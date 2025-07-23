@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="moim.renew.backend.User.Mapper.UserMapper">
+    <resultMap id="userResultMap" type="moim.renew.backend.User.Entity.UserEntity">
+        <id     property="user_id"    column="user_id"/>
+        <result property="password" column="password"/>
+        <result property="nickname" column="nickname"/>
+        <result property="review" column="review"/>
+    </resultMap>
+</mapper>

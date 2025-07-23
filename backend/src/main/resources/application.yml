@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/moim_db?serverTimezone=Asia/Seoul&useSSL=false
+    username: root      # 실제 DB 접속 아이디로 변경
+    password: 1234   # 실제 DB 비밀번호로 변경
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  mybatis:
+    config-location: classpath:sql-map-config.xml
+    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package:
+      - moim.renew.backend.User.Entity
+      - moim.renew.backend.UserReview.Entity
+      - moim.renew.backend.Moim.Entity
+      - moim.renew.backend.MoimDetail.Entity
+      - moim.renew.backend.MoimReview.Entity
+
+server:
+  port: 9000
+
+logging:
+  level:
+    root: INFO
+    org.mybatis: DEBUG
+    org.springframework.jdbc.core: DEBUG

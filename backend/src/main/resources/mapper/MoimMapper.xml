@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="moim.renew.backend.Moim.Mapper.MoimMapper">
+    <resultMap id="moimResultMap" type="moim.renew.backend.Moim.Entity.MoimEntity">
+        <id     property="moimId"       column="moim_id"/>
+        <result property="title"        column="title"/>
+        <result property="isOnline"     column="is_online"/>
+        <result property="maxPeople"    column="max_people"/>
+        <result property="expirationDate" column="expiration_date"/>
+        <result property="evenDate"     column="even_date"/>
+        <result property="location"     column="location"/>
+        <result property="representImg" column="represent_img"/>
+        <result property="category"     column="category"/>
+    </resultMap>
+</mapper>

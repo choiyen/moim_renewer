@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="moim.renew.backend.Favorite.Mapper.FavoriteMapper">
+
+    <resultMap id="favoriteResultMap" type="moim.renew.backend.Favorite.Entity.FavoriteEntity">
+        <id     property="moimId"   column="moim_id"/>
+        <id     property="userId"   column="user_id"/>
+    </resultMap>
+
+</mapper>

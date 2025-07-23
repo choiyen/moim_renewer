@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="moim.renew.backend.MoimDetail.Mapper.MoimDetailMapper">
+    <resultMap id="moimResultMap" type="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
+        <id     property="moimId"   column="moim_id"/>
+        <result property="content"  column="content"/>
+        <result property="minPeople"  column="min_people"/>
+    </resultMap>
+</mapper>

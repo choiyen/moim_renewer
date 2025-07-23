@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD MyBatis Configuration 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!-- 엔티티 패키지 별칭 자동 등록 -->
+    <typeAliases>
+        <package name="moim.renew.backend.User.Entity"/>
+        <package name="moim.renew.backend.UserReview.Entity"/>
+        <package name="moim.renew.backend.Moim.Entity"/>
+        <package name="moim.renew.backend.MoimDetail.Entity"/>
+        <package name="moim.renew.backend.MoimReview.Entity"/>
+        <package name="moim.renew.backend.Favorite.Entity"/>
+
+    </typeAliases>
+
+    <mappers>
+        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/UserReviewMapper.xml"/>
+        <mapper resource="mapper/MoimMapper.xml"/>
+        <mapper resource="mapper/MoimDetailMapper.xml"/>
+        <mapper resource="mapper/MoimReviewMapper.xml"/>
+        <mapper resource="mapper/MoimFavoriteMapper.xml"/>
+    </mappers>
+    
+</configuration>
