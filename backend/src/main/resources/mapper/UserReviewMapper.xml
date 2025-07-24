@@ -10,4 +10,24 @@
         <result property="reviewee" column="reviewee"/>
         <result property="score" column="score"/>
     </resultMap>
+
+    <insert id="InsertuserReview" parameterType="moim.renew.backend.User.Entity.UserEntity">
+        INSERT INTO userReview(id, reviewer, reviewee, score)
+        VALUES(#{id}, #{reviewer}, #{reviewee}, #{score})
+    </insert>
+
+    <update id="UpdateuserReview" parameterType="moim.renew.backend.User.Entity.UserEntity">
+        UPDATE userReview
+        SET score = #{score}
+        WHERE reviewer = #{reviewer} AND reviewee = #{reviewee}
+    </update>
+
+    <delete id="DeleteuserReview" parameterType="map">
+        DELETE FROM userReview WHERE reviewer = #{reviewer} AND reviewee = #{reviewee}
+    </delete>
+
+    <select id="FindofuserReview" parameterType="string" resultType="List">
+        SELECT * FROM userReview WHERE reviewee = #{reviewee}
+    </select>
+
 </mapper>

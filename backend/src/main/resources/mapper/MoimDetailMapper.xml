@@ -9,4 +9,16 @@
         <result property="content"  column="content"/>
         <result property="minPeople"  column="min_people"/>
     </resultMap>
+    <insert id="moimofInsert" parameterType="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
+        INSERT INTO moimDetail(moimId, content, mimPeople) VALUES(#{moimId}, #{content}, #{min_people})
+    </insert>
+    <update id="updatemoimdetailbyResult">
+        UPDATE moimDetail SET content = #{content}, mimPeople = #{mimPeople} WHERE moimId = #{moimId}
+    </update>
+    <select id="selectmoimdetailbyResult">
+        SELECT * FROM moimDetail WHERE moimId = #{moimId}
+    </select>
+    <delete id="deletemoimdetailbyResult">
+        DELETE FROM moimDetail WHERE moimId = #{moimId}
+    </delete>
 </mapper>

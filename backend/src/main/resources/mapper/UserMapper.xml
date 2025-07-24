@@ -4,10 +4,37 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="moim.renew.backend.User.Mapper.UserMapper">
+
     <resultMap id="userResultMap" type="moim.renew.backend.User.Entity.UserEntity">
-        <id     property="user_id"    column="user_id"/>
+        <id     property="userid"    column="user_id"/>
         <result property="password" column="password"/>
         <result property="nickname" column="nickname"/>
         <result property="review" column="review"/>
+        <result property="email" column="email"/>
     </resultMap>
+
+    <insert id="InsertUser" parameterType="moim.renew.backend.User.Entity.UserEntity">
+        INSERT INTO USER(user_id, password, nickname, review, email)
+        VALUES(#{userid}, #{password}, #{nickname}, #{review}, #{email})
+    </insert>
+
+    <update id="UpdateUser" parameterType="moim.renew.backend.User.Entity.UserEntity">
+        UPDATE USER
+        SET password = #{password}, nickname = #{nickname}, review = #{review}
+        WHERE user_id = #{userid}
+    </update>
+
+    <delete id="DeleteUser" parameterType="map">
+        DELETE FROM USER WHERE user_id = #{user_id} AND password = #{password}
+    </delete>
+
+    <select id="FindofUserID" parameterType="string" resultType="string">
+        SELECT user_id FROM USER WHERE email = #{email}
+    </select>
+
+    <update id="UpdatePasswordByEmail" parameterType="map">
+        UPDATE USER
+        SET password = #{password}
+        WHERE email = #{email}
+    </update>
 </mapper>

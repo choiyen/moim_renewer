@@ -4,6 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="moim.renew.backend.Moim.Mapper.MoimMapper">
+
+    <!-- ResultMap -->
     <resultMap id="moimResultMap" type="moim.renew.backend.Moim.Entity.MoimEntity">
         <id     property="moimId"       column="moim_id"/>
         <result property="title"        column="title"/>
@@ -15,4 +17,52 @@
         <result property="representImg" column="represent_img"/>
         <result property="category"     column="category"/>
     </resultMap>
+
+    <!-- INSERT -->
+    <insert id="InsertMoim" parameterType="moim.renew.backend.Moim.Entity.MoimEntity">
+        INSERT INTO moim (
+        moim_id, title, is_online, max_people,
+        expiration_date, even_date, location,
+        represent_img, category
+        ) VALUES (
+        #{moimId}, #{title}, #{isOnline}, #{maxPeople},
+        #{expirationDate}, #{evenDate}, #{location},
+        #{representImg}, #{category}
+        )
+    </insert>
+
+    <!-- UPDATE -->
+    <update id="UpdateMoim" parameterType="moim.renew.backend.Moim.Entity.MoimEntity">
+        UPDATE moim
+        SET
+        title = #{title},
+        is_online = #{isOnline},
+        max_people = #{maxPeople},
+        expiration_date = #{expirationDate},
+        even_date = #{evenDate},
+        location = #{location},
+        represent_img = #{representImg},
+        category = #{category}
+        WHERE moim_id = #{moimId}
+    </update>
+
+    <!-- SELECT 단건 -->
+    <select id="SelectMoimById" resultMap="moimResultMap" parameterType="string">
+        SELECT *
+        FROM moim
+        WHERE moim_id = #{moimId}
+    </select>
+
+    <!-- SELECT 전체 -->
+    <select id="SelectAllMoims" resultMap="moimResultMap">
+        SELECT *
+        FROM moim
+    </select>
+
+    <!-- DELETE -->
+    <delete id="DeleteMoim" parameterType="string">
+        DELETE FROM moim
+        WHERE moim_id = #{moimId}
+    </delete>
+
 </mapper>
