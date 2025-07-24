@@ -1,7 +1,13 @@
 package moim.renew.backend.MoimDetail.Mapper;
 
+import moim.renew.backend.MoimDetail.Entity.MoimDetailEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface MoimDetailMapper {
+public interface MoimDetailMapper
+{
+    void deletemoimdetailbyResult(String moimId);
+    MoimDetailEntity selectmoimdetailbyResult(String moimId);
+    void updatemoimdetailbyResult(MoimDetailEntity moimDetailEntity);
+    void moimofInsert(MoimDetailEntity moimDetailEntity);
 }

@@ -26,4 +26,14 @@
     <delete id="deleteofmoimReview" parameterType="moim.renew.backend.MoimReview.Entity.MoimReviewEntity">
         DELETE FROM moimReview WHERE moimId = #{moimId} AND reviewer = #{reviewer}
     </delete>
+    <select id="getAverageScoreByMoimId" parameterType="string" resultType="double">
+        SELECT AVG(score)
+        FROM moimReview
+        WHERE moim_id = #{moimId}
+    </select>
+    <select id="getReviewsByMoimId" parameterType="string" resultMap="moimReviewResultMap">
+        SELECT moim_id, reviewer_nickname, score, comment
+        FROM moimReview
+        WHERE moim_id = #{moimId}
+    </select>
 </mapper>

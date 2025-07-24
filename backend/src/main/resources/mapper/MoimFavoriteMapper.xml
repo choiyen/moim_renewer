@@ -9,13 +9,16 @@
         <id     property="moimId"   column="moim_id"/>
         <id     property="userId"   column="user_id"/>
     </resultMap>
-    <insert id="favoriteofmoim" parameterType="string">
+    <insert id="Insertfavoriteofmoim" parameterType="string">
         INSERT INTO favorite(moimId, userId) VALUES(moimId = #{moimId}, userId = #{userId})
     </insert>
     <delete id="Deleteoffavorite" parameterType="string">
         DELETE FROM favorite WHERE moimId = #{moimId} AND userId = #{userId}
     </delete>
     <select id="selectoffavorite" parameterType="string">
-        SELECT FROM favorite WHERE user_id = #{user_id}
+        SELECT FROM favorite WHERE user_id = #{userId}
+    </select>
+    <select id="selectofmoimId" parameterType="string">
+        SELECT FROM favorite WHERE moimId = #{moimId}
     </select>
 </mapper>
