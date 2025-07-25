@@ -8,9 +8,10 @@ import java.util.List;
 @Mapper
 public interface MoimMapper
 {
-    void DeleteMoim(String moimId);
+    MoimEntity SelectMoimById(String moimId);
     List<MoimEntity> SelectAllMoims();
-    MoimEntity SelectMoimById();
-    void UpdateMoim(MoimEntity moim);
     void InsertMoim(MoimEntity moim);
+    void DeleteMoim(String moimId, String organizer);
+    void UpdateMoim(MoimEntity moim);
+
 }

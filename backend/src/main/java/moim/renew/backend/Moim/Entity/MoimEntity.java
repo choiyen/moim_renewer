@@ -2,6 +2,7 @@ package moim.renew.backend.Moim.Entity;
 
 
 import lombok.*;
+import moim.renew.backend.Moim.DTO.MoimDTO;
 
 import java.util.Date;
 
@@ -12,13 +13,44 @@ import java.util.Date;
 @Data
 public class MoimEntity
 {
-    private Integer moimId;
+    private String moimId;
     private String title;
     private Boolean isOnline;
     private Integer maxPeople;
+    private String organizer;
     private Date expirationDate;
     private Date evenDate;
     private String location;
     private String representImg;
     private String category;
+
+    public MoimDTO convertTo()
+    {
+        return MoimDTO.builder()
+                .moimId(this.moimId)
+                .category(this.category)
+                .evenDate(this.evenDate)
+                .expirationDate(this.expirationDate)
+                .isOnline(this.isOnline)
+                .location(this.location)
+                .maxPeople(this.maxPeople)
+                .title(this.title)
+                .organizer(this.organizer)
+                .build();
+    }
+    public MoimEntity convertToReNew(MoimEntity oldMoim)
+    {
+        return MoimEntity.builder()
+                .moimId(oldMoim.getMoimId())
+                .category(this.category)
+                .evenDate(this.evenDate)
+                .expirationDate(this.expirationDate)
+                .isOnline(this.isOnline)
+                .location(this.location)
+                .representImg(this.representImg)
+                .maxPeople(this.maxPeople)
+                .title(this.title)
+                .organizer(this.organizer)
+                .build();
+    }
 }

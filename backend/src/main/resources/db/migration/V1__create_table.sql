@@ -27,7 +27,8 @@ CREATE TABLE moim (
     even_date DATE,
     location VARCHAR(25),
     represent_img VARCHAR(255),
-    category VARCHAR(40) NOT NULL
+    category VARCHAR(40) NOT NULL,
+    organizer VARCHAR(50) NULL NULL
 );
 
 CREATE TABLE moim_detail (

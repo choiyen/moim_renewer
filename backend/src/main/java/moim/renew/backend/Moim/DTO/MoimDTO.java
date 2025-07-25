@@ -2,6 +2,7 @@ package moim.renew.backend.Moim.DTO;
 
 import lombok.*;
 import jakarta.validation.constraints.*;
+import moim.renew.backend.Moim.Entity.MoimEntity;
 
 import java.util.Date;
 
@@ -15,7 +16,7 @@ public class MoimDTO
 {
 
     @NotNull(message = "moimId는 null일 수 없습니다.")
-    private Integer moimId;
+    private String moimId;
 
     @NotBlank(message = "제목은 필수 입력 항목입니다.")
     @Size(max = 30, message = "제목은 최대 30자까지 가능합니다.")
@@ -31,6 +32,9 @@ public class MoimDTO
     @NotNull(message = "모집 마감일은 필수입니다.")
     private Date expirationDate;
 
+    @NotNull(message = "모임의 주최자 설정은 필수입니다.")
+    private String organizer;
+
     @NotNull(message = "모임 예정일은 필수입니다.")
     private Date evenDate;
 
@@ -43,4 +47,20 @@ public class MoimDTO
     @NotBlank(message = "카테고리는 필수입니다.")
     @Size(max = 40, message = "카테고리는 최대 40자까지 입력 가능합니다.")
     private String category;
+
+
+    public MoimEntity convertTo()
+    {
+        return MoimEntity.builder()
+                .moimId(this.moimId)
+                .category(this.category)
+                .evenDate(this.evenDate)
+                .expirationDate(this.expirationDate)
+                .isOnline(this.isOnline)
+                .location(this.location)
+                .maxPeople(this.maxPeople)
+                .title(this.title)
+                .organizer(this.organizer)
+                .build();
+    }
 }

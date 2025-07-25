@@ -16,6 +16,7 @@
         <result property="location"     column="location"/>
         <result property="representImg" column="represent_img"/>
         <result property="category"     column="category"/>
+        <result property="organizer" column="organizer" />
     </resultMap>
 
     <!-- INSERT -->
@@ -62,7 +63,7 @@
     <!-- DELETE -->
     <delete id="DeleteMoim" parameterType="string">
         DELETE FROM moim
-        WHERE moim_id = #{moimId}
+        WHERE moim_id = #{moimId} AND organizer = #{organizer}
     </delete>
 
 </mapper>
