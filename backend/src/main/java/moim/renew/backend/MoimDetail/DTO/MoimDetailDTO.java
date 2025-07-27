@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 public class MoimDetailDTO
 {
-    private Integer moimId;
+    private String moimId;
     private String content;
     private Integer minPeople;
 }

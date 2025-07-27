@@ -2,6 +2,7 @@ package moim.renew.backend.Favorite.Entity;
 
 
 import lombok.*;
+import moim.renew.backend.Favorite.DTO.FavoriteDTO;
 
 import java.util.Date;
 
@@ -12,6 +13,14 @@ import java.util.Date;
 @Data
 public class FavoriteEntity
 {
-    private Integer moimId;
+    private String moimId;
     private String userId;
+
+    public FavoriteDTO convertTo()
+    {
+        return FavoriteDTO.builder()
+                .moimId(this.moimId)
+                .userId(this.userId)
+                .build();
+    }
 }

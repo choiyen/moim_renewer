@@ -1,6 +1,7 @@
 package moim.renew.backend.Favorite.DTO;
 
 import lombok.*;
+import moim.renew.backend.Favorite.Entity.FavoriteEntity;
 
 @Getter
 @Builder
@@ -10,6 +11,14 @@ import lombok.*;
 @ToString
 public class FavoriteDTO
 {
-    private Integer moimId;
+    private String moimId;
     private String userId;
+
+    public FavoriteEntity convertTo()
+    {
+        return FavoriteEntity.builder()
+                .moimId(this.moimId)
+                .userId(this.userId)
+                .build();
+    }
 }
