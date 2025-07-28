@@ -1,4 +1,295 @@
+import React from "react";
+import styled from "@emotion/styled";
+import star from "../../comon/frame/image/star.png";
+
+const ProfileWrapper = styled.img`
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  display: block;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    width: 120px;
+    height: 120px;
+  }
+
+  @media (max-width: 480px) {
+    width: 80px;
+    height: 80px;
+  }
+`;
+
+const WishlistItem = styled.img`
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    width: 100px;
+    height: 100px;
+  }
+
+  @media (max-width: 480px) {
+    width: 80px;
+    height: 80px;
+  }
+`;
+
+const ScrollContainer = styled.div`
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px 0;
+`;
+
+const InlineFlex = styled.div`
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+`;
+
+const NavButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  line-height: 0;
+  user-select: none;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  @media (max-width: 480px) {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
+`;
+
+const Section = styled.div`
+  text-align: center;
+  margin-top: 20px;
+  background-color: #f0f0f0;
+  padding: 40px;
+  border-radius: 8px;
+  width: 80vw;
+  max-width: 1000px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-left: auto;
+  margin-right: auto;
+`;
+const ProfileInfo = styled.div`
+  background-color: azure;
+  padding: 20px;
+  border-radius: 8px;
+  width: 30vw;
+  p {
+    font-size: 16px;
+    color: #333;
+    padding: 8px;
+    background-color: yellowgreen;
+  }
+
+  p:nth-of-type(even) {
+    background-color: #f8f9fa;
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+`;
+const FooterContainer = styled.div`
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
+  background-color: #f8f9fa;
+  padding: 40px 0;
+  color: #555;
+  font-size: 14px;
+  user-select: none;
+  margin-bottom: 50px;
+`;
+
+const FooterItem = styled.button`
+  margin: 6px 0;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  background-color: transparent;
+  border: none;
+  padding: 6px 12px;
+  font-size: 15px;
+  color: #555;
+  border-radius: 4px;
+
+  &:hover {
+    color: #007bff;
+    background-color: #e6f0ff;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #007bff88;
+  }
+`;
+
 const MoimProfile = () => {
-  return <div>마이페이지</div>;
+  const handleProfileEdit = () => {
+    alert("프로필 수정 기능은 추후 구현 예정입니다.");
+  };
+
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "20px",
+          gap: "20px",
+          flexWrap: "wrap",
+          maxWidth: "900px",
+          width: "90vw",
+        }}
+      >
+        <div>
+          <ProfileWrapper src={star} alt="프로필 이미지" />
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: "18px",
+              fontWeight: "bold",
+              marginTop: "10px",
+            }}
+          >
+            홍사운드 스토리
+          </div>
+        </div>
+        <ProfileInfo>
+          <p>사용자 이메일</p>
+          <p> adsxaf@naver.com</p>
+          <p>가입일</p>
+          <p> 2023-10-01</p>
+          <p>최근 활동</p>
+          <p> 2023-10-01</p>
+          <button
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              marginTop: "10px",
+            }}
+            onClick={handleProfileEdit}
+          >
+            프로필 수정
+          </button>
+        </ProfileInfo>
+      </div>
+      <div
+        style={{
+          width: "50vw",
+          margin: "20px auto",
+          textAlign: "left",
+        }}
+      >
+        <h1 style={{ fontSize: "24px" }}>내 소개 글</h1>
+        <p
+          style={{
+            fontSize: "16px",
+            color: "#666",
+            backgroundColor: "gainsboro",
+            padding: "10px",
+            borderRadius: "8px",
+          }}
+        >
+          나는 모임을 사랑하는 사람입니다. 다양한 사람들과의 만남을 통해 새로운
+          경험을 쌓고, 서로의 이야기를 나누는 것을 즐깁니다. 모임을 통해 친구를
+          만들고, 지식을 공유하며, 함께 성장하는 것을 목표로 합니다. 앞으로도
+          많은 모임에 참여하여 더 많은 사람들과 소통하고 싶습니다.
+        </p>
+      </div>
+      {/* 찜목록 섹션 */}
+      <Section>
+        <h3 style={{ fontSize: "18px", fontWeight: "bold" }}>찜목록</h3>
+        <ScrollContainer>
+          <InlineFlex>
+            <NavButton>{"<"}</NavButton>
+            <WishlistItem src={star} alt="찜목록 이미지" />
+            <WishlistItem src={star} alt="찜목록 이미지" />
+            <WishlistItem src={star} alt="찜목록 이미지" />
+            <WishlistItem src={star} alt="찜목록 이미지" />
+            <NavButton>{">"}</NavButton>
+          </InlineFlex>
+        </ScrollContainer>
+      </Section>
+
+      {/* 가입한 모임 목록 섹션 */}
+      <Section>
+        <h3 style={{ fontSize: "18px", fontWeight: "bold" }}>
+          가입한 모임 목록
+        </h3>
+        <ScrollContainer>
+          <InlineFlex>
+            <NavButton>{"<"}</NavButton>
+            <WishlistItem src={star} alt="가입한 모임 이미지" />
+            <WishlistItem src={star} alt="가입한 모임 이미지" />
+            <WishlistItem src={star} alt="가입한 모임 이미지" />
+            <WishlistItem src={star} alt="가입한 모임 이미지" />
+            <NavButton>{">"}</NavButton>
+          </InlineFlex>
+        </ScrollContainer>
+      </Section>
+      <FooterContainer>
+        <FooterItem>서비스 소개</FooterItem>
+        <FooterItem>공지사항</FooterItem>
+        <FooterItem>자주 묻는 질문</FooterItem>
+        <FooterItem>서비스 약관 및 정책</FooterItem>
+        <FooterItem>개인정보 처리방침</FooterItem>
+        <FooterItem>고객센터</FooterItem>
+      </FooterContainer>
+    </div>
+  );
 };
+
 export default MoimProfile;
