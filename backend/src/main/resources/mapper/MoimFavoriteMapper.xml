@@ -8,6 +8,7 @@
     <resultMap id="favoriteResultMap" type="moim.renew.backend.Favorite.Entity.FavoriteEntity">
         <id     property="moimId"   column="moim_id"/>
         <id     property="userId"   column="user_id"/>
+        <id     property="favoriteId" column="favoriteId"/>
     </resultMap>
     <insert id="Insertfavoriteofmoim" parameterType="string">
         INSERT INTO favorite(moimId, userId) VALUES(moimId = #{moimId}, userId = #{userId})

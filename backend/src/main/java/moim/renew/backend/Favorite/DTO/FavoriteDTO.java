@@ -11,6 +11,7 @@ import moim.renew.backend.Favorite.Entity.FavoriteEntity;
 @ToString
 public class FavoriteDTO
 {
+    private Integer favoriteId;
     private String moimId;
     private String userId;
 
@@ -19,6 +20,7 @@ public class FavoriteDTO
         return FavoriteEntity.builder()
                 .moimId(this.moimId)
                 .userId(this.userId)
+                .favoriteId(this.favoriteId)
                 .build();
     }
 }

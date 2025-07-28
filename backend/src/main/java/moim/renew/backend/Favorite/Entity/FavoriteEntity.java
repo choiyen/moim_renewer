@@ -13,6 +13,7 @@ import java.util.Date;
 @Data
 public class FavoriteEntity
 {
+    private Integer favoriteId;
     private String moimId;
     private String userId;
 
@@ -21,6 +22,7 @@ public class FavoriteEntity
         return FavoriteDTO.builder()
                 .moimId(this.moimId)
                 .userId(this.userId)
+                .favoriteId(this.favoriteId)
                 .build();
     }
 }

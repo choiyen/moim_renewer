@@ -19,7 +19,7 @@ CREATE TABLE user_review (
 );
 
 CREATE TABLE moim (
-    moim_id INT AUTO_INCREMENT PRIMARY KEY,
+    moim_id VARCHAR(20) PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
     is_online BOOLEAN DEFAULT FALSE,
     max_people INT,  -- CHECK (max_people <= 100)는 애플리케이션에서 처리 권장
@@ -32,7 +32,7 @@ CREATE TABLE moim (
 );
 
 CREATE TABLE moim_detail (
-    moim_id INT NOT NULL PRIMARY KEY,
+    moim_id VARCHAR(20) NOT NULL PRIMARY KEY,
     content LONGTEXT,
     min_people INT,
     CONSTRAINT fk_moim_id FOREIGN KEY (moim_id) REFERENCES moim(moim_id)
@@ -41,7 +41,7 @@ CREATE TABLE moim_detail (
 );
 
 CREATE TABLE moim_review (
-    moim_id INT NOT NULL,
+    moim_id VARCHAR(20) NOT NULL,
     reviewer_nickname VARCHAR(10) NOT NULL,
     score DECIMAL(3,1) NOT NULL,
     comment TEXT,
@@ -52,10 +52,9 @@ CREATE TABLE moim_review (
 );
 
 CREATE TABLE moim_favorite (
-    moim_id INT NOT NULL,
+    favoriteId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    moim_id VARCHAR(20) NOT NULL,
     user_id VARCHAR(20) NOT NULL,
-
-    PRIMARY KEY (moim_id, user_id),
 
     CONSTRAINT fk_dibs_moim_moim FOREIGN KEY (moim_id)
         REFERENCES moim(moim_id)
