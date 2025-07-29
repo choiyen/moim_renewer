@@ -28,4 +28,11 @@ public class UserDTO
                 .review(this.review)
                 .build();
     }
+    public UserTokenDTO convertTo(String Token)
+    {
+        return UserTokenDTO.builder()
+                .userDTO(this)
+                .token(Token)
+                .build();
+    }
 }

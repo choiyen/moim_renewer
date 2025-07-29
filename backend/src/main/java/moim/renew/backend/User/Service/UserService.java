@@ -97,4 +97,13 @@ public class UserService
     {
         return userMapper.getUserID(id);
     }
+    // 로그인
+    public UserEntity getByCredentials(String email, String password, PasswordEncoder passwordEncoder) {
+        UserEntity originalUser = userMapper.FindofUserID(email);
+        if(originalUser != null && passwordEncoder.matches(password, originalUser.getPassword())) {
+            return originalUser;
+        }
+        return null;
+    }
+
 }

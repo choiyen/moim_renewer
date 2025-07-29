@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface MoimReviewMapper
 {
   void deleteofmoimReview(String moimId, String reviewer);
+  void InsertofmoimReview(MoimReviewEntity moimReviewEntity);
   void updateofcommentandscore(MoimReviewEntity moimReviewEntity);
   void updateofcomment(MoimReviewEntity moimReviewEntity);
   void updateofscore(MoimReviewEntity moimReviewEntity);
