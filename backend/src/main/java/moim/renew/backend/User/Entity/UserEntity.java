@@ -15,6 +15,7 @@ public class UserEntity
     private String user_id;
     private String password;
     private String nickname;
+    private String Intro;
     private Float review = 3.0f; // 기본값 설정
 
     public UserDTO convertTo()
@@ -24,6 +25,7 @@ public class UserEntity
                 .nickname(this.nickname)
                 .review(this.review)
                 .password(this.password)
+                .Intro(this.Intro)
                 .build();
     }
     public UserEntity convertToReNew(UserEntity oldUser)
@@ -33,6 +35,7 @@ public class UserEntity
                 .password(this.password)
                 .nickname(this.nickname)
                 .review(oldUser.review)
+                .Intro(this.Intro)
                 .build();
     }
     public UserEntity convertToPassword(PasswordEncoder passwordEncoder)
@@ -42,6 +45,7 @@ public class UserEntity
                 .password(passwordEncoder.encode(this.password))
                 .nickname(this.nickname)
                 .review(this.review)
+                .Intro(this.Intro)
                 .build();
     }
 }

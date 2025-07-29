@@ -11,16 +11,17 @@
         <result property="nickname" column="nickname"/>
         <result property="review" column="review"/>
         <result property="email" column="email"/>
+        <result property="Intro" column="Intro"/>
     </resultMap>
 
     <insert id="InsertUser" parameterType="moim.renew.backend.User.Entity.UserEntity">
-        INSERT INTO USER(user_id, password, nickname, review, email)
-        VALUES(#{userid}, #{password}, #{nickname}, #{review}, #{email})
+        INSERT INTO USER(user_id, password, nickname, review, email, Intro)
+        VALUES(#{userid}, #{password}, #{nickname}, #{review}, #{email}, #{Intro})
     </insert>
 
     <update id="UpdateUser" parameterType="moim.renew.backend.User.Entity.UserEntity">
         UPDATE USER
-        SET password = #{password}, nickname = #{nickname}, review = #{review}
+        SET password = #{password}, nickname = #{nickname}, review = #{review}, Intro = #{Intro}
         WHERE user_id = #{userid}
     </update>
 

@@ -4,6 +4,7 @@ CREATE TABLE user (
     password VARCHAR(255) NOT NULL,
     nickname VARCHAR(10) NOT NULL UNIQUE,
     review DECIMAL(3,1) DEFAULT 3.0
+    Intro LONGTEXT NULL,
 );
 
 CREATE TABLE user_review (

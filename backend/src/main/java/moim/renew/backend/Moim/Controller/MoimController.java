@@ -126,7 +126,7 @@ public class MoimController
                 throw new BadCredentialsException("JWT 패킷에서 로그인 정보조회 실패");
             }
             MoimDTO moimDTO1 = moimService.Update(moimDTO);
-            return ResponseEntity.ok().body(responseDTO.Response("success", "moim 업데이트 완료", Collections.singletonList(moimDTO)));
+            return ResponseEntity.ok().body(responseDTO.Response("success", "moim 업데이트 완료", Collections.singletonList(moimDTO1)));
         }
         catch (AuthenticationException e)
         {
