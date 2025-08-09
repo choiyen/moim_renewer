@@ -13,4 +13,5 @@ public class MoimDetailDTO
     private String moimId;
     private String content;
     private Integer minPeople;
+    private Double Pay;
 }

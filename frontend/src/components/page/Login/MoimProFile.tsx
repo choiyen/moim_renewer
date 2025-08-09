@@ -1,6 +1,8 @@
-import React from "react";
 import styled from "@emotion/styled";
 import star from "../../comon/frame/image/star.png";
+import PasswordModal from "../Model/PasswordModel";
+import { useNavigate } from "react-router-dom";
+import { useModelStore } from "../../../types/State";
 
 const ProfileWrapper = styled.img`
   width: 200px;
@@ -57,13 +59,13 @@ const ScrollContainer = styled.div`
   padding: 10px 0;
 `;
 
-const InlineFlex = styled.div`
+export const InlineFlex = styled.div`
   display: inline-flex;
   gap: 10px;
   align-items: center;
 `;
 
-const NavButton = styled.button`
+export const NavButton = styled.button`
   background-color: #007bff;
   color: white;
   border: none;
@@ -86,7 +88,7 @@ const NavButton = styled.button`
   }
 `;
 
-const Section = styled.div`
+export const Section = styled.div`
   text-align: center;
   margin-top: 20px;
   background-color: #f0f0f0;
@@ -164,10 +166,19 @@ const FooterItem = styled.button`
 `;
 
 const MoimProfile = () => {
+  const nativegate = useNavigate();
   const handleProfileEdit = () => {
-    alert("프로필 수정 기능은 추후 구현 예정입니다.");
+    nativegate("/profile/edit");
   };
-
+  const handleConfirm = (
+    currentPw: string,
+    newPw: string,
+    confirmPw: string
+  ) => {
+    // 검증 및 API 호출
+    console.log(currentPw, newPw, confirmPw);
+    useModelStore.getState().setPasswordModalOpen(false);
+  };
   return (
     <div
       style={{
@@ -219,11 +230,36 @@ const MoimProfile = () => {
               borderRadius: "8px",
               cursor: "pointer",
               marginTop: "10px",
+              marginRight: "25px",
             }}
             onClick={handleProfileEdit}
           >
             프로필 수정
           </button>
+          <button
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#dd8526",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              marginTop: "10px",
+            }}
+            onClick={() => {
+              useModelStore.getState().setPasswordModalOpen(true);
+            }}
+          >
+            비밀번호 변경
+          </button>
+          {useModelStore.getState().isPasswordModalOpen && (
+            <PasswordModal
+              onClose={() =>
+                useModelStore.getState().setPasswordModalOpen(false)
+              }
+              onConfirm={handleConfirm}
+            />
+          )}
         </ProfileInfo>
       </div>
       <div
@@ -268,6 +304,21 @@ const MoimProfile = () => {
       <Section>
         <h3 style={{ fontSize: "18px", fontWeight: "bold" }}>
           가입한 모임 목록
+        </h3>
+        <ScrollContainer>
+          <InlineFlex>
+            <NavButton>{"<"}</NavButton>
+            <WishlistItem src={star} alt="가입한 모임 이미지" />
+            <WishlistItem src={star} alt="가입한 모임 이미지" />
+            <WishlistItem src={star} alt="가입한 모임 이미지" />
+            <WishlistItem src={star} alt="가입한 모임 이미지" />
+            <NavButton>{">"}</NavButton>
+          </InlineFlex>
+        </ScrollContainer>
+      </Section>
+      <Section>
+        <h3 style={{ fontSize: "18px", fontWeight: "bold" }}>
+          가입 대기 중인 모임
         </h3>
         <ScrollContainer>
           <InlineFlex>

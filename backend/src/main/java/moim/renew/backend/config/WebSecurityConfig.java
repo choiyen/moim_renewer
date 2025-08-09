@@ -20,10 +20,8 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
-
-    @Value("${released.URL}")
-    String url;
+public class WebSecurityConfig
+{
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;

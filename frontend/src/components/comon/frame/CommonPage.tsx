@@ -4,9 +4,9 @@ import Header from "./Header";
 
 const CommonPage: React.FC = () => {
   return (
-    <div>
+    <div style={{ paddingBottom: "80px" }}>
       <Header />
-      <Outlet /> {/* 자식 라우트들이 여기 렌더링됨 */}
+      <Outlet />
       <Footer />
     </div>
   );

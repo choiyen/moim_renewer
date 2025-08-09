@@ -41,6 +41,8 @@ public class MoimReviewService
             return 0;
         }
     }
+
+
     public MoimReviewDTO updateofScore(String moimId, Float score)
     {
         MoimReviewEntity NewReviewEntity = moimReviewMapper.getReviewsByMoimId(moimId).ConvertToNewScore(score);

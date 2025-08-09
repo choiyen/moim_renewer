@@ -2,6 +2,8 @@
 import styled from "@emotion/styled";
 import { FaGoogle } from "react-icons/fa";
 import { SiNaver, SiKakao } from "react-icons/si";
+import { useNavigate } from "react-router-dom";
+import { useLoginStore } from "../../../types/State";
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -98,7 +100,7 @@ const SignupButton = styled.button`
 
 const MoimLogin = () => {
   const defaultUrl = import.meta.env.VITE_DEFAULT_URL;
-
+  const navigate = useNavigate();
   return (
     <ButtonWrapper>
       <div className="lg:w-[40vw] sm:w-[80vw] md:w-[60vw] flex flex-col items-center gap-2 justify-center border-4 border-dashed border-gray-300 rounded-lg p-6">
@@ -113,10 +115,24 @@ const MoimLogin = () => {
             모임 커뮤니티 로그인
           </h1>
           {/* TODO: Replace with actual InputBox component */}
-          <Input type="text" placeholder="아이디 또는 이메일" />
-          <Input type="password" placeholder="비밀번호" />
+          <Input
+            type="text"
+            placeholder="아이디 또는 이메일"
+            value={useLoginStore.getState().Login.id}
+            onChange={(e) => useLoginStore.getState().setId(e.target.value)}
+          />
+          <Input
+            type="password"
+            placeholder="비밀번호"
+            value={useLoginStore.getState().Login.password}
+            onChange={(e) =>
+              useLoginStore.getState().setPassword(e.target.value)
+            }
+          />
           <LoginButton>로그인</LoginButton>
-          <SignupButton>회원가입</SignupButton>
+          <SignupButton onClick={() => navigate("/signup")}>
+            회원가입
+          </SignupButton>
         </div>
         <GoogleButton href={`${defaultUrl}/oauth2/authorize/google`}>
           <FaGoogle /> 구글로 로그인

@@ -5,6 +5,7 @@ import moim.renew.backend.UserReview.DTO.UserReviewDTO;
 import moim.renew.backend.UserReview.Entity.UserReviewEntity;
 import moim.renew.backend.UserReview.Mapper.UserReviewMapper;
 import moim.renew.backend.config.Exception.InsertException;
+import moim.renew.backend.config.Exception.SelectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,6 +64,8 @@ public class UserReviewService
             return true;
         }
     }
+
+
     public List<UserReviewDTO> FindofuserReview(String reviewer)
     {
         List<UserReviewEntity> userReviewEntities = userReviewMapper.FindofuserReview(reviewer);
@@ -72,5 +75,18 @@ public class UserReviewService
             userReviewDTOS.add(userReviewEntity.convertTo());
         }
         return userReviewDTOS;
+    }
+
+    public UserReviewDTO FindofuserReviewId(String id)
+    {
+        UserReviewEntity userReviewEntity = userReviewMapper.FindofuserReviewId(id);
+        if(userReviewEntity != null)
+        {
+            return userReviewEntity.convertTo();
+        }
+        else
+        {
+            throw new SelectException();
+        }
     }
 }

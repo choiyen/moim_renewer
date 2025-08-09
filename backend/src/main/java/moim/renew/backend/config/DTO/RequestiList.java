@@ -3,7 +3,8 @@ package moim.renew.backend.config.DTO;
 
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.domain.Pageable;
+
+import java.awt.print.Pageable;
 
 @Builder
 @Data

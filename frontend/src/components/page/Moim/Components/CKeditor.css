@@ -1,0 +1,59 @@
+.ck-toolbar {
+  flex: 0 0 auto;
+}
+.ck-content {
+  width: 100%;
+  height: 400px;
+  flex: 1 1 auto;
+  overflow: auto;
+  background-color: aliceblue;
+}
+.ck-read-only {
+  padding: 0 !important;
+}
+.ck-content h2 {
+  font-size: 1.5em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+.ck-content h3 {
+  font-size: 1.17em;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  font-weight: bold;
+}
+.ck-content h4 {
+  margin-block-start: 1.33em;
+  margin-block-end: 1.33em;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  font-weight: bold;
+}
+.ck-content ul {
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  font-weight: bold;
+  padding-inline-start: 40px;
+}
+.ck-content ol {
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-inline-start: 40px;
+}
+.ck-content a:-webkit-any-link {
+  color: #38a5ee;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.ck-content blockquote > p {
+  margin: 16px 0;
+}

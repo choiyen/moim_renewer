@@ -9,7 +9,9 @@ import lombok.*;
 @Data
 public class MoimDetailEntity
 {
+    private Integer id;
     private String moimId;
     private String content;
     private Integer minPeople;
+    private Double Pay;
 }

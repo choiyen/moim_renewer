@@ -1,3 +1,4 @@
+import { Sparkles } from "lucide-react";
 import { Head } from "./Head";
 import { FaSearch } from "react-icons/fa";
 
@@ -9,7 +10,11 @@ const Header: React.FC = () => {
         description="많은 사람들과 만나보아요? Moim에서...!"
       />
       {/* 로고 */}
-      <h1 className="text-xl font-bold text-gray-800">Moim</h1>
+      <h1 className="flex gap-1 text-xl font-bold text-gray-800">
+        <Sparkles size={24} />
+        Moim
+        <Sparkles size={24} />
+      </h1>
       {/* 검색창 */}
       <div className="flex items-center w-full max-w-md space-x-2 bg-black p-2 rounded-2xl h-14">
         <FaSearch className="text-white" size={20} />
