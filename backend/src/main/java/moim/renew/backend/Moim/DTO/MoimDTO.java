@@ -48,6 +48,17 @@ public class MoimDTO
     @Size(max = 40, message = "카테고리는 최대 40자까지 입력 가능합니다.")
     private String category;
 
+    @NotBlank(message = "카테고리는 필수입니다.")
+    @Size(max = 40, message = "카테고리는 최대 40자까지 입력 가능합니다.")
+    private String description;
+
+    private String[] tag;//어떻게 처리할 지 고민중
+
+    @NotBlank(message = "카테고리는 필수입니다.")
+    @Size(max = 40, message = "카테고리는 최대 40자까지 입력 가능합니다.")
+    private String categoryDetail;
+
+
 
     public MoimEntity convertTo()
     {
@@ -60,6 +71,9 @@ public class MoimDTO
                 .location(this.location)
                 .maxPeople(this.maxPeople)
                 .title(this.title)
+                .categoryDetail(this.categoryDetail)
+                .tag(this.tag)
+                .description(this.description)
                 .organizer(this.organizer)
                 .build();
     }

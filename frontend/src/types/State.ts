@@ -187,14 +187,19 @@ const useUserStore = create<UserState>((set) => ({
 
 //MoimData
 export interface MoimData {
-  id?: number;
-  image: string;
+  moimId?: number;
   title: string;
+  isOnline: boolean;
   maxpeople: number;
-  Members: string[];
+  organizer: string;
+  expirationDate: Date;
+  evenDate: Date;
+  image: string;
   description: string;
   tag: string[];
-  Join: boolean;
+  location: string;
+  category: string;
+  categoryDetail: string;
 }
 export interface MoimDetailStore {
   moimdetailId: number;
@@ -202,6 +207,8 @@ export interface MoimDetailStore {
   content: string;
   minPeople: number;
   Pay: number;
+  Members: string[];
+  Approval: boolean; //승인 필요
 }
 
 export interface MoimDataStore {
@@ -218,7 +225,12 @@ export interface MoimDataStore {
   setContent: (content: string) => void;
   setMinPeople: (minPeople: number) => void;
   setPay: (Pay: number) => void;
-  setJoin: (Join: boolean) => void;
+  setisOnline: (isOnline: boolean) => void;
+  setOrganizer: (organizer: string) => void;
+  setDate: (expirationDate: Date, evenDate: Date) => void;
+  setLocation: (location: string) => void;
+  setcategory: (category: string) => void;
+  setcategoryDetail: (categoryDetail: string) => void;
 }
 
 const useMoimStore = create<{ MoimDataStore: MoimDataStore }>((set) => ({
@@ -227,15 +239,21 @@ const useMoimStore = create<{ MoimDataStore: MoimDataStore }>((set) => ({
       image: "",
       title: "",
       maxpeople: 0,
-      Members: [],
       description: "",
       tag: [],
-      Join: false,
+      isOnline: false,
+      organizer: "",
+      expirationDate: new Date(),
+      evenDate: new Date(),
+      location: "",
+      category: "",
+      categoryDetail: "",
     },
     moimDetail: {
       moimdetailId: 0,
       moimId: "",
       content: "",
+      Members: [],
       minPeople: 0,
       Pay: 0,
     },
@@ -260,19 +278,6 @@ const useMoimStore = create<{ MoimDataStore: MoimDataStore }>((set) => ({
           moimData: { ...state.MoimDataStore.moimData, maxpeople },
         },
       })),
-    setMembers: (Members: string) =>
-      set((state) => {
-        const newMembers = [...state.MoimDataStore.moimData.Members, Members];
-        return {
-          MoimDataStore: {
-            ...state.MoimDataStore,
-            moimData: {
-              ...state.MoimDataStore.moimData,
-              Members: newMembers,
-            },
-          },
-        };
-      }),
     setDescription: (description: string) =>
       set((state) => ({
         MoimDataStore: {
@@ -280,11 +285,60 @@ const useMoimStore = create<{ MoimDataStore: MoimDataStore }>((set) => ({
           moimData: { ...state.MoimDataStore.moimData, description },
         },
       })),
-    setJoin: (Join: boolean) =>
+    setisOnline: (isOnline: boolean) =>
       set((state) => ({
         MoimDataStore: {
           ...state.MoimDataStore,
-          moimData: { ...state.MoimDataStore.moimData, Join },
+          moimData: { ...state.MoimDataStore.moimData, isOnline },
+        },
+      })),
+    setOrganizer: (organizer: string) =>
+      set((state) => ({
+        MoimDataStore: {
+          ...state.MoimDataStore,
+          moimData: { ...state.MoimDataStore.moimData, organizer },
+        },
+      })),
+    setDate: (expirationDate: Date, evenDate: Date) =>
+      set((state) => ({
+        MoimDataStore: {
+          ...state.MoimDataStore,
+          moimData: {
+            ...state.MoimDataStore.moimData,
+            expirationDate,
+            evenDate,
+          },
+        },
+      })),
+    setLocation: (location: string) =>
+      set((state) => ({
+        MoimDataStore: {
+          ...state.MoimDataStore,
+          moimData: {
+            ...state.MoimDataStore.moimData,
+            location,
+          },
+        },
+      })),
+    setcategory: (category: string) =>
+      set((state) => ({
+        MoimDataStore: {
+          ...state.MoimDataStore,
+          moimData: {
+            ...state.MoimDataStore.moimData,
+            category,
+          },
+        },
+      })),
+
+    setcategoryDetail: (categoryDetail: string) =>
+      set((state) => ({
+        MoimDataStore: {
+          ...state.MoimDataStore,
+          moimData: {
+            ...state.MoimDataStore.moimData,
+            categoryDetail,
+          },
         },
       })),
     setTag: (index, value) =>
@@ -316,20 +370,39 @@ const useMoimStore = create<{ MoimDataStore: MoimDataStore }>((set) => ({
             image: "",
             title: "",
             maxpeople: 0,
-            Members: [],
             description: "",
             tag: [],
-            Join: false,
+            isOnline: false,
+            organizer: "",
+            expirationDate: new Date(),
+            evenDate: new Date(),
+            location: "",
+            category: "",
+            categoryDetail: "",
           },
           moimDetail: {
             moimdetailId: 0,
             moimId: "",
+            Members: [],
             content: "",
             minPeople: 0,
             Pay: 0,
           },
         },
       })),
+    setMembers: (Members: string) =>
+      set((state) => {
+        const newMembers = [...state.MoimDataStore.moimDetail.Members, Members];
+        return {
+          MoimDataStore: {
+            ...state.MoimDataStore,
+            moimDetail: {
+              ...state.MoimDataStore.moimDetail,
+              Members: newMembers,
+            },
+          },
+        };
+      }),
     setContent: (content: string) =>
       set((state) => ({
         MoimDataStore: {

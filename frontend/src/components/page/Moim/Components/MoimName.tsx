@@ -125,7 +125,8 @@ const MoimNameContainer = styled.div`
 `;
 
 const MoimName = () => {
-  const { moimData, setTitle, setimage } = useMoimStore().MoimDataStore;
+  const { moimData, setTitle, setimage, setisOnline } =
+    useMoimStore().MoimDataStore;
   const [preview, setPreview] = useState(moimData.image || "");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,7 +165,25 @@ const MoimName = () => {
           onChange={(e) => setTitle(e.target.value)}
         />
       </Fieldset>
-
+      <Fieldset>
+        <Legend>온/오프라인 여부</Legend>
+        <UnderlineInput
+          type="radio"
+          name="isOnline"
+          value="true"
+          checked={moimData.isOnline === true}
+          onChange={() => setisOnline(true)}
+        />
+        True
+        <UnderlineInput
+          type="radio"
+          name="isOnline"
+          value="false"
+          checked={moimData.isOnline === false}
+          onChange={() => setisOnline(false)}
+        />
+        False
+      </Fieldset>
       <Fieldset2>
         <Legend>모임 타이틀 이미지</Legend>
         <FileLabel htmlFor="file-upload">

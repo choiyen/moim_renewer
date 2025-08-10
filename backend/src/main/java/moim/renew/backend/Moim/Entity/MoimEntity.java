@@ -22,7 +22,10 @@ public class MoimEntity
     private Date evenDate;
     private String location;
     private String representImg;
+    private String description;
+    private String[] tag;
     private String category;
+    private String categoryDetail;
 
     public MoimDTO convertTo()
     {
@@ -36,6 +39,9 @@ public class MoimEntity
                 .maxPeople(this.maxPeople)
                 .title(this.title)
                 .organizer(this.organizer)
+                .categoryDetail(this.categoryDetail)
+                .description(this.description)
+                .tag(this.tag)
                 .build();
     }
     public MoimEntity convertToReNew(MoimEntity oldMoim)

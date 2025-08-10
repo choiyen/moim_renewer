@@ -4,7 +4,7 @@ CREATE TABLE user (
     password VARCHAR(255) NOT NULL,
     nickname VARCHAR(10) NOT NULL UNIQUE,
     review DECIMAL(3,1) DEFAULT 3.0,
-    Intro LONGTEXT NULL
+    Intro LONGTEXT NULL,
 );
 
 CREATE TABLE user_review (
@@ -29,13 +29,28 @@ CREATE TABLE moim (
     location VARCHAR(25),
     represent_img VARCHAR(255),
     category VARCHAR(40) NOT NULL,
-    organizer VARCHAR(50) NULL NULL
+    organizer VARCHAR(50) NOT NULL,
+    description VARCHAR(50) NOT NULL,  -- 쉼표 누락 수정
+    tag JSON,
+    category_detail VARCHAR(40) NOT NULL,  -- 카멜케이스 → 스네이크케이스 변경 추천
+    approval BOOLEAN DEFAULT FALSE         -- 쉼표 제거 (마지막 컬럼 뒤 쉼표 안 됨)
 );
 
+CREATE TABLE moim_approval (
+  moim_id VARCHAR(20) NOT NULL,
+  join_member VARCHAR(255),
+  approval_members TEXT,
+  CONSTRAINT fk_moim_id FOREIGN KEY (moim_id) REFERENCES moim(moim_id)
+          ON DELETE CASCADE
+          ON UPDATE CASCADE
+); --신규 테이블 추가
+
 CREATE TABLE moim_detail (
-    moim_id VARCHAR(20) NOT NULL PRIMARY KEY,
+    moimdetailId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    moim_id VARCHAR(20) NOT NULL,
     content LONGTEXT,
     min_people INT,
+    Pay DECIMAL(15, 2),
     CONSTRAINT fk_moim_id FOREIGN KEY (moim_id) REFERENCES moim(moim_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE

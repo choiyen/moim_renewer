@@ -146,14 +146,20 @@ export const MoimDataDummys: MoimDataDummy = {
     image: star,
     title: "주말 농구 동호회",
     maxpeople: 15,
-    Members: ["박민수", "이수진", "정현우"],
     description:
       "농구를 좋아하는 사람들이 모여 실력을 키우고 친목을 다지는 주말 모임입니다.",
     tag: ["농구", "스포츠", "운동", "취미"],
-    Join: false,
+    isOnline: false,
+    organizer: "",
+    expirationDate: new Date(),
+    evenDate: new Date(),
+    location: "",
+    category: "",
+    categoryDetail: "",
   },
   MoimDetail: {
     moimdetailId: 1,
+    Members: ["박민수", "이수진", "정현우"],
     moimId: "BASKET2025",
     content:
       "매주 토요일 오후 2시에 시내 체육관에서 연습 경기를 진행합니다. 초보부터 상급자까지 모두 환영하며, 가벼운 트레이닝과 게임 후 뒷풀이도 함께합니다.",
