@@ -5,20 +5,22 @@
 
 <mapper namespace="moim.renew.backend.MoimDetail.Mapper.MoimDetailMapper">
     <resultMap id="moimResultMap" type="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
-        <id     property="moimId"   column="moim_id"/>
+        <id property="moimId" column="moim_id"/>
         <result property="content"  column="content"/>
         <result property="minPeople"  column="min_people"/>
+        <result property="pay" column="Pay"/>
+        <result property="member" column="member"/>
     </resultMap>
     <insert id="moimofInsert" parameterType="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
-        INSERT INTO moimDetail(moimId, content, mimPeople) VALUES(#{moimId}, #{content}, #{min_people})
+        INSERT INTO moimDetail(moim_id, content, min_people,Pay) VALUES(#{moimId}, #{content}, #{minPeople}, #{pay})
     </insert>
     <update id="updatemoimdetailbyResult">
-        UPDATE moimDetail SET content = #{content}, mimPeople = #{mimPeople} WHERE moimId = #{moimId}
+        UPDATE moimDetail SET content = #{content}, min_people = #{mimPeople}, Pay = #{pay}  WHERE moim_id = #{moimId}
     </update>
     <select id="selectmoimdetailbyResult">
-        SELECT * FROM moimDetail WHERE moimId = #{moimId}
+        SELECT * FROM moimDetail WHERE moim_id = #{moimId}
     </select>
     <delete id="deletemoimdetailbyResult">
-        DELETE FROM moimDetail WHERE moimId = #{moimId}
+        DELETE FROM moimDetail WHERE moim_id = #{moimId}
     </delete>
 </mapper>

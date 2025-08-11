@@ -126,4 +126,9 @@ public class MoimService {
             }
         }
     }
+    public boolean isApproved(String moimId) {
+        Boolean approved = moimMapper.ApprovalByMoimId(moimId);
+        return approved != null && approved;
+    }
+
 }

@@ -12,8 +12,8 @@
     </resultMap>
 
     <insert id="InsertuserReview" parameterType="moim.renew.backend.UserReview.Entity.UserReviewEntity">
-        INSERT INTO userReview(id, reviewer, reviewee, score)
-        VALUES(#{id}, #{reviewer}, #{reviewee}, #{score})
+        INSERT INTO userReview(reviewer, reviewee, score)
+        VALUES(#{reviewer}, #{reviewee}, #{score})
     </insert>
 
     <update id="UpdateuserReview" parameterType="string">

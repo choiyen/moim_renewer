@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="moim.renew.backend.Approval.Mapper.ApprovalMapper">
+
+    <resultMap id="moimApprovalResultMap" type="moim.renew.backend.Approval.Entity.ApprovalEntity">
+        <id     property="moimId"       column="moim_id"/>
+        <result property="joinmember"   column="join_member" typeHandler="moim.renew.backend.Approval.Handler.StringArrayJsonTypeHandler"/>
+        <result property="approval"     column="approval_members" typeHandler="moim.renew.backend.Approval.Handler.StringArrayJsonTypeHandler"/>
+    </resultMap>
+
+    <!-- INSERT -->
+    <insert id="moimApprovalofInsert" parameterType="moim.renew.backend.Approval.Entity.ApprovalEntity">
+        INSERT INTO moim_approval (moim_id, join_member, approval_members)
+        VALUES (#{moimId}, #{joinmember}, #{approval})
+    </insert>
+
+    <!-- UPDATE -->
+    <update id="updatemoimApprovalbyResult" parameterType="moim.renew.backend.Approval.Entity.ApprovalEntity">
+        UPDATE moim_approval
+        SET join_member = #{joinmember},
+        approval_members = #{approval}
+        WHERE moim_id = #{moimId}
+    </update>
+
+    <!-- SELECT -->
+    <select id="selectmoimApprovalbyResult" parameterType="string" resultMap="moimApprovalResultMap">
+        SELECT * FROM moim_approval
+        WHERE moim_id = #{moimId}
+    </select>
+
+    <!-- DELETE -->
+    <delete id="deletemoimApprovalbyResult" parameterType="string">
+        DELETE FROM moim_approval
+        WHERE moim_id = #{moimId}
+    </delete>
+
+</mapper>

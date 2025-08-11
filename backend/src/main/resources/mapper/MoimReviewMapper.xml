@@ -12,19 +12,19 @@
     </resultMap>
 
     <insert id="InsertofmoimReview" parameterType="moim.renew.backend.MoimReview.Entity.MoimReviewEntity">
-        INSERT INTO moimReView(moimId, reviewer, score, comment) VALUES(#{moimId},#{reviewer}, #{scorec}, #{comment})
+        INSERT INTO moimReView(moimId, reviewer_nickname, score, comment) VALUES(#{moimId},#{reviewer}, #{scorec}, #{comment})
     </insert>
     <update id="updateofscore" parameterType="moim.renew.backend.MoimReview.Entity.MoimReviewEntity">
-        UPDATE moimReView SET score = #{score} WHERE moimId = #{moimId} AND reviewer = #{reviewer}
+        UPDATE moimReView SET score = #{score} WHERE moimId = #{moimId} AND reviewer_nickname = #{reviewer}
     </update>
     <update id="updateofcomment" parameterType="moim.renew.backend.MoimReview.Entity.MoimReviewEntity">
-        UPDATE moimReView SET comment = #{comment} WHERE moimId = #{moimId} AND reviewer = #{reviewer}
+        UPDATE moimReView SET comment = #{comment} WHERE moimId = #{moimId} AND reviewer_nickname = #{reviewer}
     </update>
     <update id="updateofcommentandscore" parameterType="moim.renew.backend.MoimReview.Entity.MoimReviewEntity">
-        UPDATE moimReView SET comment = #{comment}, score = #{score} WHERE moimId = #{moimId} AND reviewer = #{reviewer}
+        UPDATE moimReView SET comment = #{comment}, score = #{score} WHERE moimId = #{moimId} AND reviewer_nickname = #{reviewer}
     </update>
     <delete id="deleteofmoimReview" parameterType="moim.renew.backend.MoimReview.Entity.MoimReviewEntity">
-        DELETE FROM moimReview WHERE moimId = #{moimId} AND reviewer = #{reviewer}
+        DELETE FROM moimReview WHERE moimId = #{moimId} AND reviewer_nickname = #{reviewer}
     </delete>
     <select id="getAverageScoreByMoimId" parameterType="string" resultType="double">
         SELECT AVG(score)

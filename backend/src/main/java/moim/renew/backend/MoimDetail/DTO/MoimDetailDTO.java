@@ -2,6 +2,8 @@ package moim.renew.backend.MoimDetail.DTO;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Builder
 @EqualsAndHashCode
@@ -14,4 +16,5 @@ public class MoimDetailDTO
     private String content;
     private Integer minPeople;
     private Double Pay;
+    private List<String> Member;
 }

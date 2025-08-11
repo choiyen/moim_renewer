@@ -29,11 +29,11 @@ public class MoimDTO
     @Max(value = 100, message = "최대 인원은 100명을 초과할 수 없습니다.")
     private Integer maxPeople;
 
-    @NotNull(message = "모집 마감일은 필수입니다.")
-    private Date expirationDate;
-
     @NotNull(message = "모임의 주최자 설정은 필수입니다.")
     private String organizer;
+
+    @NotNull(message = "모집 마감일은 필수입니다.")
+    private Date expirationDate;
 
     @NotNull(message = "모임 예정일은 필수입니다.")
     private Date evenDate;
@@ -50,14 +50,18 @@ public class MoimDTO
 
     @NotBlank(message = "카테고리는 필수입니다.")
     @Size(max = 40, message = "카테고리는 최대 40자까지 입력 가능합니다.")
-    private String description;
-
-    private String[] tag;//어떻게 처리할 지 고민중
+    private String categoryDetail;
 
     @NotBlank(message = "카테고리는 필수입니다.")
     @Size(max = 40, message = "카테고리는 최대 40자까지 입력 가능합니다.")
-    private String categoryDetail;
+    private String description;
 
+    @NotNull(message = "tag 배열은 null일 수 없습니다.")
+    @Size(max = 50, message = "tag 배열은 최대 50개 이하여야 합니다.")
+    private String[] tag;//어떻게 처리할 지 고민중
+
+    @NotNull(message = "tag 배열은 null일 수 없습니다.")
+    private boolean approval;
 
 
     public MoimEntity convertTo()
@@ -75,6 +79,7 @@ public class MoimDTO
                 .tag(this.tag)
                 .description(this.description)
                 .organizer(this.organizer)
+                .approval(this.approval)
                 .build();
     }
 }

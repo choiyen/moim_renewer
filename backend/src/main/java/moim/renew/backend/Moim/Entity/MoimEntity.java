@@ -26,37 +26,44 @@ public class MoimEntity
     private String[] tag;
     private String category;
     private String categoryDetail;
+    private boolean approval;
 
     public MoimDTO convertTo()
     {
         return MoimDTO.builder()
                 .moimId(this.moimId)
-                .category(this.category)
+                .title(this.title)
+                .isOnline(this.isOnline)
+                .maxPeople(this.maxPeople)
+                .organizer(this.organizer)
                 .evenDate(this.evenDate)
                 .expirationDate(this.expirationDate)
-                .isOnline(this.isOnline)
                 .location(this.location)
-                .maxPeople(this.maxPeople)
-                .title(this.title)
-                .organizer(this.organizer)
-                .categoryDetail(this.categoryDetail)
+                .representImg(this.representImg)
                 .description(this.description)
                 .tag(this.tag)
+                .category(this.category)
+                .categoryDetail(this.categoryDetail)
+
                 .build();
     }
     public MoimEntity convertToReNew(MoimEntity oldMoim)
     {
         return MoimEntity.builder()
                 .moimId(oldMoim.getMoimId())
-                .category(this.category)
+                .title(this.title)
+                .isOnline(this.isOnline)
+                .maxPeople(this.maxPeople)
+                .organizer(this.organizer)
                 .evenDate(this.evenDate)
                 .expirationDate(this.expirationDate)
-                .isOnline(this.isOnline)
                 .location(this.location)
                 .representImg(this.representImg)
-                .maxPeople(this.maxPeople)
-                .title(this.title)
-                .organizer(this.organizer)
+                .description(this.description)
+                .tag(this.tag)
+                .category(this.category)
+                .categoryDetail(this.categoryDetail)
+                .approval(this.approval)
                 .build();
     }
 }

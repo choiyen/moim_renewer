@@ -12,7 +12,7 @@
         <package name="moim.renew.backend.MoimDetail.Entity"/>
         <package name="moim.renew.backend.MoimReview.Entity"/>
         <package name="moim.renew.backend.Favorite.Entity"/>
-
+        <package name="moim.renew.backend.Approval.Entity"/>
     </typeAliases>
 
     <mappers>
@@ -22,6 +22,8 @@
         <mapper resource="mapper/MoimDetailMapper.xml"/>
         <mapper resource="mapper/MoimReviewMapper.xml"/>
         <mapper resource="mapper/MoimFavoriteMapper.xml"/>
+        <mapper resource="mapper/MoimApprovalMapper.xml"/>
+
     </mappers>
     
 </configuration>

@@ -6,12 +6,12 @@
 <mapper namespace="moim.renew.backend.Favorite.Mapper.FavoriteMapper">
 
     <resultMap id="favoriteResultMap" type="moim.renew.backend.Favorite.Entity.FavoriteEntity">
-        <id     property="moimId"   column="moim_id"/>
-        <id     property="userId"   column="user_id"/>
         <id     property="favoriteId" column="favoriteId"/>
+        <result property="moimId"   column="moim_id"/>
+        <result property="userId"   column="user_id"/>
     </resultMap>
     <insert id="Insertfavoriteofmoim" parameterType="string">
-        INSERT INTO favorite(moimId, userId) VALUES(moimId = #{moimId}, userId = #{userId})
+        INSERT INTO favorite(moim_id, user_id) VALUES(#{moimId}, #{userId})
     </insert>
     <delete id="Deleteoffavorite" parameterType="string">
         DELETE FROM favorite WHERE moimId = #{moimId} AND userId = #{userId}
@@ -20,6 +20,6 @@
         SELECT FROM favorite WHERE user_id = #{userId}
     </select>
     <select id="selectofmoimId" parameterType="string">
-        SELECT FROM favorite WHERE moimId = #{moimId}
+        SELECT FROM favorite WHERE moim_id = #{moimId}
     </select>
 </mapper>

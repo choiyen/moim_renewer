@@ -13,5 +13,5 @@ public interface MoimMapper
     void InsertMoim(MoimEntity moim);
     void DeleteMoim(String moimId, String organizer);
     void UpdateMoim(MoimEntity moim);
-
+    Boolean ApprovalByMoimId(String moimId);
 }

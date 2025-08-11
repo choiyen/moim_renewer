@@ -16,7 +16,11 @@
         <result property="location"     column="location"/>
         <result property="representImg" column="represent_img"/>
         <result property="category"     column="category"/>
-        <result property="organizer" column="organizer" />
+        <result property="organizer"    column="organizer" />
+        <result property="description"  column="description"/>
+        <result property="tag" column="tag" typeHandler="moim.renew.backend.Approval.Handler.StringArrayJsonTypeHandler"/>
+        <result property="CategoryDetail" column="category_detail" />
+        <result property="approval" column="approval"/>
     </resultMap>
 
     <!-- INSERT -->
@@ -24,11 +28,12 @@
         INSERT INTO moim (
         moim_id, title, is_online, max_people,
         expiration_date, even_date, location,
-        represent_img, category
+        represent_img, category,organizer,description, tag,category_detail,approval
         ) VALUES (
         #{moimId}, #{title}, #{isOnline}, #{maxPeople},
         #{expirationDate}, #{evenDate}, #{location},
-        #{representImg}, #{category}
+        #{representImg}, #{category}, #{organizer},
+        #{description},#{tag},#{category_detail},#{approval}
         )
     </insert>
 
@@ -44,6 +49,11 @@
         location = #{location},
         represent_img = #{representImg},
         category = #{category}
+        organizer = #{organizer},
+        description =  #{description},
+        tag = #{tag},
+        category_detail = #{category_detail},
+        approval = #{approval}
         WHERE moim_id = #{moimId}
     </update>
 
@@ -58,6 +68,10 @@
     <select id="SelectAllMoims" resultMap="moimResultMap">
         SELECT *
         FROM moim
+    </select>
+
+    <select id="ApprovalByMoimId" resultType="boolean" parameterType="string">
+        SELECT approval FROM moim WHERE moim_id = #{moimId}
     </select>
 
     <!-- DELETE -->
