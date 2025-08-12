@@ -3,6 +3,7 @@ CREATE TABLE `users` (
     password VARCHAR(255) NOT NULL,
     nickname VARCHAR(10) NOT NULL UNIQUE,
     review DECIMAL(3,1) DEFAULT 3.0,
+    provider VARCHAR(255),
     Intro LONGTEXT NULL
 );
 

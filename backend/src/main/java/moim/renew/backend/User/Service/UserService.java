@@ -10,6 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.module.FindException;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -105,5 +108,74 @@ public class UserService
         }
         return null;
     }
+    public UserDTO UserCreate(Map<String, Object> userInfo, String oauthType) {
+        // 1. userInfo에서 이메일, 이름 등 추출
+        String email;
+        String name;
+        String socialId;
 
+        switch(oauthType.toLowerCase())
+        {
+            case "kakao":
+                Map<String, Object> kakaoAccount = (Map<String, Object>) userInfo.get("kakao_account");
+                email = (String) kakaoAccount.get("email");
+                Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");  // 여기서 캐스팅
+                name = (String) profile.get("nickname");
+                socialId = String.valueOf(userInfo.get("id"));
+            case "naver":
+                Map<String, Object> naverResp = (Map<String, Object>) userInfo.get("response");
+                email = (String) naverResp.get("email");
+                name = (String) naverResp.get("name");
+                socialId = (String) naverResp.get("id");
+                break;
+            case "google":
+                email = (String) userInfo.get("email");
+                name = (String) userInfo.get("name");
+                socialId = (String) userInfo.get("sub");
+                break;
+            case "facebook":
+                email = (String) userInfo.get("email");
+                name = (String) userInfo.get("nasome");
+                socialId = (String) userInfo.get("id");
+                break;
+            default:
+                throw new IllegalArgumentException("지원하지 않는 OAuth 타입입니다.");
+        }
+
+        // 2. 기존 회원 여부 조회
+        UserEntity existingUser = userMapper.FindofUserID(email);
+        if (existingUser != null && existingUser.getProvider().equals(oauthType.toLowerCase())) {
+            // 이미 가입된 사용자라면 그대로 반환
+            return existingUser.convertTo();
+        }
+
+        // 3. 신규 회원 생성
+        UserEntity newUser = UserEntity.builder()
+                .user_id(email)
+                .Intro(null)
+                .provider(socialId)
+                .nickname(name)
+                .review(null)
+                .password(generateRandomPassword())
+                .build();
+
+        userMapper.InsertUser(newUser);
+
+        UserEntity userEntity = userMapper.FindofUserID(email);
+        if(userEntity != null)
+        {
+            return userEntity.convertTo();
+        }
+        else
+        {
+            throw new InsertException("OAuth2 정보는 가져왔으나, 회원가입 정보를 DB에 등록하지 못했습니다.");
+        }
+
+    }
+
+    private String generateRandomPassword()
+    {
+        // 랜덤 문자열 생성 로직 (예: UUID 등)
+        return UUID.randomUUID().toString();
+    }
 }

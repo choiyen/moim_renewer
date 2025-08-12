@@ -256,6 +256,7 @@ const useMoimStore = create<{ MoimDataStore: MoimDataStore }>((set) => ({
       Members: [],
       minPeople: 0,
       Pay: 0,
+      Approval: false,
     },
     setimage: (image: string) =>
       set((state) => ({
@@ -387,6 +388,7 @@ const useMoimStore = create<{ MoimDataStore: MoimDataStore }>((set) => ({
             content: "",
             minPeople: 0,
             Pay: 0,
+            Approval: false,
           },
         },
       })),
@@ -422,6 +424,13 @@ const useMoimStore = create<{ MoimDataStore: MoimDataStore }>((set) => ({
         MoimDataStore: {
           ...state.MoimDataStore,
           moimDetail: { ...state.MoimDataStore.moimDetail, Pay },
+        },
+      })),
+    setApproval: (Approval: boolean) =>
+      set((state) => ({
+        MoimDataStore: {
+          ...state.MoimDataStore,
+          moimDetail: { ...state.MoimDataStore.moimDetail, Approval },
         },
       })),
   },

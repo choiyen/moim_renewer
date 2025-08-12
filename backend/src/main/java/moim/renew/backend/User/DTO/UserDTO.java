@@ -17,6 +17,7 @@ public class UserDTO
     private String password;
     private String nickname;
     private String Intro;
+    private String provider;
     private Float review = 3.0f; // 기본값 설정
 
     public UserEntity convertTo()
@@ -28,6 +29,7 @@ public class UserDTO
                 .nickname(this.nickname)
                 .review(this.review)
                 .Intro(this.Intro)
+                .provider(this.provider)
                 .build();
     }
     public UserTokenDTO convertTo(String Token)

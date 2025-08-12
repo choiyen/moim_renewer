@@ -26,10 +26,11 @@ public class WebSecurityConfig
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    private String PassPath = Arrays.toString(new String[]{
+    private static final String[] PASS_PATH = {
             "/api/Moim/**",
             "/api/user/**",
-    });
+            "/api/Auth/**"
+    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
@@ -37,7 +38,7 @@ public class WebSecurityConfig
                 .csrf(CsrfConfigurer::disable)
                 .sessionManagement(
                         sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers(PassPath).permitAll().anyRequest().authenticated());
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers(PASS_PATH).permitAll().anyRequest().authenticated());
         //로그인, 환율, 소켓만 비로그인 시 접속 가능 나머지는 jwt 토큰 필요
         http.addFilterBefore(jwtAuthenticationFilter, CorsFilter.class);
 

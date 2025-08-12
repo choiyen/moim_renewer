@@ -25,8 +25,6 @@ public class MoimDetailService
   @Autowired
   private MoimDetailMapper moimDetailMapper;
 
-  @Autowired
-  private ApprovalService approvalService;
 
   public List<Object> JoinMoim(String moimId, String member)
   {

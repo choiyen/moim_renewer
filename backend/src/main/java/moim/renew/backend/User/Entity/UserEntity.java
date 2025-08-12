@@ -16,6 +16,7 @@ public class UserEntity
     private String password;
     private String nickname;
     private String Intro;
+    private String provider;
     private Float review = 3.0f; // 기본값 설정
 
     public UserDTO convertTo()
@@ -26,6 +27,7 @@ public class UserEntity
                 .review(this.review)
                 .password(this.password)
                 .Intro(this.Intro)
+                .provider(this.provider)
                 .build();
     }
     public UserEntity convertToReNew(UserEntity oldUser)
@@ -36,6 +38,7 @@ public class UserEntity
                 .nickname(this.nickname)
                 .review(oldUser.review)
                 .Intro(this.Intro)
+                .provider(oldUser.provider)
                 .build();
     }
     public UserEntity convertToPassword(PasswordEncoder passwordEncoder)
