@@ -40,7 +40,7 @@ public class TokenProvider {
         // 기한 : 지금으로부터 1시간
         // 생성
         return Jwts.builder().signWith(SignatureAlgorithm.HS512, jwtProperties.getSecretKey())
-                .setSubject(userEntity.getUser_id())
+                .setSubject(userEntity.getUserId())
                 .setIssuer(jwtProperties.getIssuer())
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)

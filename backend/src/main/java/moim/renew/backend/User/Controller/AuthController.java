@@ -44,22 +44,24 @@ public class AuthController
             Map<String, Object> userInfo = service.requestUserInfo(accessToken);
 
             String userId = extractUserIdFrom(userInfo, oAuth2Type);
+            System.out.println("ssss "+ userId);
             UserDTO userDTO = userService.FindUserID(userId);
-
             if(userDTO == null)
             {
+                System.out.println("ooo" +userDTO);
                 userDTO = userService.UserCreate(userInfo,oAuth2Type);
             }
 
             String jwt = tokenProvider.createToken(userDTO.convertTo());
             //반환 받은 UserDTO를 토대로 jwt 토큰 생성
 
-            return ResponseEntity.ok(responseDTO.Response("success", "OAuth2 인증 완료", Collections.singletonList(Map.of("token", jwt, "user", userInfo))));
+            return ResponseEntity.ok().body(responseDTO.Response("success", "OAuth2 인증 완료", Collections.singletonList(Map.of("token", "null", "user", userInfo))));
             //생성한 JWT 토큰을 프론트 엔드로 보냄
         }
         catch (Exception e)
         {
-            return ResponseEntity.badRequest().body(responseDTO.Response("error", e.getMessage()));
+            System.out.println(e);
+            return ResponseEntity.badRequest().body(responseDTO.Response("errorjjjjj", e.getMessage()));
         }
     }
     // OAuth2를 제공하는 서버에서 반환한 토큰에서 서버에 저장할 값을 반환 받는 코드

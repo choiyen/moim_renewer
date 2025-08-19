@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import { useMoimStore } from "../../../../types/State";
-import { shallow } from "zustand/shallow";
 
 const Container = styled.div`
   min-height: calc(90vh - 100px);

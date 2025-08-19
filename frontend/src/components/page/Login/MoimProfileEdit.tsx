@@ -18,7 +18,6 @@ const MoimProfileEdit = () => {
         <input type="text" id="nickname" />
         <button>중복확인</button>
       </ProfileEditContainer>
-      {/* Add your form or edit components here */}
     </ButtonWrapper>
   );
 };

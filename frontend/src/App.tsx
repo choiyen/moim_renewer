@@ -15,11 +15,12 @@ import MoimProfile from "./components/page/Login/MoimProFile";
 import MoimReview from "./components/page/Moim/MoimReview";
 import MoimLogin from "./components/page/Login/MoimLogin";
 import MoimSignUp from "./components/page/Login/MoimSignUp";
-import MoimMap from "./components/page/Main/MoimMap";
 import MoimProfileEdit from "./components/page/Login/MoimProfileEdit";
 import MoimConsult from "./components/page/Consult/MoimConsult";
 import MoimDetail from "./components/page/Moim/MoimDetail";
 import ConsultInsert from "./components/page/Consult/ConsultInsert";
+import MoimMap from "./components/page/Map/MoimMap";
+import ConsultSelect from "./components/page/Consult/ConsultSelect";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       { path: "/moim/insert", element: <MoimInsert /> }, // 모임 등록 페이지
       { path: "/moim/edit", element: <MoimEdit /> }, // 모임 수정 페이지
       { path: "/moim/detail/:id", element: <MoimDetail /> }, // 모임 상세 페이지
+      {
+        path: "/consult/select/:id",
+        element: <ConsultSelect />,
+      },
       {
         path: "/moim/review/:id",
         element: <MoimReview Titleday={new Date()} />,

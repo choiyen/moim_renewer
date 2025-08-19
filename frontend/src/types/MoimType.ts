@@ -3,7 +3,6 @@ interface MoimType {
   Category: string;
   SubCategory: string[];
 }
-
 export const hopper: MoimType[] = [
   {
     id: 1,

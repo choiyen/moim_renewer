@@ -12,7 +12,6 @@ import moim.renew.backend.config.Exception.InsertException;
 import moim.renew.backend.config.Exception.SelectException;
 import moim.renew.backend.config.Exception.UpdateException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -175,11 +174,33 @@ public class UserController
             return ResponseEntity.ok().body(responseDTO.Response("error", e.getMessage()));
         }
     }
+
+    @GetMapping("/check")
+    public ResponseEntity<?> EmailCheck(@RequestParam String email)
+    {
+        try
+        {
+            boolean bool = userService.getUserID(email);
+            if(bool)
+            {
+                return ResponseEntity.ok().body(responseDTO.Response("checknot", "이메일 중복!!"));
+            }
+            else
+            {
+                return ResponseEntity.ok().body(responseDTO.Response("success", "이메일 중복확인"));
+            }
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.badRequest().body(responseDTO.Response("error", e.getMessage()));
+        }
+    }
+
     // 로그인
     @PostMapping("/signin")
     public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO){
         try{
-            UserEntity user = userService.getByCredentials(userDTO.getUser_id(), userDTO.getPassword(), passwordEncoder);
+            UserEntity user = userService.getByCredentials(userDTO.getUserId(), userDTO.getPassword(), passwordEncoder);
             if(user != null)
             {
                 String token = tokenProvider.createToken(user);

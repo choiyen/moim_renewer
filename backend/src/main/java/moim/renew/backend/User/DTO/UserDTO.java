@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @ToString
 public class UserDTO
 {
-    private String user_id;
+    private String userId;
     private String password;
     private String nickname;
     private String Intro;
@@ -24,7 +24,7 @@ public class UserDTO
     {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return UserEntity.builder()
-                .user_id(this.user_id)
+                .userId(this.userId)
                 .password(passwordEncoder.encode(this.password))
                 .nickname(this.nickname)
                 .review(this.review)

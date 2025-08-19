@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Service("google")
@@ -35,20 +36,35 @@ public class GoogleOAuth2Service implements OAuth2Service
             conn.setDoOutput(true);
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-            String params = "code=" + URLEncoder.encode(code, "UTF-8") +
-                    "&client_id=" + URLEncoder.encode(clientId, "UTF-8") +
-                    "&client_secret=" + URLEncoder.encode(clientSecret, "UTF-8") +
-                    "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8") +
+            String params = "code=" + URLEncoder.encode(code, StandardCharsets.UTF_8) +
+                    "&client_id=" + URLEncoder.encode(clientId, StandardCharsets.UTF_8) +
+                    "&client_secret=" + URLEncoder.encode(clientSecret, StandardCharsets.UTF_8) +
+                    "&redirect_uri=" + URLEncoder.encode(redirectUri, StandardCharsets.UTF_8) +
                     "&grant_type=authorization_code";
+            System.out.println("Request params: " + params);
 
             try (OutputStream os = conn.getOutputStream()) {
-                os.write(params.getBytes());
+                os.write(params.getBytes(StandardCharsets.UTF_8));
             }
 
-            InputStream inputStream = conn.getInputStream();
-            Map<String, Object> response = objectMapper.readValue(inputStream, Map.class);
-            return (String) response.get("access_token");
-        } catch (Exception e) {
+            int status = conn.getResponseCode();
+            InputStream inputStream = (status >= 200 && status < 300)
+                    ? conn.getInputStream()
+                    : conn.getErrorStream();
+
+            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            System.out.println("Google Token API Response: " + body);
+
+            if (status >= 200 && status < 300) {
+                Map<String, Object> response = objectMapper.readValue(body, Map.class);
+                return (String) response.get("access_token");
+            } else {
+                throw new RuntimeException("Google token 요청 실패: " + body);
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println("dfdfs"+ e);
             throw new RuntimeException("Google access token 요청 실패", e);
         }
     }

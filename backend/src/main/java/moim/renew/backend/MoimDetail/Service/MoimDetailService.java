@@ -32,9 +32,9 @@ public class MoimDetailService
       MoimDetailEntity moimDetailEntity = moimDetailMapper.selectmoimdetailbyResult(moimId);
      if(!moimDTO.isApproval())
      {
-         if(moimDTO.getMaxPeople() <= moimDetailEntity.getMember().size())
+         if(moimDTO.getMaxPeople() <= moimDetailEntity.getMember().length)
          {
-             List<String> list = new ArrayList<>(moimDetailEntity.getMember());
+             List<String> list = new ArrayList<>(List.of(moimDetailEntity.getMember()));
              list.add(member);
              moimDetailMapper.JoinMoim(list);
              MoimDetailEntity moimDetailEntity1 = moimDetailMapper.selectmoimdetailbyResult(moimId);

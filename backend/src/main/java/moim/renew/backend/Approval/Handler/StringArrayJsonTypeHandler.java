@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.MappedTypes;
 
 import java.sql.*;
 
@@ -14,6 +15,7 @@ import java.sql.*;
  * - DB에서 읽을 때는 JSON 문자열을 다시 String[]로 변환
  * - 특정 칼럼 매핑 시, MyBatis 매퍼 XML에서 typeHandler 속성으로 이 클래스를 지정해야 함
  */
+@MappedTypes(String[].class)
 public class StringArrayJsonTypeHandler extends BaseTypeHandler<String[]> {
 
     // JSON 직렬화/역직렬화를 위해 ObjectMapper 사용

@@ -6,39 +6,38 @@
 <mapper namespace="moim.renew.backend.User.Mapper.UserMapper">
 
     <resultMap id="userResultMap" type="moim.renew.backend.User.Entity.UserEntity">
-        <id     property="userid"    column="user_id"/>
+        <id     property="userId"    column="user_id"/>
         <result property="password" column="password"/>
         <result property="nickname" column="nickname"/>
         <result property="review" column="review"/>
-        <result property="email" column="email"/>
         <result property="Intro" column="Intro"/>
     </resultMap>
 
     <insert id="InsertUser" parameterType="moim.renew.backend.User.Entity.UserEntity">
-        INSERT INTO USER(user_id, password, nickname, review, email, Intro)
-        VALUES(#{userid}, #{password}, #{nickname}, #{review}, #{email}, #{Intro})
+        INSERT INTO users(user_id, password, nickname, review, Intro)
+        VALUES(#{userId}, #{password}, #{nickname}, #{review}, #{Intro})
     </insert>
 
     <update id="UpdateUser" parameterType="moim.renew.backend.User.Entity.UserEntity">
-        UPDATE USER
+        UPDATE users
         SET password = #{password}, nickname = #{nickname}, review = #{review}, Intro = #{Intro}
-        WHERE user_id = #{userid}
+        WHERE user_id = #{userId}
     </update>
 
     <delete id="DeleteUser" parameterType="map">
-        DELETE FROM USER WHERE user_id = #{user_id} AND password = #{password}
+        DELETE FROM users WHERE user_id = #{userId} AND password = #{password}
     </delete>
 
-    <select id="FindofUserID" parameterType="string" resultType="string">
-        SELECT user_id FROM USER WHERE email = #{email}
-    </select>
-
     <update id="UpdatePasswordByEmail" parameterType="map">
-        UPDATE USER
+        UPDATE users
         SET password = #{password}
-        WHERE email = #{email}
+        WHERE user_id = #{userId}
     </update>
     <select id="getUserID" parameterType="string" resultType="int">
-        SELECT COUNT(*) FROM USER WHERE user_id = #{userId}
+        SELECT COUNT(*) FROM users WHERE user_id = #{userId}
+    </select>
+
+    <select id="FindUserID" parameterType="string" resultType="moim.renew.backend.User.Entity.UserEntity">
+        SELECT * FROM users WHERE user_id = #{userId}
     </select>
 </mapper>

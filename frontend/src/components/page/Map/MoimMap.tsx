@@ -12,7 +12,7 @@ const MoimMap = () => {
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
-      "//dapi.kakao.com/v2/maps/sdk.js?appkey=28f6c27651565b4d9090a3f542951474&autoload=false";
+      "//dapi.kakao.com/v2/maps/sdk.js?appkey=28f6c27651565b4d9090a3f542951474w&autoload=false";
     script.async = true;
 
     script.onload = () => {

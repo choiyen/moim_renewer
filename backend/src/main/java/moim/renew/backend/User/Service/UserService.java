@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.lang.module.FindException;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,9 +19,9 @@ public class UserService
     @Autowired
     private UserMapper userMapper;
 
-    public UserDTO FindUserID(String Email)
+    public UserDTO FindUserID(String userId)
     {
-        UserEntity userEntity = userMapper.FindofUserID(Email);
+        UserEntity userEntity = userMapper.FindUserID(userId);
         if(userEntity != null)
         {
             log.info("정상적으로 User 정보를 찾는데 성공하였습니다.");
@@ -32,14 +30,14 @@ public class UserService
         else
         {
             log.error("유저 정보를 찾는데 실패하였습니다. 아무래도 JWT 토큰이 만료된 것 같아요");
-            throw new FindException("해당 이메일을 가진 User 정보를 찾을 수 없습니다.");
+            return null;
         }
     }
     public UserDTO UserIDInsert(UserDTO userDTO, PasswordEncoder passwordEncoder)
     {
         UserEntity userEntity = userDTO.convertTo().convertToPassword(passwordEncoder);
         userMapper.InsertUser(userEntity);
-        UserDTO userDTO2 = FindUserID(userDTO.getUser_id());
+        UserDTO userDTO2 = FindUserID(userDTO.getUserId());
         if(userDTO2 == null)
         {
             log.error("User 정보를 생성하는데 실패하였습니다.");
@@ -55,7 +53,7 @@ public class UserService
     public Boolean UserDelete(String Email, String password, PasswordEncoder passwordEncoder)
     {
         userMapper.DeleteUser(Email, passwordEncoder.encode(password));
-        UserEntity userEntity = userMapper.FindofUserID(Email);
+        UserEntity userEntity = userMapper.FindUserID(Email);
         if(userEntity != null)
         {
             log.error("정상적으로 User 정보가 삭제되지 않았습니다.");
@@ -70,7 +68,7 @@ public class UserService
     public Boolean UserPasswordChange(String Email, String Password, PasswordEncoder passwordEncoder)
     {
         userMapper.UpdatePasswordByEmail(Email, passwordEncoder.encode(Password));
-        UserEntity userEntity = userMapper.FindofUserID(Email);
+        UserEntity userEntity = userMapper.FindUserID(Email);
         if(passwordEncoder.matches(Password, userEntity.getPassword()))
         {
             throw new InsertException("정상적으로 User 정보가 삭제되지 않았습니다.");
@@ -82,11 +80,11 @@ public class UserService
     }
     public UserDTO UserIDUpdate(UserDTO NewDTO, PasswordEncoder passwordEncoder)
     {
-        UserDTO OldDTO = FindUserID(NewDTO.getUser_id());
+        UserDTO OldDTO = FindUserID(NewDTO.getUserId());
         UserEntity userEntity = NewDTO.convertTo().convertToReNew(OldDTO.convertTo());
         UserEntity EncodingEntity = userEntity.convertToPassword(passwordEncoder);
         userMapper.UpdateUser(EncodingEntity);
-        UserDTO RenewUserDTO = FindUserID(EncodingEntity.getUser_id());
+        UserDTO RenewUserDTO = FindUserID(EncodingEntity.getUserId());
         if(RenewUserDTO.equals(EncodingEntity.convertTo()))
         {
             return RenewUserDTO;
@@ -98,11 +96,18 @@ public class UserService
     }
     public Boolean getUserID(String id)
     {
-        return userMapper.getUserID(id);
+        int i = userMapper.getUserID(id);
+        if(i > 0) {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // 로그인
     public UserEntity getByCredentials(String email, String password, PasswordEncoder passwordEncoder) {
-        UserEntity originalUser = userMapper.FindofUserID(email);
+        UserEntity originalUser = userMapper.FindUserID(email);
         if(originalUser != null && passwordEncoder.matches(password, originalUser.getPassword())) {
             return originalUser;
         }
@@ -143,7 +148,7 @@ public class UserService
         }
 
         // 2. 기존 회원 여부 조회
-        UserEntity existingUser = userMapper.FindofUserID(email);
+        UserEntity existingUser = userMapper.FindUserID(email);
         if (existingUser != null && existingUser.getProvider().equals(oauthType.toLowerCase())) {
             // 이미 가입된 사용자라면 그대로 반환
             return existingUser.convertTo();
@@ -151,7 +156,7 @@ public class UserService
 
         // 3. 신규 회원 생성
         UserEntity newUser = UserEntity.builder()
-                .user_id(email)
+                .userId(email)
                 .Intro(null)
                 .provider(socialId)
                 .nickname(name)
@@ -161,7 +166,7 @@ public class UserService
 
         userMapper.InsertUser(newUser);
 
-        UserEntity userEntity = userMapper.FindofUserID(email);
+        UserEntity userEntity = userMapper.FindUserID(email);
         if(userEntity != null)
         {
             return userEntity.convertTo();

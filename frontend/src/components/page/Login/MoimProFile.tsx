@@ -3,6 +3,7 @@ import star from "../../comon/frame/image/star.png";
 import PasswordModal from "../Model/PasswordModel";
 import { useNavigate } from "react-router-dom";
 import { useModelStore } from "../../../types/State";
+import { useEffect } from "react";
 
 const ProfileWrapper = styled.img`
   width: 200px;
@@ -179,6 +180,15 @@ const MoimProfile = () => {
     console.log(currentPw, newPw, confirmPw);
     useModelStore.getState().setPasswordModalOpen(false);
   };
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      nativegate("/login"); // 토큰 없음 → 로그인으로
+      return;
+    }
+  }, [nativegate]);
+
   return (
     <div
       style={{

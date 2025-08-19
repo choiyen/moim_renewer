@@ -4,6 +4,8 @@ import { FaGoogle } from "react-icons/fa";
 import { SiNaver, SiKakao } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import { useLoginStore } from "../../../types/State";
+import { GET } from "../../comon/axios/axiosInstance";
+import { useEffect } from "react";
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -97,10 +99,68 @@ const SignupButton = styled.button`
     width: 60vw; // 모바일에서는 크게
   }
 `;
+const OAUTH2_CONFIG = {
+  kakao: {
+    authorizeUrl: "https://kauth.kakao.com/oauth/authorize",
+    clientId: import.meta.env.VITE_KOKAO_ID,
+    redirectUri: "http://localhost:5173/login?OAuth2Type=kakao",
+    responseType: "code",
+    scope: "",
+  },
+  google: {
+    authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+    clientId: import.meta.env.VITE_GOOGLE_ID,
+    redirectUri: "http://localhost:5173/login?OAuth2Type=google",
+    responseType: "code",
+    scope: "openid email profile",
+  },
+  naver: {
+    authorizeUrl: "https://nid.naver.com/oauth2.0/authorize",
+    clientId: import.meta.env.VITE_NAVER_ID,
+    redirectUri: "http://localhost:5173/login?OAuth2Type=naver",
+    responseType: "code",
+    scope: "",
+    state: () => Math.random().toString(36).substring(2, 15), // CSRF 방지
+  },
+};
 
 const MoimLogin = () => {
-  const defaultUrl = import.meta.env.VITE_DEFAULT_URL;
   const navigate = useNavigate();
+  const handleAuth = (OAuth2Type: "kakao" | "google" | "naver") => {
+    const config = OAUTH2_CONFIG[OAuth2Type];
+    if (!config) {
+      console.error("지원하지 않는 OAuth2 제공자:", OAuth2Type);
+      return;
+    }
+
+    let url =
+      `${config.authorizeUrl}?client_id=${config.clientId}` +
+      `&redirect_uri=${encodeURIComponent(config.redirectUri)}` +
+      `&response_type=${config.responseType || "code"}` +
+      `&scope=${config.scope || ""}`;
+
+    // 네이버는 state 필요
+    if (OAuth2Type === "naver") {
+      url += `&state=${OAUTH2_CONFIG.naver.state}`;
+    }
+
+    // 브라우저 리다이렉트
+    window.location.href = url;
+  };
+  const { Login, setId, setPassword } = useLoginStore();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const OAuth2Type = params.get("OAuth2Type"); // 추가
+    if (code) {
+      // 백엔드로 code 전송
+      GET({ url: `/Auth/sign/${OAuth2Type}`, params: { code } })
+        .then((res) => console.log("JWT + UserInfo:", res))
+        .catch((err) => console.error(err));
+    }
+  }, []);
+
   return (
     <ButtonWrapper>
       <div className="lg:w-[40vw] sm:w-[80vw] md:w-[60vw] flex flex-col items-center gap-2 justify-center border-4 border-dashed border-gray-300 rounded-lg p-6">
@@ -118,29 +178,27 @@ const MoimLogin = () => {
           <Input
             type="text"
             placeholder="아이디 또는 이메일"
-            value={useLoginStore.getState().Login.id}
-            onChange={(e) => useLoginStore.getState().setId(e.target.value)}
+            value={Login.id}
+            onChange={(e) => setId(e.target.value)}
           />
           <Input
             type="password"
             placeholder="비밀번호"
-            value={useLoginStore.getState().Login.password}
-            onChange={(e) =>
-              useLoginStore.getState().setPassword(e.target.value)
-            }
+            value={Login.password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <LoginButton>로그인</LoginButton>
           <SignupButton onClick={() => navigate("/signup")}>
             회원가입
           </SignupButton>
         </div>
-        <GoogleButton href={`${defaultUrl}/oauth2/authorize/google`}>
+        <GoogleButton onClick={() => handleAuth("google")}>
           <FaGoogle /> 구글로 로그인
         </GoogleButton>
-        <NaverButton href={`${defaultUrl}/oauth2/authorize/naver`}>
+        <NaverButton onClick={() => handleAuth("naver")}>
           <SiNaver /> 네이버로 로그인
         </NaverButton>
-        <KakaoButton href={`${defaultUrl}/oauth2/authorize/kakao`}>
+        <KakaoButton onClick={() => handleAuth("kakao")}>
           <SiKakao /> 카카오로 로그인
         </KakaoButton>
       </div>

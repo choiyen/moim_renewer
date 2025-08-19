@@ -1,6 +1,9 @@
 import styled from "@emotion/styled";
 import { useUserStore } from "../../../types/State";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { GET } from "../../comon/axios/axiosInstance";
+import { toast } from "react-toastify";
+import { hopper } from "../../../types/MoimType";
 
 export const ButtonWrapper = styled.div`
   display: flex;
@@ -45,6 +48,12 @@ const InputRow = styled.div`
   gap: 10px;
   width: 100%;
 `;
+const InputDateRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+`;
 const AddressInputRow = styled(InputRow)`
   flex-direction: column !important;
   align-items: stretch !important;
@@ -60,7 +69,16 @@ const SignupInput = styled.input`
   border: 1px solid #ccc;
 `;
 
-const CheckDuplicateButton = styled.button`
+const SignupInputDate = styled.input`
+  flex: 1;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100px;
+`;
+
+const CheckDuplicateButton = styled.button<{ disabled?: boolean }>`
   height: 40px;
   padding: 0 12px;
   background-color: #28a745;
@@ -70,9 +88,20 @@ const CheckDuplicateButton = styled.button`
   cursor: pointer;
   font-size: 14px;
   white-space: nowrap;
+  ${(props) =>
+    props.disabled &&
+    `
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #cccccc; /* 큰따옴표 제거 */
+    color: black;
+  `}
 
   &:hover {
-    background-color: #218838;
+    background-color: ${(props) => (props.disabled ? "#cccccc" : "#218838")};
+    box-shadow: ${(props) =>
+      props.disabled ? "none" : "0 4px 8px rgba(0, 0, 0, 0.2)"};
   }
 
   @media (max-width: 768px) {
@@ -157,29 +186,62 @@ const SelectInput = styled.select`
 `;
 
 const MoimSignUp = () => {
-  // Update the selector to use the correct property names from your user store
-  // For example, if your store has 'termsAgreed' and 'setTermsAgreed', use those:
-  const [termsChecked, setTermsChecked] = useUserStore((state) => [
-    state.userData.checked,
-    state.setChecked,
-  ]);
-  const [termServiceChecked, setTermServiceChecked] = useState(false);
-  const [termPrivacyChecked, setTermPrivacyChecked] = useState(false);
-  const [termMarketingChecked, setTermMarketingChecked] = useState(false);
-  useEffect(() => {
-    if (termServiceChecked && termPrivacyChecked && termMarketingChecked) {
-      setTermsChecked(true);
-    }
-  }, [termServiceChecked, termPrivacyChecked, termMarketingChecked]);
+  const setTermsChecked = useUserStore((state) => state.setChecked);
+  const termsChecked = useUserStore((state) => state.userData.checked);
+  const [termCheck, setTermCheck] = useState({
+    Market: false,
+    Service: false,
+    Privacy: false,
+  });
+  const [isEmailDuplicationDisabled, setisEmailDuplicationDisabled] =
+    useState(false);
+  const nicknameButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (termsChecked) {
-      // 모든 약관에 동의한 경우 추가 작업 수행
-      setTermServiceChecked(true);
-      setTermPrivacyChecked(true);
-      setTermMarketingChecked(true);
+    if (termCheck.Market && termCheck.Privacy && termCheck.Service) {
+      setTermsChecked(true);
+    } else {
+      setTermsChecked(false);
     }
-  }, [termsChecked]);
+  }, [setTermsChecked, termCheck.Market, termCheck.Privacy, termCheck.Service]);
+  const {
+    userData,
+    setEmail,
+    setPassword,
+    setConfirmPassword,
+    setNickname,
+    setProfileImage,
+    setGender,
+    setBirthdate,
+    setAddress,
+    setIntroduction,
+  } = useUserStore();
+
+  const handleEmailCheck = () => {
+    GET({
+      url: "/user/check",
+      params: { email: userData.email },
+    }).then((res) => {
+      console.log(res);
+      if (res.resultType == "checknot") {
+        setisEmailDuplicationDisabled(true);
+      } else if (res.resultType == "success") {
+        setisEmailDuplicationDisabled(true);
+        toast.error("중복된 이메일입니다. 다시 입력해주세요.", {
+          position: "top-center",
+          autoClose: 5000,
+        });
+      } else {
+        toast.error(
+          "설계에 반영되지 않은 결과 타입입니다. 발견시 관리자에게 문의해주세요",
+          {
+            position: "top-center",
+            autoClose: 5000,
+          }
+        );
+      }
+    });
+  };
 
   return (
     <ButtonWrapper>
@@ -191,10 +253,18 @@ const MoimSignUp = () => {
             type="text"
             placeholder="이메일"
             id="email"
-            value={useUserStore.getState().userData.email}
-            onChange={(e) => useUserStore.getState().setEmail(e.target.value)}
+            value={userData.email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
-          <CheckDuplicateButton type="button">이메일 확인</CheckDuplicateButton>
+          <CheckDuplicateButton
+            type="button"
+            onClick={() => handleEmailCheck()}
+            disabled={isEmailDuplicationDisabled}
+          >
+            {isEmailDuplicationDisabled ? "확인 완료" : "중복 확인"}
+          </CheckDuplicateButton>
         </InputRow>
 
         <Label htmlFor="password">비밀번호</Label>
@@ -203,10 +273,8 @@ const MoimSignUp = () => {
             type="password"
             placeholder="비밀번호"
             id="password"
-            value={useUserStore.getState().userData.password}
-            onChange={(e) =>
-              useUserStore.getState().setPassword(e.target.value)
-            }
+            value={userData.password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </InputRow>
 
@@ -216,10 +284,8 @@ const MoimSignUp = () => {
             type="password"
             placeholder="비밀번호 확인"
             id="confirm-password"
-            value={useUserStore.getState().userData.confirmPassword}
-            onChange={(e) =>
-              useUserStore.getState().setConfirmPassword(e.target.value)
-            }
+            value={userData.confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </InputRow>
         <Label htmlFor="nickname">닉네임</Label>
@@ -228,12 +294,12 @@ const MoimSignUp = () => {
             type="text"
             placeholder="닉네임"
             id="nickname"
-            value={useUserStore.getState().userData.nickname}
-            onChange={(e) =>
-              useUserStore.getState().setNickname(e.target.value)
-            }
+            value={userData.nickname}
+            onChange={(e) => setNickname(e.target.value)}
           />
-          <CheckDuplicateButton type="button">중복 확인</CheckDuplicateButton>
+          <CheckDuplicateButton type="button" ref={nicknameButtonRef}>
+            중복 확인
+          </CheckDuplicateButton>
         </InputRow>
         <Label htmlFor="profile-image">프로필 이미지</Label>
         <InputRow>
@@ -243,7 +309,7 @@ const MoimSignUp = () => {
             onChange={(e) => {
               const files = e.target.files;
               if (files && files[0]) {
-                useUserStore.getState().setProfileImage(files[0]);
+                setProfileImage(files[0]);
               }
             }}
           />
@@ -254,11 +320,8 @@ const MoimSignUp = () => {
             <SelectInput
               id="gender"
               name="gender"
-              defaultValue=""
-              onChange={(e) =>
-                useUserStore.getState().setGender(e.target.value)
-              }
-              value={useUserStore.getState().userData.gender}
+              onChange={(e) => setGender(e.target.value)}
+              value={userData.gender}
             >
               <option value="" disabled>
                 성별을 선택하세요
@@ -270,100 +333,105 @@ const MoimSignUp = () => {
           </InputRow>
         </InputRow>
         <Label htmlFor="birthdate">생년월일</Label>
-        <InputRow>
-          <SignupInput
+        <InputDateRow>
+          <SignupInputDate
             type="text"
             placeholder="년"
             id="birthdate-year"
-            value={useUserStore.getState().userData.birthdate.year}
+            value={userData.birthdate.year}
             onChange={(e) =>
-              useUserStore
-                .getState()
-                .setBirthdate(
-                  e.target.value,
-                  useUserStore.getState().userData.birthdate.month,
-                  useUserStore.getState().userData.birthdate.day
-                )
+              setBirthdate(
+                e.target.value,
+                userData.birthdate.month,
+                userData.birthdate.day
+              )
             }
           />
-          <SignupInput
+          <SignupInputDate
             type="text"
             placeholder="월"
             id="birthdate-month"
-            value={useUserStore.getState().userData.birthdate.month}
+            value={userData.birthdate.month}
             onChange={(e) =>
-              useUserStore
-                .getState()
-                .setBirthdate(
-                  useUserStore.getState().userData.birthdate.year,
-                  e.target.value,
-                  useUserStore.getState().userData.birthdate.day
-                )
+              setBirthdate(
+                userData.birthdate.year,
+                e.target.value,
+                userData.birthdate.day
+              )
             }
           />
-          <SignupInput
+          <SignupInputDate
             type="text"
             placeholder="일"
             id="birthdate-day"
-            value={useUserStore.getState().userData.birthdate.day}
+            value={userData.birthdate.day}
             onChange={(e) =>
-              useUserStore
-                .getState()
-                .setBirthdate(
-                  useUserStore.getState().userData.birthdate.year,
-                  useUserStore.getState().userData.birthdate.month,
-                  e.target.value
-                )
+              setBirthdate(
+                userData.birthdate.year,
+                userData.birthdate.month,
+                e.target.value
+              )
             }
           />
-        </InputRow>
+        </InputDateRow>
         <Label htmlFor="address">주소</Label>
         <AddressInputRow>
           <SignupInput
             type="text"
             placeholder="기본 주소"
             id="address"
-            value={useUserStore.getState().userData.address.basic}
+            value={userData.address.basic}
             onChange={(e) =>
-              useUserStore
-                .getState()
-                .setAddress(
-                  e.target.value,
-                  useUserStore.getState().userData.address.detail
-                )
+              setAddress(e.target.value, userData.address.detail)
             }
           />
           <SignupInput
             type="text"
             placeholder="상세 주소"
             id="address-detail"
-            value={useUserStore.getState().userData.address.detail}
-            onChange={(e) =>
-              useUserStore
-                .getState()
-                .setAddress(
-                  useUserStore.getState().userData.address.basic,
-                  e.target.value
-                )
-            }
+            value={userData.address.detail}
+            onChange={(e) => setAddress(userData.address.basic, e.target.value)}
           />
         </AddressInputRow>
+        <Label>주요 관심사</Label>
+        <SelectInput>
+          {hopper.map((item, idx) => (
+            <option key={idx} value={item.Category}>
+              {item.Category}
+            </option>
+          ))}
+        </SelectInput>
         <Label htmlFor="introduction">자기소개</Label>
         <InputRow>
           <SignupIntro
             placeholder="자기소개"
             id="introduction"
-            value={useUserStore.getState().userData.introduction}
-            onChange={(e) =>
-              useUserStore.getState().setIntroduction(e.target.value)
-            }
+            value={userData.introduction}
+            onChange={(e) => setIntroduction(e.target.value)}
           />
         </InputRow>
+
         <TermsWrapper>
           <TermsTitle>가입 약관 동의</TermsTitle>
 
           <TermsItem>
-            <SignupInput type="checkbox" id="terms-all" />
+            <SignupInput
+              type="checkbox"
+              id="terms-all"
+              checked={termsChecked}
+              onChange={(e) => {
+                setTermsChecked(e.target.checked);
+              }}
+              onClick={() => {
+                if (termsChecked) {
+                  setTermCheck({
+                    Market: false,
+                    Privacy: false,
+                    Service: false,
+                  });
+                }
+              }}
+            />
             <TermsLabel htmlFor="terms-all">
               모든 가입 약관에 동의합니다.
             </TermsLabel>
@@ -373,8 +441,13 @@ const MoimSignUp = () => {
             <SignupInput
               type="checkbox"
               id="terms-service"
-              checked={termServiceChecked}
-              onChange={(e) => setTermServiceChecked(e.target.checked)}
+              checked={termCheck.Service}
+              onChange={(e) =>
+                setTermCheck((state) => ({
+                  ...state,
+                  Service: e.target.checked,
+                }))
+              }
             />
             <TermsLabel htmlFor="terms-service">
               Moim 이용 약관에 동의합니다. (필수)
@@ -385,8 +458,13 @@ const MoimSignUp = () => {
             <SignupInput
               type="checkbox"
               id="terms-privacy"
-              checked={termPrivacyChecked}
-              onChange={(e) => setTermPrivacyChecked(e.target.checked)}
+              checked={termCheck.Privacy}
+              onChange={(e) =>
+                setTermCheck((state) => ({
+                  ...state,
+                  Privacy: e.target.checked,
+                }))
+              }
             />
             <TermsLabel htmlFor="terms-privacy">
               개인정보 수집 및 이용에 동의합니다. (필수)
@@ -397,8 +475,13 @@ const MoimSignUp = () => {
             <SignupInput
               type="checkbox"
               id="terms-marketing"
-              checked={termMarketingChecked}
-              onChange={(e) => setTermMarketingChecked(e.target.checked)}
+              checked={termCheck.Market}
+              onChange={(e) =>
+                setTermCheck((state) => ({
+                  ...state,
+                  Market: e.target.checked,
+                }))
+              }
             />
             <TermsLabel htmlFor="terms-marketing">
               마케팅 활용 및 광고성 정보 수신에 동의합니다. (선택)

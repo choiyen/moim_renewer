@@ -1,7 +1,6 @@
 package moim.renew.backend.User.Entity;
 
 import lombok.*;
-import moim.renew.backend.Moim.Entity.MoimEntity;
 import moim.renew.backend.User.DTO.UserDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -12,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Data
 public class UserEntity
 {
-    private String user_id;
+    private String userId;
     private String password;
     private String nickname;
     private String Intro;
@@ -22,7 +21,7 @@ public class UserEntity
     public UserDTO convertTo()
     {
         return UserDTO.builder()
-                .user_id(this.user_id)
+                .userId(this.userId)
                 .nickname(this.nickname)
                 .review(this.review)
                 .password(this.password)
@@ -33,7 +32,7 @@ public class UserEntity
     public UserEntity convertToReNew(UserEntity oldUser)
     {
         return UserEntity.builder()
-                .user_id(oldUser.user_id)
+                .userId(oldUser.userId)
                 .password(this.password)
                 .nickname(this.nickname)
                 .review(oldUser.review)
@@ -44,7 +43,7 @@ public class UserEntity
     public UserEntity convertToPassword(PasswordEncoder passwordEncoder)
     {
         return UserEntity.builder()
-                .user_id(this.user_id)
+                .userId(this.userId)
                 .password(passwordEncoder.encode(this.password))
                 .nickname(this.nickname)
                 .review(this.review)

@@ -10,6 +10,16 @@ const useModelStore = create<ModelState>((set) => ({
   setPasswordModalOpen: (isOpen) => set({ isPasswordModalOpen: isOpen }),
 })); //모달창 처리 완료
 
+interface MoimReviewModelState {
+  isReviewModalOpen: boolean;
+  setReviewModalOpen: (isOpen: boolean) => void;
+}
+
+const useMoimReviewStore = create<MoimReviewModelState>((set) => ({
+  isReviewModalOpen: false,
+  setReviewModalOpen: (isOpen) => set({ isReviewModalOpen: isOpen }),
+})); //모달창 처리 완료
+
 interface MoimCountData {
   Moimcount: number;
   setMoimCount: (MoimCount: number) => void;
@@ -17,7 +27,7 @@ interface MoimCountData {
 const useMoimCountData = create<MoimCountData>((set) => ({
   Moimcount: 0,
   setMoimCount: (MoimCounts) => set({ Moimcount: MoimCounts }),
-}));
+})); //현재 가입 중인 모임의 수
 
 interface LoginState {
   Login: {
@@ -187,7 +197,7 @@ const useUserStore = create<UserState>((set) => ({
 
 //MoimData
 export interface MoimData {
-  moimId?: number;
+  moimId?: string;
   title: string;
   isOnline: boolean;
   maxpeople: number;
@@ -442,4 +452,5 @@ export {
   useUserStore,
   useMoimStore,
   useMoimCountData,
+  useMoimReviewStore,
 };

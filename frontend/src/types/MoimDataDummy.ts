@@ -1,62 +1,19 @@
 import type { MoimData, MoimDetailStore } from "./State";
-import star from "../../comon/frame/image/star.png";
+import star from "../../public/vite.svg";
 
 interface MoimDataDummy {
   MoimData: MoimData;
   MoimDetail: MoimDetailStore;
 }
 
-export const consultPosts = [
-  { id: 1, title: "모임 삭제가 안돼요", author: "홍길동", date: "2025-08-01" },
-  {
-    id: 2,
-    title: "비밀번호 변경은 어디서 하나요?",
-    author: "김영희",
-    date: "2025-07-30",
-  },
-  {
-    id: 3,
-    title: "모임장 권한을 넘기고 싶어요",
-    author: "이철수",
-    date: "2025-07-28",
-  },
-];
-
-export const featureRequests = [
-  {
-    id: 1,
-    title: "모임에 공지 고정 기능이 있었으면 해요",
-    author: "박지은",
-    date: "2025-07-31",
-  },
-  {
-    id: 2,
-    title: "다크모드도 지원해주세요!",
-    author: "최윤호",
-    date: "2025-07-29",
-  },
-];
-
-export const userReviews = [
-  {
-    id: 1,
-    title: "첫 모임 참여했는데 정말 좋았어요",
-    author: "익명",
-    date: "2025-07-25",
-  },
-  {
-    id: 2,
-    title: "덕분에 좋은 사람들 만났어요!",
-    author: "김태현",
-    date: "2025-07-22",
-  },
-  {
-    id: 3,
-    title: "오프라인 모임 분위기 최고였어요",
-    author: "이은지",
-    date: "2025-07-20",
-  },
-];
+interface Posts {
+  id: number;
+  title: string;
+  author: string;
+  date: string;
+  comment: string;
+  ConsultType: ConsultType;
+}
 
 export const ConsultType = {
   SERVICE: "서비스",
@@ -64,82 +21,88 @@ export const ConsultType = {
   REVIEW: "이용후기",
 } as const;
 
-export type ConsultType = (typeof ConsultType)[keyof typeof ConsultType];
-
-interface MoimCousultDummy {
-  ConsultId: string;
-  ConsultType: ConsultType;
-  ConsultTitle: string;
-  ConsultNickname: string;
-  ConsultContent: string;
-}
-
-export const MoimConsultDummy: MoimCousultDummy[] = [
+export const consultPosts: Posts[] = [
   {
-    ConsultId: "SERVICE1",
-    ConsultType: ConsultType.SERVICE,
-    ConsultTitle: "모임 삭제가 안돼요",
-    ConsultNickname: "홍길동",
-    ConsultContent:
-      "모임을 삭제하려고 하는데 삭제 버튼이 작동하지 않습니다. 해결 방법을 알려주세요.",
+    id: 1,
+    title: "모임 삭제가 안돼요",
+    author: "홍길동",
+    date: "2025-08-01",
+    comment:
+      "모임을 삭제하려고 시도했는데 버튼을 눌러도 아무 반응이 없네요. 여러 번 시도했지만 동일합니다. 혹시 다른 방법이 있는지 궁금합니다. 빠른 확인과 수정 부탁드립니다.",
+    ConsultType: "서비스",
   },
   {
-    ConsultId: "SERVICE2",
-    ConsultType: ConsultType.SERVICE,
-    ConsultTitle: "비밀번호 변경은 어디서 하나요?",
-    ConsultNickname: "김영희",
-    ConsultContent:
-      "계정 비밀번호를 변경하고 싶은데 어디서 할 수 있는지 안내 부탁드립니다.",
+    id: 2,
+    title: "비밀번호 변경은 어디서 하나요?",
+    author: "김영희",
+    date: "2025-07-30",
+    comment:
+      "회원정보 메뉴에서 비밀번호를 바꾸고 싶은데 위치를 찾기 어렵습니다. 단계별 안내가 있으면 좋겠습니다. 혹시 화면에 표시되는 가이드가 있다면 참고하고 싶어요. 확인 부탁드립니다.",
+    ConsultType: "서비스",
   },
   {
-    ConsultId: "SERVICE3",
-    ConsultType: ConsultType.SERVICE,
-    ConsultTitle: "모임장 권한을 넘기고 싶어요",
-    ConsultNickname: "이철수",
-    ConsultContent:
-      "현재 모임장 권한을 다른 사람에게 넘기고 싶은데 방법이 있나요?",
-  },
-  {
-    ConsultId: "FEATURE1",
-    ConsultType: ConsultType.FEATURE,
-    ConsultTitle: "모임에 공지 고정 기능이 있었으면 해요",
-    ConsultNickname: "박지은",
-    ConsultContent:
-      "중요한 공지를 상단에 고정할 수 있는 기능이 추가되면 좋겠습니다.",
-  },
-  {
-    ConsultId: "FEATURE2",
-    ConsultType: ConsultType.FEATURE,
-    ConsultTitle: "다크모드도 지원해주세요!",
-    ConsultNickname: "최윤호",
-    ConsultContent:
-      "밤에 눈이 편하도록 다크모드를 제공해 주시면 감사하겠습니다.",
-  },
-  {
-    ConsultId: "REVIEW1",
-    ConsultType: ConsultType.REVIEW,
-    ConsultTitle: "첫 모임 참여했는데 정말 좋았어요",
-    ConsultNickname: "익명",
-    ConsultContent:
-      "처음 참여한 모임이었는데 분위기도 좋고 사람들도 친절했습니다.",
-  },
-  {
-    ConsultId: "REVIEW2",
-    ConsultType: ConsultType.REVIEW,
-    ConsultTitle: "덕분에 좋은 사람들 만났어요!",
-    ConsultNickname: "김태현",
-    ConsultContent:
-      "이 서비스를 통해 좋은 분들을 만나서 즐거운 시간을 보냈습니다.",
-  },
-  {
-    ConsultId: "REVIEW3",
-    ConsultType: ConsultType.REVIEW,
-    ConsultTitle: "오프라인 모임 분위기 최고였어요",
-    ConsultNickname: "이은지",
-    ConsultContent:
-      "오프라인 모임의 분위기가 매우 좋았고 다시 참여하고 싶습니다.",
+    id: 3,
+    title: "모임장 권한을 넘기고 싶어요",
+    author: "이철수",
+    date: "2025-07-28",
+    comment:
+      "현재 모임장의 권한을 다른 사람에게 넘기고 싶은데 방법을 잘 모르겠습니다. 메뉴를 찾아봐도 옵션이 보이지 않네요. 자세한 안내가 있으면 좋겠습니다. 확인 부탁드립니다.",
+    ConsultType: "서비스",
   },
 ];
+
+export const featureRequests: Posts[] = [
+  {
+    id: 4,
+    title: "모임에 공지 고정 기능이 있었으면 해요",
+    author: "박지은",
+    date: "2025-07-31",
+    comment:
+      "중요한 공지를 항상 상단에 고정할 수 있는 기능이 있으면 좋겠습니다. 특히 이벤트나 안내 사항을 빠르게 확인할 수 있어 편리할 것 같아요. 사용자 입장에서 큰 도움이 될 것 같습니다. 구현 검토 부탁드립니다.",
+    ConsultType: "기능",
+  },
+  {
+    id: 5,
+    title: "다크모드도 지원해주세요!",
+    author: "최윤호",
+    date: "2025-07-29",
+    comment:
+      "밤에 앱을 사용하면 눈이 많이 피로합니다. 다크모드를 지원하면 장시간 사용에도 편안할 것 같습니다. 시각적으로도 훨씬 깔끔해질 것 같아요. 기능 추가 검토 부탁드립니다.",
+    ConsultType: "기능",
+  },
+];
+
+export const userReviews: Posts[] = [
+  {
+    id: 6,
+    title: "첫 모임 참여했는데 정말 좋았어요",
+    author: "익명",
+    date: "2025-07-25",
+    comment:
+      "첫 모임이라 조금 긴장했는데 분위기가 너무 좋았습니다. 사람들도 친절하고 자연스럽게 어울릴 수 있었습니다. 진행 방식도 깔끔하고 만족스러웠습니다. 다음 모임도 기대됩니다.",
+    ConsultType: "이용후기",
+  },
+  {
+    id: 7,
+    title: "덕분에 좋은 사람들 만났어요!",
+    author: "김태현",
+    date: "2025-07-22",
+    comment:
+      "취미가 비슷한 사람들과 쉽게 친해질 수 있었습니다. 운영진도 세심하게 챙겨주셔서 불편함이 없었어요. 즐거운 시간을 보내고 돌아갈 수 있었습니다. 다음 모임도 꼭 참여하고 싶습니다.",
+    ConsultType: "이용후기",
+  },
+  {
+    id: 8,
+    title: "오프라인 모임 분위기 최고였어요",
+    author: "이은지",
+    date: "2025-07-20",
+    comment:
+      "온라인과는 다른 따뜻한 분위기였습니다. 참가자 모두 적극적이고 친절해서 즐겁게 시간을 보냈습니다. 공간과 환경도 편안하게 마련되어 좋았습니다. 다음 모임도 기대됩니다.",
+    ConsultType: "이용후기",
+  },
+];
+
+export type ConsultType = (typeof ConsultType)[keyof typeof ConsultType];
 
 export const MoimDataDummys: MoimDataDummy = {
   MoimData: {
@@ -150,12 +113,13 @@ export const MoimDataDummys: MoimDataDummy = {
       "농구를 좋아하는 사람들이 모여 실력을 키우고 친목을 다지는 주말 모임입니다.",
     tag: ["농구", "스포츠", "운동", "취미"],
     isOnline: false,
-    organizer: "",
+    organizer: "김유성",
     expirationDate: new Date(),
-    evenDate: new Date(),
-    location: "",
-    category: "",
-    categoryDetail: "",
+    evenDate: new Date(new Date().setDate(new Date().getDate() + 7)),
+    location: "경상남도 진주",
+    category: "스포츠 & 액티비티",
+    categoryDetail: "농구",
+    moimId: "BASKET2025",
   },
   MoimDetail: {
     moimdetailId: 1,
@@ -165,5 +129,6 @@ export const MoimDataDummys: MoimDataDummy = {
       "매주 토요일 오후 2시에 시내 체육관에서 연습 경기를 진행합니다. 초보부터 상급자까지 모두 환영하며, 가벼운 트레이닝과 게임 후 뒷풀이도 함께합니다.",
     minPeople: 5,
     Pay: 10000,
+    Approval: false,
   },
 };

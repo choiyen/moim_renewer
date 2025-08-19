@@ -1,13 +1,7 @@
 import styled from "@emotion/styled";
 import React, { useEffect, useState } from "react";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
-
-const MoimReviewTitle = styled.h2`
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: #333;
-  text-align: center;
-`;
+import { useMoimReviewStore } from "../../../types/State";
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -156,29 +150,29 @@ const StarRating: React.FC<{
 };
 
 const MoimReview = ({ Titleday }: MoimReviewProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(true);
   const [rating, setRating] = useState(0);
+  const { isReviewModalOpen, setReviewModalOpen } = useMoimReviewStore();
+
   const [reviewText, setReviewText] = useState("");
 
   useEffect(() => {
     const now = new Date();
     if (now < Titleday) {
-      setIsModalOpen(false); // 날짜 지나지 않았으면 모달 닫기
+      setReviewModalOpen(false); // 날짜 지나지 않았으면 모달 닫기
     } else {
-      setIsModalOpen(true); // 날짜 지났으면 모달 열기
+      setReviewModalOpen(true); // 날짜 지났으면 모달 열기
     }
   }, [Titleday]);
 
   const handleConfirm = () => {
     alert(`별점: ${rating}\n리뷰: ${reviewText}`);
-    setIsModalOpen(false);
+    setReviewModalOpen(false);
   };
 
   return (
     <div>
-      <MoimReviewTitle>모임</MoimReviewTitle>
-      {isModalOpen && (
-        <ModalBackground onClick={() => setIsModalOpen(false)}>
+      {isReviewModalOpen && (
+        <ModalBackground onClick={() => setReviewModalOpen(false)}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
             <div style={{ fontWeight: "bold", fontSize: "18px" }}>
               모임 이름: {newMoimReview.Title}
@@ -198,7 +192,7 @@ const MoimReview = ({ Titleday }: MoimReviewProps) => {
 
             <ButtonRow>
               <ConfirmButton onClick={handleConfirm}>등록하기</ConfirmButton>
-              <CancelButton onClick={() => setIsModalOpen(false)}>
+              <CancelButton onClick={() => setReviewModalOpen(false)}>
                 닫기
               </CancelButton>
             </ButtonRow>

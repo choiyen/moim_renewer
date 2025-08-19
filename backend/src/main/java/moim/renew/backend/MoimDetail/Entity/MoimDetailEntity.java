@@ -16,5 +16,5 @@ public class MoimDetailEntity
     private String content;
     private Integer minPeople;
     private Double Pay;
-    private List<String> Member;
+    private String[] Member;
 }

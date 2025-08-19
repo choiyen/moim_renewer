@@ -2,14 +2,20 @@ package moim.renew.backend.User.Mapper;
 
 import moim.renew.backend.User.Entity.UserEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserMapper {
 
-    boolean getUserID(String UserID);
-    void UpdatePasswordByEmail(String email, String password);
-    UserEntity FindofUserID(String email);
-    void DeleteUser(String user_id, String password);
+    int getUserID(@Param("userId") String userId);
+
+    void UpdatePasswordByEmail(@Param("email") String email, @Param("password") String password);
+
+    UserEntity FindUserID(@Param("userId") String userId);
+
+    void DeleteUser(@Param("userId") String userId, @Param("password") String password);
+
     void UpdateUser(UserEntity userEntity);
+
     void InsertUser(UserEntity userEntity);
 }

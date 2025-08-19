@@ -1,0 +1,126 @@
+.MoimDetailTitle {
+  width: 100%;
+  background-color: #e6f7ff; /* 연한 하늘색 */
+  text-align: center;
+  padding: 15px;
+}
+.MoimDetailCateGory {
+  width: 100%;
+  text-align: right;
+  background-color: #fff8dc;
+  padding: 15px;
+}
+
+.MoimDetailContent {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+}
+
+.MoimDetailContent img {
+  width: 250px;
+  object-fit: contain;
+  height: 250px;
+}
+
+/* moimDetail.module.css */
+
+.MoimDetailCards {
+  display: flex;
+  background-color: #ffe4e1; /* MistyRose 계열 */
+  padding: 50px;
+  flex-direction: column;
+}
+
+.tableContainer {
+  width: 100%;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tableContainer table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableContainer td {
+  padding: 12px 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.tableContainer tr:nth-child(odd) td {
+  background-color: #f9fafb;
+}
+
+.tableContainer tr td:first-child {
+  font-weight: 600;
+  background-color: #f3f4f6;
+  width: 20%;
+}
+
+.tagSpan {
+  margin-right: 4px;
+}
+
+.memberSpan {
+  margin-right: 4px;
+}
+
+.tableContainer tr:last-child td {
+  background-color: red;
+  height: 500px; /* 최소 높이 지정 */
+  word-break: break-word; /* 긴 문장 자동 줄바꿈 */
+  background-color: #f9fafb; /* 배경색 선택 */
+  border-radius: 8px; /* 모서리 둥글게 */
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 15px;
+}
+
+.buttonContainer button:first-child {
+  width: 100px;
+  height: 50px;
+  background-color: #3b82f6; /* 원하는 색상 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonContainer button:nth-child(2) {
+  width: 100px;
+  height: 50px;
+  background-color: #28a745; /* 초록색 계열 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonContainer button:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.buttonContainer button:last-child {
+  width: 100px;
+  height: 50px;
+  background-color: #fca5a5; /* 삭제 버튼용 다른 색상 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
