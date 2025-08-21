@@ -41,7 +41,7 @@ public class MoimDTO
     @Size(max = 25, message = "장소는 최대 25자까지 입력 가능합니다.")
     private String location;
 
-    @Size(max = 255, message = "이미지 URL은 255자 이하로 입력해주세요.")
+    @Size(max = 2550, message = "이미지 URL은 255자 이하로 입력해주세요.")
     private String representImg;
 
     @NotBlank(message = "카테고리는 필수입니다.")

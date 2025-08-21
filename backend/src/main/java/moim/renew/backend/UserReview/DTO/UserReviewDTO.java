@@ -1,5 +1,7 @@
 package moim.renew.backend.UserReview.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import moim.renew.backend.UserReview.Entity.UserReviewEntity;
 
@@ -12,7 +14,10 @@ import moim.renew.backend.UserReview.Entity.UserReviewEntity;
 public class UserReviewDTO
 {
     private Integer id;
+
+    @NotBlank(message = "리뷰를 주는 사람 데이터는 없으면 곤란합니다.")
     private String reviewer;
+    @NotNull(message = "평가를 받는 사람 데이터는 없으면 곤란합니다.")
     private String reviewee;
     private Float score = 10.0f; // 기본값 설정
 

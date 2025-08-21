@@ -195,6 +195,8 @@ const MoimSignUp = () => {
   });
   const [isEmailDuplicationDisabled, setisEmailDuplicationDisabled] =
     useState(false);
+  const [isNickNameDuplicationDisabled, setisNickNameDuplicationDisabled] =
+    useState(false);
   const nicknameButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -226,7 +228,6 @@ const MoimSignUp = () => {
       if (res.resultType == "checknot") {
         setisEmailDuplicationDisabled(true);
       } else if (res.resultType == "success") {
-        setisEmailDuplicationDisabled(true);
         toast.error("중복된 이메일입니다. 다시 입력해주세요.", {
           position: "top-center",
           autoClose: 5000,
@@ -243,6 +244,58 @@ const MoimSignUp = () => {
     });
   };
 
+  const handleNicknameCheck = () => {
+    GET({
+      url: "/user/check",
+      params: { nickname: userData.nickname },
+    }).then((res) => {
+      console.log(res);
+      if (res.resultType == "checknot") {
+        setisNickNameDuplicationDisabled(true);
+      } else if (res.resultType == "success") {
+        toast.error("중복된 이메일입니다. 다시 입력해주세요.", {
+          position: "top-center",
+          autoClose: 5000,
+        });
+      } else {
+        toast.error(
+          "설계에 반영되지 않은 결과 타입입니다. 발견시 관리자에게 문의해주세요",
+          {
+            position: "top-center",
+            autoClose: 5000,
+          }
+        );
+      }
+    });
+  };
+  const Profileset = () => {
+    if (!(isEmailDuplicationDisabled && isNickNameDuplicationDisabled)) {
+      alert("이메일과 닉네임에 대한 중복확인 과정을 진행하지 않았습니다.");
+    }
+
+    if (userData.password !== userData.confirmPassword) {
+      alert("비밀번호와 비밀번호 확인이 서로 다릅니다");
+    }
+
+    if (
+      userData.address.basic == "" ||
+      userData.address.detail == "" ||
+      userData.birthdate.day == "" ||
+      userData.birthdate.month == "" ||
+      userData.birthdate.year == "" ||
+      userData.email == "" ||
+      userData.gender == "" ||
+      userData.introduction == "" ||
+      userData.nickname == "" ||
+      !userData.profileImage
+    ) {
+      alert("비어있는 데이터가 존재합니다.");
+    }
+
+    if (!userData.checked) {
+      alert("모든 주의사항이 체크되어 있지 않습니다. 체크해주세요");
+    }
+  };
   return (
     <ButtonWrapper>
       <SignupTitle>Moim 회원가입</SignupTitle>
@@ -297,7 +350,11 @@ const MoimSignUp = () => {
             value={userData.nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
-          <CheckDuplicateButton type="button" ref={nicknameButtonRef}>
+          <CheckDuplicateButton
+            type="button"
+            ref={nicknameButtonRef}
+            onClick={() => handleNicknameCheck()}
+          >
             중복 확인
           </CheckDuplicateButton>
         </InputRow>
@@ -489,7 +546,9 @@ const MoimSignUp = () => {
           </TermsItem>
         </TermsWrapper>
 
-        <SignButton type="submit">회원가입</SignButton>
+        <SignButton type="button" onClick={() => Profileset()}>
+          회원가입
+        </SignButton>
       </SignupWrapper>
     </ButtonWrapper>
   );

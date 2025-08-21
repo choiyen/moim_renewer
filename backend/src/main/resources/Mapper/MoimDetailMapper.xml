@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="moim.renew.backend.MoimDetail.Mapper.MoimDetailMapper">
+
+    <resultMap id="moimDetailResultMap" type="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
+        <id     property="moimId"       column="moim_id"/>
+        <result property="content"   column="content" />
+        <result property="minpeople" column="min_people"/>
+        <result property="pay" column="pay"/>
+        <result property="member"     column="member" typeHandler="moim.renew.backend.Approval.Handler.StringArrayJsonTypeHandler"/>
+    </resultMap>
+
+    <!-- INSERT -->
+    <insert id="moimofInsert" parameterType="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
+        INSERT INTO moim_detail (moim_id, content, min_people, pay)
+        VALUES (#{moimId}, #{content}, #{minpeople},#{pay})
+    </insert>
+    <!-- UPDATE -->
+    <update id="updatemoimdetailbyResult" parameterType="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
+        UPDATE moim_detail
+        SET content = #{content},
+        minpeople = #{minpeople},
+        pay = #{pay}
+        WHERE moim_id = #{moimId}
+    </update>
+
+    <!-- SELECT -->
+    <select id="selectmoimdetailbyResult" parameterType="string" resultMap="moimDetailResultMap">
+        SELECT * FROM moim_detail
+        WHERE moim_id = #{moimId}
+    </select>
+
+    <!-- DELETE -->
+    <delete id="deletemoimdetailbyResult" parameterType="string">
+        DELETE FROM moim_detail
+        WHERE moim_id = #{moimId}
+    </delete>
+
+</mapper>

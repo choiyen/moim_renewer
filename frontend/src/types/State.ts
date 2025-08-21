@@ -60,7 +60,6 @@ const useLoginStore = create<LoginState>((set) => ({
 })); //처리 완료
 
 interface UserData {
-  addressDetail: string | number | readonly string[] | undefined;
   email: string;
   password: string;
   confirmPassword: string;

@@ -16,14 +16,7 @@ spring:
       - application-secret.yml
   mybatis:
     config-location: classpath:sql-map-config.xml
-    mapper-locations: classpath:mapper/*.xml
-    type-aliases-package:
-      - moim.renew.backend.User.Entity
-      - moim.renew.backend.UserReview.Entity
-      - moim.renew.backend.Moim.Entity
-      - moim.renew.backend.MoimDetail.Entity
-      - moim.renew.backend.MoimReview.Entity
-
+    mapper-locations: classpath:Mapper/*.xml
 server:
   port: 9000
 

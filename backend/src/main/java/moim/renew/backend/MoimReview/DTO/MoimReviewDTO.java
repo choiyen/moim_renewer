@@ -1,5 +1,6 @@
 package moim.renew.backend.MoimReview.DTO;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import moim.renew.backend.MoimReview.Entity.MoimReviewEntity;
 
@@ -12,8 +13,11 @@ import moim.renew.backend.MoimReview.Entity.MoimReviewEntity;
 public class MoimReviewDTO
 {
     private String moimId;
+
+    @NotNull(message = "리뷰를 쓴 사람의 닉네임은 포함되어야 합니다.")
     private String reviewerNickname;
-    private Float score;
+
+    private Float score = 5.0f;
     private String comment;
 
     public MoimReviewEntity ConvertTo()

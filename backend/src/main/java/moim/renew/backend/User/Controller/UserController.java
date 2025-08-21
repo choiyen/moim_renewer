@@ -2,6 +2,8 @@ package moim.renew.backend.User.Controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import moim.renew.backend.S3Service.S3ImageService;
 import moim.renew.backend.Security.TokenProvider;
 import moim.renew.backend.User.DTO.UserDTO;
 import moim.renew.backend.User.DTO.UserTokenDTO;
@@ -18,12 +20,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserController
 {
     @Autowired
@@ -37,12 +41,23 @@ public class UserController
     @Autowired
     TokenProvider tokenProvider;
 
+    private final S3ImageService awsS3Service;
+
+
     @PostMapping
-    public ResponseEntity<?> UserPost(@RequestBody UserDTO userDTO)
-    {
+    public ResponseEntity<?> userPost(
+            @RequestPart("userDTO") UserDTO userDTO,   // JSON 문자열 → DTO
+            @RequestPart("file") MultipartFile file   // 업로드 파일
+    )     {
         try
         {
-            UserDTO userDTO1 = userService.UserIDInsert(userDTO, passwordEncoder);
+            if(file != null)
+            {
+                throw new SelectException("업로드 파일이 설정되어 있지 않습니다.");
+            }
+            String url = awsS3Service.upload(file);
+            UserDTO userDTO2 = userDTO.convertToUrl(url);
+            UserDTO userDTO1 = userService.UserIDInsert(userDTO2, passwordEncoder);
             if (userDTO1 != null)
             {
                 return ResponseEntity.ok().body(responseDTO.Response("success", responseDTO.getMessage()));
@@ -58,16 +73,17 @@ public class UserController
         }
     }
     @PutMapping
-    public ResponseEntity<?> UserPut(@AuthenticationPrincipal String userId, @RequestBody UserDTO userDTO)
+    public ResponseEntity<?> UserPut(@AuthenticationPrincipal String userId,  @RequestPart("userDTO") UserDTO userDTO,   // JSON 문자열 → DTO
+                                     @RequestPart("file") MultipartFile file)   // 업로드 파일)
     {
         try
         {
-            if(userId == null || userId.isEmpty())
-            {
+            if(userId == null || userId.isEmpty()) {
                 throw new BadCredentialsException("로그인 관련 에러 발생 : JWT 토큰이 확인되지 않음");
             }
-
-            UserDTO userDTO1 = userService.UserIDUpdate(userDTO, passwordEncoder);
+            String url = awsS3Service.upload(file);
+            UserDTO userUrlDTO = userDTO.convertToUrl(url);
+            UserDTO userDTO1 = userService.UserIDUpdate(userUrlDTO, passwordEncoder);
             if (userDTO1 != null)
             {
                 return ResponseEntity.ok().body(responseDTO.Response("success", responseDTO.getMessage()));

@@ -3,6 +3,8 @@
   background-color: #e6f7ff; /* 연한 하늘색 */
   text-align: center;
   padding: 15px;
+  font-size: 28px;
+  font-weight: bold;
 }
 .MoimDetailCateGory {
   width: 100%;
@@ -20,9 +22,14 @@
 }
 
 .MoimDetailContent img {
-  width: 250px;
+  width: 500px;
   object-fit: contain;
-  height: 250px;
+  height: 500px;
+
+  @media screen and (max-width: 768px) {
+    width: 250px;
+    height: 250px;
+  }
 }
 
 /* moimDetail.module.css */
