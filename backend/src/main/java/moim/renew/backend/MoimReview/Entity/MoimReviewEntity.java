@@ -12,7 +12,7 @@ import moim.renew.backend.MoimReview.DTO.MoimReviewDTO;
 public class MoimReviewEntity
 {
     private String moimId;
-    private String reviewerNickname;
+    private String reviewer;
     private Float score;
     private String comment;
 
@@ -21,7 +21,7 @@ public class MoimReviewEntity
         return MoimReviewDTO.builder()
                 .moimId(this.moimId)
                 .comment(this.comment)
-                .reviewerNickname(this.reviewerNickname)
+                .reviewer(this.reviewer)
                 .score(this.score)
                 .build();
     }
@@ -30,7 +30,7 @@ public class MoimReviewEntity
         return MoimReviewEntity.builder()
                 .moimId(this.moimId)
                 .comment(this.comment)
-                .reviewerNickname(this.reviewerNickname)
+                .reviewer(this.reviewer)
                 .score(score)
                 .build();
     }
@@ -39,7 +39,7 @@ public class MoimReviewEntity
         return MoimReviewEntity.builder()
                 .moimId(this.moimId)
                 .comment(comment)
-                .reviewerNickname(this.reviewerNickname)
+                .reviewer(this.reviewer)
                 .score(this.score)
                 .build();
     }
@@ -48,7 +48,7 @@ public class MoimReviewEntity
         return MoimReviewEntity.builder()
                 .moimId(this.moimId)
                 .comment(comment)
-                .reviewerNickname(this.reviewerNickname)
+                .reviewer(this.reviewer)
                 .score(score)
                 .build();
     }

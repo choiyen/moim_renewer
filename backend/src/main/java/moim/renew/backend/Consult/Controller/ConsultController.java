@@ -1,0 +1,9 @@
+package moim.renew.backend.Consult.Controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/consult")
+public class ConsultController {
+}

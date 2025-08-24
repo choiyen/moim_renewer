@@ -6,9 +6,9 @@
 <mapper namespace="moim.renew.backend.Favorite.Mapper.FavoriteMapper">
 
     <resultMap id="favoriteResultMap" type="moim.renew.backend.Favorite.Entity.FavoriteEntity">
-        <id     property="favoriteId" column="favoriteId"/>
-        <result property="moimId"   column="moim_id"/>
-        <result property="userId"   column="user_id"/>
+        <id     property="favoriteId" column="FavoriteId"/>
+        <result property="moimId"   column="Moim_id"/>
+        <result property="userId"   column="User_id"/>
     </resultMap>
     <insert id="Insertfavoriteofmoim" parameterType="string">
         INSERT INTO favorite(moim_id, user_id) VALUES(#{moimId}, #{userId})

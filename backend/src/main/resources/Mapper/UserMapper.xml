@@ -6,11 +6,19 @@
 <mapper namespace="moim.renew.backend.User.Mapper.UserMapper">
 
     <resultMap id="userResultMap" type="moim.renew.backend.User.Entity.UserEntity">
-        <id     property="userId"    column="user_id"/>
-        <result property="password" column="password"/>
-        <result property="nickname" column="nickname"/>
-        <result property="review" column="review"/>
-        <result property="Intro" column="Intro"/>
+        <id     property="userId"    column="User_id"/>
+        <result property="password" column="Password"/>
+        <result property="nickname" column="Nickname"/>
+        <result property="intro" column="Intro"/>
+        <result property="review" column="Review"/>
+        <result property="provider" column="Provider"/>
+        <result property="profileImg" column="Profileimg"/>
+        <result property="birthDay" column="Birthday"/>
+        <result property="gender" column="Gender"/>
+        <result property="type" column="Type"/>
+        <result property="address" column="Address"/>
+        <result property="addressDetail" column="AddressDetail"/>
+        <result property="Interests" column="Interests"/>
     </resultMap>
 
     <insert id="InsertUser" parameterType="moim.renew.backend.User.Entity.UserEntity">

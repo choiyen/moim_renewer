@@ -6,11 +6,11 @@
 <mapper namespace="moim.renew.backend.MoimDetail.Mapper.MoimDetailMapper">
 
     <resultMap id="moimDetailResultMap" type="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
-        <id     property="moimId"       column="moim_id"/>
-        <result property="content"   column="content" />
-        <result property="minpeople" column="min_people"/>
-        <result property="pay" column="pay"/>
-        <result property="member"     column="member" typeHandler="moim.renew.backend.Approval.Handler.StringArrayJsonTypeHandler"/>
+        <id     property="moimId"       column="Moim_id"/>
+        <result property="content"   column="Content" />
+        <result property="minpeople" column="Min_people"/>
+        <result property="pay" column="Pay"/>
+        <result property="approval" column="Approval"/>
     </resultMap>
 
     <!-- INSERT -->

@@ -5,6 +5,7 @@ import lombok.*;
 import moim.renew.backend.User.Entity.UserEntity;
 import moim.renew.backend.config.Enum.GenderEnum;
 import moim.renew.backend.config.Enum.ProviderEnum;
+import moim.renew.backend.config.Enum.UserTypeEnum;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -46,18 +47,20 @@ public class UserDTO
     private Float review = 3.0f; // 기본값 설정
 
     @NotBlank(message = "프로필 이미지는 무조건 포함되어야 하는 데이터입니다.")
-    private String ProfileImg; //프로필 이미지
+    private String profileImg; //프로필 이미지
 
     @NotBlank(message = "생년월일 데이터는 반드시 포함되어야 합니다.")
     @Pattern(
             regexp = "^(19[0-9]{2}|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
             message = "생년월일은 YYYY-MM-DD 형식이어야 합니다."
     )
-    private String Birthday; // 예: 1999-01-01
+    private String birthDay; // 예: 1999-01-01
 
     @NotNull(message = "성별 데이터는 반드시 포함되어야 합니다.")
-    private GenderEnum Gender;
+    private GenderEnum gender;
 
+    @NotNull(message = "userType은 관리자와 사용자 뿐입니다.")
+    private UserTypeEnum type;
 
     @NotBlank(message = "주소는 반드시 포함되어야 합니다.")
     private String address;
@@ -65,7 +68,7 @@ public class UserDTO
     private String addressDetail;
 
     @NotBlank(message = "관심사는 반드시 포함되어야 합니다.")
-    private String Interests;
+    private String interests;
 
     public UserEntity convertTo()
     {
@@ -77,12 +80,12 @@ public class UserDTO
                 .review(this.review)
                 .Intro(this.Intro)
                 .provider(String.valueOf(this.provider))
-                .ProfileImg(this.ProfileImg)
-                .Gander(String.valueOf(this.Gender))
+                .profileImg(this.profileImg)
+                .Gender(String.valueOf(this.gender))
                 .address(this.address)
                 .addressDetail(this.addressDetail)
-                .Birthday(this.Birthday)
-                .Interests(this.Interests)
+                .Birthday(this.birthDay)
+                .Interests(this.interests)
                 .build();
     }
     public UserDTO convertToUrl(String url)
@@ -94,12 +97,12 @@ public class UserDTO
                 .review(this.review)
                 .Intro(this.Intro)
                 .provider(this.provider)
-                .ProfileImg(this.ProfileImg)
-                .Gender(this.Gender)
+                .profileImg(this.profileImg)
+                .gender(this.gender)
                 .address(this.address)
                 .addressDetail(this.addressDetail)
-                .Birthday(this.Birthday)
-                .Interests(this.Interests)
+                .birthDay(this.birthDay)
+                .interests(this.interests)
                 .build();
     }
     public UserTokenDTO convertTo(String Token)

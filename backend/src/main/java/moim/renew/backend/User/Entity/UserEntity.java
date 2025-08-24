@@ -4,6 +4,7 @@ import lombok.*;
 import moim.renew.backend.User.DTO.UserDTO;
 import moim.renew.backend.config.Enum.GenderEnum;
 import moim.renew.backend.config.Enum.ProviderEnum;
+import moim.renew.backend.config.Enum.UserTypeEnum;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)  // 생성자 접근 수준을 PUBLIC으로 설정
@@ -19,12 +20,13 @@ public class UserEntity
     private String Intro;
     private String provider;
     private Float review = 3.0f; // 기본값 설정
-    private String ProfileImg; //프로필 이미지
-    private String Gender;//성별
-    private String Birthday; // 생년월일
+    private String profileImg; //프로필 이미지
+    private String gender;//성별
+    private String birthday; // 생년월일
+    private String type;
     private String address;
     private String addressDetail;
-    private String Interests;
+    private String interests;
 
     public UserDTO convertTo()
     {
@@ -35,12 +37,13 @@ public class UserEntity
                 .password(this.password)
                 .Intro(this.Intro)
                 .provider(ProviderEnum.valueOf(this.provider))
-                .ProfileImg(this.ProfileImg)
-                .Gender(GenderEnum.valueOf(this.Gender))
+                .profileImg(this.profileImg)
+                .gender(GenderEnum.valueOf(this.gender))
                 .address(this.address)
                 .addressDetail(this.addressDetail)
-                .Birthday(this.Birthday)
-                .Interests(this.Interests)
+                .birthDay(this.birthday)
+                .interests(this.interests)
+                .type(UserTypeEnum.valueOf(this.type))
                 .build();
     }
     public UserEntity convertToReNew(UserEntity oldUser)
@@ -52,12 +55,13 @@ public class UserEntity
                 .review(oldUser.review)
                 .Intro(this.Intro)
                 .provider(oldUser.provider)
-                .ProfileImg(this.ProfileImg)
-                .Gender(this.Gender)
+                .profileImg(this.profileImg)
+                .gender(this.gender)
                 .address(this.address)
                 .addressDetail(this.addressDetail)
-                .Birthday(this.Birthday)
-                .Interests(this.Interests)
+                .birthday(this.birthday)
+                .interests(this.interests)
+                .type(this.type)
                 .build();
     }
     public UserEntity convertToPassword(PasswordEncoder passwordEncoder)
@@ -68,6 +72,14 @@ public class UserEntity
                 .nickname(this.nickname)
                 .review(this.review)
                 .Intro(this.Intro)
+                .provider(this.provider)
+                .profileImg(this.profileImg)
+                .gender(this.gender)
+                .address(this.address)
+                .addressDetail(this.addressDetail)
+                .birthday(this.birthday)
+                .interests(this.interests)
+                .type(this.type)
                 .build();
     }
 }

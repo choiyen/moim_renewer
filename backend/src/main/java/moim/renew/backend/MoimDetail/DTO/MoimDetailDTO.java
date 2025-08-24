@@ -20,5 +20,5 @@ public class MoimDetailDTO
     private String content;
     private Integer minPeople;
     private Double Pay;
-    private List<String> Member;
+    private Boolean approval;
 }

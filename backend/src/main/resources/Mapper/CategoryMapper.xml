@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="moim.renew.backend.MoimCategory.Category.Mapper.MoimCategoryMapper">
+    <resultMap id="userReviewResultMap" type="moim.renew.backend.MoimCategory.Category.Entity.MoimCateGoryEntity">
+        <id     property="categoryId"    column="Category_id"/>
+        <result property="categorisation" column="Category_name"/>
+    </resultMap>
+</mapper>

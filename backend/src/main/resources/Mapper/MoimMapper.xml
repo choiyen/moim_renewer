@@ -7,20 +7,18 @@
 
     <!-- ResultMap -->
     <resultMap id="moimResultMap" type="moim.renew.backend.Moim.Entity.MoimEntity">
-        <id     property="moimId"       column="moim_id"/>
-        <result property="title"        column="title"/>
-        <result property="isOnline"     column="is_online"/>
-        <result property="maxPeople"    column="max_people"/>
-        <result property="expirationDate" column="expiration_date"/>
-        <result property="evenDate"     column="even_date"/>
-        <result property="location"     column="location"/>
-        <result property="representImg" column="represent_img"/>
-        <result property="category"     column="category"/>
-        <result property="organizer"    column="organizer" />
-        <result property="description"  column="description"/>
-        <result property="tag" column="tag" typeHandler="moim.renew.backend.Approval.Handler.StringArrayJsonTypeHandler"/>
-        <result property="CategoryDetail" column="category_detail" />
-        <result property="approval" column="approval"/>
+        <id     property="moimId"       column="Moim_id"/>
+        <result property="title"        column="Title"/>
+        <result property="isOnline"     column="Is_online"/>
+        <result property="maxPeople"    column="Max_people"/>
+        <result property="expirationDate" column="Expiration_Date"/>
+        <result property="evenDate"     column="Even_Date"/>
+        <result property="location"     column="Location"/>
+        <result property="representImg" column="Represent_img"/>
+        <result property="organizer"    column="Organizer" />
+        <result property="description"  column="Description"/>
+        <result property="tag" column="Tag" typeHandler="moim.renew.backend.Approval.Handler.StringArrayJsonTypeHandler"/>
+        <result property="categoryDetailId" column="CateGoryDetail_id" />
     </resultMap>
 
     <!-- INSERT -->

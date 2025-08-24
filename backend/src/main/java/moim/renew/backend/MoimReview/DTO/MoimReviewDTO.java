@@ -15,7 +15,7 @@ public class MoimReviewDTO
     private String moimId;
 
     @NotNull(message = "리뷰를 쓴 사람의 닉네임은 포함되어야 합니다.")
-    private String reviewerNickname;
+    private String reviewer;
 
     private Float score = 5.0f;
     private String comment;
@@ -25,7 +25,7 @@ public class MoimReviewDTO
         return MoimReviewEntity.builder()
                 .moimId(this.moimId)
                 .comment(this.comment)
-                .reviewerNickname(this.reviewerNickname)
+                .reviewer(this.reviewer)
                 .score(this.score)
                 .build();
     }

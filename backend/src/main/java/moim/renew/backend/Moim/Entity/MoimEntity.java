@@ -17,16 +17,14 @@ public class MoimEntity
     private String title;
     private Boolean isOnline;
     private Integer maxPeople;
-    private String organizer;
     private Date expirationDate;
     private Date evenDate;
     private String location;
     private String representImg;
+    private String organizer;
     private String description;
     private String[] tag;
-    private String category;
-    private String categoryDetail;
-    private boolean approval;
+    private String categoryDetailId;
 
     public MoimDTO convertTo()
     {
@@ -42,9 +40,7 @@ public class MoimEntity
                 .representImg(this.representImg)
                 .description(this.description)
                 .tag(this.tag)
-                .category(this.category)
-                .categoryDetail(this.categoryDetail)
-
+                .categoryDetailId(this.categoryDetailId)
                 .build();
     }
     public MoimEntity convertToReNew(MoimEntity oldMoim)
@@ -61,9 +57,7 @@ public class MoimEntity
                 .representImg(this.representImg)
                 .description(this.description)
                 .tag(this.tag)
-                .category(this.category)
-                .categoryDetail(this.categoryDetail)
-                .approval(this.approval)
+                .categoryDetailId(this.categoryDetailId)
                 .build();
     }
 }

@@ -5,10 +5,10 @@
 
 <mapper namespace="moim.renew.backend.MoimReview.Mapper.MoimReviewMapper">
     <resultMap id="moimReviewResultMap" type="moim.renew.backend.MoimReview.Entity.MoimReviewEntity">
-        <id     property="moimId"    column="moim_id"/>
-        <result property="reviewer" column="reviewer_nickname"/>
-        <result property="score" column="score"/>
-        <result property="comment" column="comment"/>
+        <id     property="moimId"    column="Moim_id"/>
+        <result property="reviewer" column="Reviewer_nickname"/>
+        <result property="score" column="Score"/>
+        <result property="comment" column="Comment"/>
     </resultMap>
 
     <insert id="InsertofmoimReview" parameterType="moim.renew.backend.MoimReview.Entity.MoimReviewEntity">

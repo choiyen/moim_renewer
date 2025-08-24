@@ -6,9 +6,12 @@
 <mapper namespace="moim.renew.backend.Approval.Mapper.ApprovalMapper">
 
     <resultMap id="moimApprovalResultMap" type="moim.renew.backend.Approval.Entity.ApprovalEntity">
-        <id     property="moimId"       column="moim_id"/>
-        <result property="joinmember"   column="join_member" typeHandler="moim.renew.backend.Approval.Handler.StringArrayJsonTypeHandler"/>
-        <result property="approval"     column="approval_members" typeHandler="moim.renew.backend.Approval.Handler.StringArrayJsonTypeHandler"/>
+        <id     property="approvalId"       column="Approval_id"/>
+        <result property="moimId" column="Moim_id"/>
+        <result property="userId" column="User_id"/>
+        <result property="status" column="Status"/>
+        <result property="requestedAt" column="Requested_at"/>
+        <result property="approvalAt" column="Approval_at"/>
     </resultMap>
 
     <!-- INSERT -->
