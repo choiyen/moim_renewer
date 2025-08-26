@@ -135,3 +135,17 @@ CREATE TABLE moim_consult (
               ON DELETE CASCADE
               ON UPDATE CASCADE
 );
+
+CREATE TABLE moim_consult_comment (
+    Moims_ConsultCommentId VARCHAR(50) PRIMARY KEY,
+    Moims_consultId VARCHAR(50),
+    Nickname VARCHAR(50) NOT NULL,
+    Password VARCHAR(50) NOT NULL,
+    Comments VARCHAR(100) NOT NULL,
+    CONSTRAINT fk_moim_consult_comment FOREIGN KEY (Moims_consultId) REFERENCES moim_consult(Moims_consultId)
+             ON DELETE CASCADE
+             ON UPDATE CASCADE,
+    CONSTRAINT fk_moim_consult_consult_category FOREIGN KEY (Nickname) REFERENCES users(Nickname)
+             ON DELETE CASCADE
+             ON UPDATE CASCADE
+)

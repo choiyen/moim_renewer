@@ -81,11 +81,11 @@ public class UserDTO
                 .Intro(this.Intro)
                 .provider(String.valueOf(this.provider))
                 .profileImg(this.profileImg)
-                .Gender(String.valueOf(this.gender))
+                .gender(String.valueOf(this.gender))
                 .address(this.address)
                 .addressDetail(this.addressDetail)
-                .Birthday(this.birthDay)
-                .Interests(this.interests)
+                .birthday(this.birthDay)
+                .interests(this.interests)
                 .build();
     }
     public UserDTO convertToUrl(String url)

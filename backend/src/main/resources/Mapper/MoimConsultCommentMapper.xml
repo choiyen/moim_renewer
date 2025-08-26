@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="moim.renew.backend.ConsultComment.Mapper.ConsultCommentMapper">
+    <resultMap id="ConsultCommentResultMap" type="moim.renew.backend.ConsultComment.Entity.ConsultCommentEntity">
+        <id     property="moimConsultCommentId"    column="Moims_ConsultCommentId"/>
+        <result property="moimConsultId" column="Moims_consultId"/>
+        <result property="nickname" column="Nickname"/>
+        <result property="password" column="Password"/>
+        <result property="comments" column="Comments"/>
+    </resultMap>
+
+    <!-- 문의 게시판의 댓글 개설   -->
+    <insert id="InsertConsultComment" parameterType="moim.renew.backend.ConsultComment.Entity.ConsultCommentEntity">
+        INSERT INTO moim_consult_comment( Moims_ConsultCommentId, Moims_consultId, Nickname, Password, Comments)
+        VALUES( #{moimConsultCommentId}, #{moimConsultId}, #{nickname}, #{password}, #{comments})
+    </insert>
+    <!--  문의 게시판의 댓글 수정  -->
+    <update id="UpdateConsultComment" parameterType="moim.renew.backend.ConsultComment.Entity.ConsultCommentEntity">
+        UPDATE moim_consult_comment SET Comments = #{comments} WHERE Moims_ConsultCommentId = #{moimConsultCommentId}
+    </update>
+    <!-- 문의 게시판의 댓글 확인 -->
+    <select id="SelectConsultComment" parameterType="string" resultMap="ConsultCommentResultMap">
+        SELECT * FROM moim_consult_comment WHERE Moims_consultId = #{moimConsultId}
+    </select>
+    <!-- 문의 댓글 게시판 삭제-->
+    <delete id="DeleteConsultComment" parameterType="string">
+        DELETE FROM moim_consult_comment WHERE Moims_ConsultCommentId = #{moimConsultCommentId} AND Password = #{password}
+    </delete>
+
+</mapper>

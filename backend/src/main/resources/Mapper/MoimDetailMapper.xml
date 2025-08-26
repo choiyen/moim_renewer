@@ -13,30 +13,36 @@
         <result property="approval" column="Approval"/>
     </resultMap>
 
-    <!-- INSERT -->
+    <!-- 모임 세부사항 생성 -->
     <insert id="moimofInsert" parameterType="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
-        INSERT INTO moim_detail (moim_id, content, min_people, pay)
-        VALUES (#{moimId}, #{content}, #{minpeople},#{pay})
+        INSERT INTO moim_detail (Moim_id, Content, Min_people, Pay, Approval)
+        VALUES (#{moimId}, #{content}, #{minpeople},#{pay}, #{approval})
     </insert>
-    <!-- UPDATE -->
+    <!-- 모임 세부사항 업데이트 -->
     <update id="updatemoimdetailbyResult" parameterType="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
         UPDATE moim_detail
-        SET content = #{content},
-        minpeople = #{minpeople},
-        pay = #{pay}
-        WHERE moim_id = #{moimId}
+        SET Content = #{content},
+        Min_people = #{minpeople},
+        Pay = #{pay},
+        WHERE Moim_id = #{moimId}
+    </update>
+    <!--  모임 승인 기능에 관한 업데이트  -->
+    <update id="updateByApproval" parameterType="string">
+        UPDATE moim_detail
+        SET Approval = #{approval}
+        WHERE Moim_id = #{moimId}
     </update>
 
-    <!-- SELECT -->
+    <!-- 모임 Id에 따른 세부 정보 조회 -->
     <select id="selectmoimdetailbyResult" parameterType="string" resultMap="moimDetailResultMap">
-        SELECT * FROM moim_detail
-        WHERE moim_id = #{moimId}
+        SELECT Moim_id, Content, Min_people, Pay, Approval FROM moim_detail
+        WHERE Moim_id = #{moimId}
     </select>
 
-    <!-- DELETE -->
+    <!-- 모임 세부 사항 삭제 -->
     <delete id="deletemoimdetailbyResult" parameterType="string">
         DELETE FROM moim_detail
-        WHERE moim_id = #{moimId}
+        WHERE Moim_id = #{moimId}
     </delete>
 
 </mapper>

@@ -12,5 +12,5 @@ public interface MoimDetailMapper
     MoimDetailEntity selectmoimdetailbyResult(String moimId);
     void updatemoimdetailbyResult(MoimDetailEntity moimDetailEntity);
     void moimofInsert(MoimDetailEntity moimDetailEntity);
-    void JoinMoim(List<String> Member);
+    void updateByApproval(String approval, String moimId);
 }

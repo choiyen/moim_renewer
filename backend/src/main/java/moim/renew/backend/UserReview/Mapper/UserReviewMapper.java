@@ -13,5 +13,5 @@ public interface UserReviewMapper
     void DeleteuserReview(String reviewer, String reviewee);
     List<UserReviewEntity> FindofuserReview(String reviewer);
     UserReviewEntity FindGet(String reviewer, String reviewee);
-    UserReviewEntity FindofuserReviewId(String id);
+    UserReviewEntity FindofuserReviewId(String Reviews_id);
 }

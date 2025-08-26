@@ -5,7 +5,7 @@
 
 <mapper namespace="moim.renew.backend.Moim.Mapper.MoimMapper">
 
-    <!-- ResultMap -->
+    <!-- 모임 Entity와 모임 Table 간 매핑 -->
     <resultMap id="moimResultMap" type="moim.renew.backend.Moim.Entity.MoimEntity">
         <id     property="moimId"       column="Moim_id"/>
         <result property="title"        column="Title"/>
@@ -21,58 +21,52 @@
         <result property="categoryDetailId" column="CateGoryDetail_id" />
     </resultMap>
 
-    <!-- INSERT -->
+    <!-- 모임 데이터 생성 -->
     <insert id="InsertMoim" parameterType="moim.renew.backend.Moim.Entity.MoimEntity">
         INSERT INTO moim (
-        moim_id, title, is_online, max_people,
-        expiration_date, even_date, location,
-        represent_img, category,organizer,description, tag,category_detail,approval
+        Moim_id, Title, Is_online, Max_people,
+        Expiration_Date, Even_Date, Location,
+        Represent_img, Organizer,Description, Tag,CateGoryDetail_id
         ) VALUES (
         #{moimId}, #{title}, #{isOnline}, #{maxPeople},
         #{expirationDate}, #{evenDate}, #{location},
-        #{representImg}, #{category}, #{organizer},
-        #{description},#{tag},#{category_detail},#{approval}
+        #{representImg}, #{organizer},
+        #{description},#{tag},#{categoryDetailId}
         )
     </insert>
 
-    <!-- UPDATE -->
+    <!-- 모임 데이터 수정 -->
     <update id="UpdateMoim" parameterType="moim.renew.backend.Moim.Entity.MoimEntity">
         UPDATE moim
         SET
-        title = #{title},
-        is_online = #{isOnline},
-        max_people = #{maxPeople},
-        expiration_date = #{expirationDate},
-        even_date = #{evenDate},
-        location = #{location},
-        represent_img = #{representImg},
-        category = #{category}
-        organizer = #{organizer},
-        description =  #{description},
-        tag = #{tag},
-        category_detail = #{category_detail},
-        approval = #{approval}
-        WHERE moim_id = #{moimId}
+        Title = #{title},
+        Is_online = #{isOnline},
+        Max_people = #{maxPeople},
+        Expiration_Date = #{expirationDate},
+        Even_Date = #{evenDate},
+        Location = #{location},
+        Represent_img = #{representImg},
+        Organizer = #{organizer},
+        Description =  #{description},
+        Tag = #{tag},
+        CateGoryDetail_id = #{categoryDetailId}
+        WHERE Moim_id = #{moimId}
     </update>
 
-    <!-- SELECT 단건 -->
+    <!-- 모임 데이터 조회 -->
     <select id="SelectMoimById" resultMap="moimResultMap" parameterType="string">
         SELECT *
         FROM moim
-        WHERE moim_id = #{moimId}
+        WHERE Moim_id = #{moimId}
     </select>
 
-    <!-- SELECT 전체 -->
+    <!-- 전체 모임 정보 : 메인 페이지 용 -->
     <select id="SelectAllMoims" resultMap="moimResultMap">
         SELECT *
         FROM moim
     </select>
 
-    <select id="ApprovalByMoimId" resultType="boolean" parameterType="string">
-        SELECT approval FROM moim WHERE moim_id = #{moimId}
-    </select>
-
-    <!-- DELETE -->
+    <!-- 모임 데이터 삭제 -->
     <delete id="DeleteMoim" parameterType="string">
         DELETE FROM moim
         WHERE moim_id = #{moimId} AND organizer = #{organizer}

@@ -30,7 +30,7 @@ public class FavoriteService
     public FavoriteDTO Insertfavoriteofmoim(FavoriteDTO favoriteDTO)
     {
         favoriteMapper.Insertfavoriteofmoim(favoriteDTO.convertTo());
-        FavoriteEntity favoriteEntity = favoriteMapper.selectofmoimId(favoriteDTO.getMoimId());
+        FavoriteEntity favoriteEntity = favoriteMapper.selectofmoimId(favoriteDTO.getMoimId(), favoriteDTO.getUserId());
         if(favoriteEntity == null)
         {
             throw new InsertException("찜 목록 생성에 실패하였습니다.");
@@ -42,11 +42,11 @@ public class FavoriteService
     }
     public Boolean Deleteoffavorite(String moimid, String userId)
     {
-        FavoriteEntity favoriteEntity = favoriteMapper.selectofmoimId(moimid);
+        FavoriteEntity favoriteEntity = favoriteMapper.selectofmoimId(moimid, userId);
         if(favoriteEntity != null)
         {
             favoriteMapper.Deleteoffavorite(moimid, userId);
-            FavoriteEntity favoriteEntity2 = favoriteMapper.selectofmoimId(moimid);
+            FavoriteEntity favoriteEntity2 = favoriteMapper.selectofmoimId(moimid, userId);
 
             if(favoriteEntity2 != null)
             {

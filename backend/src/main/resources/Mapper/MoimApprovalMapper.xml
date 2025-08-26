@@ -5,39 +5,48 @@
 
 <mapper namespace="moim.renew.backend.Approval.Mapper.ApprovalMapper">
 
+    <!-- ResultMap -->
     <resultMap id="moimApprovalResultMap" type="moim.renew.backend.Approval.Entity.ApprovalEntity">
-        <id     property="approvalId"       column="Approval_id"/>
-        <result property="moimId" column="Moim_id"/>
-        <result property="userId" column="User_id"/>
-        <result property="status" column="Status"/>
-        <result property="requestedAt" column="Requested_at"/>
-        <result property="approvalAt" column="Approval_at"/>
+        <id     property="approvalId"   column="Approval_id"/>
+        <result property="moimId"       column="Moim_id"/>
+        <result property="userId"       column="User_id"/>
+        <result property="status"       column="Status"/>
+        <result property="requestedAt"  column="Requested_at"/>
+        <result property="approvalAt"   column="Approval_at"/>
     </resultMap>
 
-    <!-- INSERT -->
-    <insert id="moimApprovalofInsert" parameterType="moim.renew.backend.Approval.Entity.ApprovalEntity">
-        INSERT INTO moim_approval (moim_id, join_member, approval_members)
-        VALUES (#{moimId}, #{joinmember}, #{approval})
+    <!-- INSERT (Approval_id는 AUTO_INCREMENT라서 제외) -->
+    <insert id="insertMoimApproval" parameterType="moim.renew.backend.Approval.Entity.ApprovalEntity" useGeneratedKeys="true" keyProperty="approvalId">
+        INSERT INTO moim_approval (Moim_id, User_id, Status)
+        VALUES (#{moimId}, #{userId}, #{status})
     </insert>
 
-    <!-- UPDATE -->
-    <update id="updatemoimApprovalbyResult" parameterType="moim.renew.backend.Approval.Entity.ApprovalEntity">
+    <!-- UPDATE (승인 상태 갱신) -->
+    <update id="updateMoimApprovalStatus" parameterType="moim.renew.backend.Approval.Entity.ApprovalEntity">
         UPDATE moim_approval
-        SET join_member = #{joinmember},
-        approval_members = #{approval}
-        WHERE moim_id = #{moimId}
+        SET Status = #{status},
+        Approval_at = CURRENT_TIMESTAMP
+        WHERE Approval_id = #{approvalId}
     </update>
 
-    <!-- SELECT -->
-    <select id="selectmoimApprovalbyResult" parameterType="string" resultMap="moimApprovalResultMap">
-        SELECT * FROM moim_approval
-        WHERE moim_id = #{moimId}
+    <!-- SELECT (moimId 기준으로 전체 승인 조회) -->
+    <select id="selectMoimApprovalsByMoimId" parameterType="string" resultMap="moimApprovalResultMap">
+        SELECT Approval_id, Moim_id, User_id, Status, Requested_at, Approval_at
+        FROM moim_approval
+        WHERE Moim_id = #{moimId}
     </select>
 
-    <!-- DELETE -->
-    <delete id="deletemoimApprovalbyResult" parameterType="string">
+    <!-- SELECT (userId 기준으로 해당 모임의 승인 상태 조회) -->
+    <select id="selectMoimApprovalsByUserId" parameterType="string" resultMap="moimApprovalResultMap">
+        SELECT Approval_id, Moim_id, User_id, Status, Requested_at, Approval_at
+        FROM moim_approval
+        WHERE User_id = #{userId} AND Moim_id = #{moimId}
+    </select>
+
+    <!-- DELETE (특정 승인 내역 삭제) -->
+    <delete id="deleteMoimApproval" parameterType="int">
         DELETE FROM moim_approval
-        WHERE moim_id = #{moimId}
+        WHERE Approval_id = #{approvalId}
     </delete>
 
 </mapper>
