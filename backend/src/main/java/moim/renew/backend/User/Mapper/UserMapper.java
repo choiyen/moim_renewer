@@ -9,6 +9,9 @@ public interface UserMapper {
 
     int getUserID(@Param("userId") String userId);
 
+    int getNickname(@Param("nickname") String nickname);
+
+
     void UpdatePasswordByEmail(@Param("email") String email, @Param("password") String password);
 
     UserEntity FindUserID(@Param("userId") String userId);

@@ -22,7 +22,7 @@ public class UserEntity
     private Float review = 3.0f; // 기본값 설정
     private String profileImg; //프로필 이미지
     private String gender;//성별
-    private String birthday; // 생년월일
+    private String birthDay; // 생년월일
     private String type;
     private String address;
     private String addressDetail;
@@ -30,18 +30,31 @@ public class UserEntity
 
     public UserDTO convertTo()
     {
+        System.out.println("userId: " + this.userId);
+        System.out.println("nickname: " + this.nickname);
+        System.out.println("review: " + this.review);
+        System.out.println("password: " + this.password);
+        System.out.println("Intro: " + this.Intro);
+        System.out.println("provider: " + this.provider);
+        System.out.println("profileImg: " + this.profileImg);
+        System.out.println("gender: " + this.gender);
+        System.out.println("address: " + this.address);
+        System.out.println("addressDetail: " + this.addressDetail);
+        System.out.println("birthDay: " + this.birthDay);
+        System.out.println("interests: " + this.interests);
+        System.out.println("type: " + this.type);
         return UserDTO.builder()
                 .userId(this.userId)
                 .nickname(this.nickname)
                 .review(this.review)
                 .password(this.password)
-                .Intro(this.Intro)
+                .intro(this.Intro)
                 .provider(ProviderEnum.valueOf(this.provider))
                 .profileImg(this.profileImg)
                 .gender(GenderEnum.valueOf(this.gender))
                 .address(this.address)
                 .addressDetail(this.addressDetail)
-                .birthDay(this.birthday)
+                .birthDay(this.birthDay)
                 .interests(this.interests)
                 .type(UserTypeEnum.valueOf(this.type))
                 .build();
@@ -59,7 +72,7 @@ public class UserEntity
                 .gender(this.gender)
                 .address(this.address)
                 .addressDetail(this.addressDetail)
-                .birthday(this.birthday)
+                .birthDay(this.birthDay)
                 .interests(this.interests)
                 .type(this.type)
                 .build();
@@ -77,7 +90,7 @@ public class UserEntity
                 .gender(this.gender)
                 .address(this.address)
                 .addressDetail(this.addressDetail)
-                .birthday(this.birthday)
+                .birthDay(this.birthDay)
                 .interests(this.interests)
                 .type(this.type)
                 .build();

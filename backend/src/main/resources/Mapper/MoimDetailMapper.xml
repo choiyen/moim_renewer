@@ -5,7 +5,7 @@
 
 <mapper namespace="moim.renew.backend.MoimDetail.Mapper.MoimDetailMapper">
 
-    <resultMap id="moimDetailResultMap" type="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
+    <resultMap id="moimDetailResultMap" type="MoimDetailEntity">
         <id     property="moimId"       column="Moim_id"/>
         <result property="content"   column="Content" />
         <result property="minpeople" column="Min_people"/>
@@ -14,12 +14,12 @@
     </resultMap>
 
     <!-- 모임 세부사항 생성 -->
-    <insert id="moimofInsert" parameterType="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
+    <insert id="moimofInsert" parameterType="MoimDetailEntity">
         INSERT INTO moim_detail (Moim_id, Content, Min_people, Pay, Approval)
         VALUES (#{moimId}, #{content}, #{minpeople},#{pay}, #{approval})
     </insert>
     <!-- 모임 세부사항 업데이트 -->
-    <update id="updatemoimdetailbyResult" parameterType="moim.renew.backend.MoimDetail.Entity.MoimDetailEntity">
+    <update id="updatemoimdetailbyResult" parameterType="MoimDetailEntity">
         UPDATE moim_detail
         SET Content = #{content},
         Min_people = #{minpeople},
@@ -27,20 +27,20 @@
         WHERE Moim_id = #{moimId}
     </update>
     <!--  모임 승인 기능에 관한 업데이트  -->
-    <update id="updateByApproval" parameterType="string">
+    <update id="updateByApproval" parameterType="java.lang.String">
         UPDATE moim_detail
         SET Approval = #{approval}
         WHERE Moim_id = #{moimId}
     </update>
 
     <!-- 모임 Id에 따른 세부 정보 조회 -->
-    <select id="selectmoimdetailbyResult" parameterType="string" resultMap="moimDetailResultMap">
+    <select id="selectmoimdetailbyResult" parameterType="java.lang.String" resultMap="moimDetailResultMap">
         SELECT Moim_id, Content, Min_people, Pay, Approval FROM moim_detail
         WHERE Moim_id = #{moimId}
     </select>
 
     <!-- 모임 세부 사항 삭제 -->
-    <delete id="deletemoimdetailbyResult" parameterType="string">
+    <delete id="deletemoimdetailbyResult" parameterType="java.lang.String">
         DELETE FROM moim_detail
         WHERE Moim_id = #{moimId}
     </delete>

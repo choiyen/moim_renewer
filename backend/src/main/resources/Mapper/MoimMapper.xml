@@ -6,7 +6,7 @@
 <mapper namespace="moim.renew.backend.Moim.Mapper.MoimMapper">
 
     <!-- 모임 Entity와 모임 Table 간 매핑 -->
-    <resultMap id="moimResultMap" type="moim.renew.backend.Moim.Entity.MoimEntity">
+    <resultMap id="moimResultMap" type="MoimEntity">
         <id     property="moimId"       column="Moim_id"/>
         <result property="title"        column="Title"/>
         <result property="isOnline"     column="Is_online"/>
@@ -22,7 +22,7 @@
     </resultMap>
 
     <!-- 모임 데이터 생성 -->
-    <insert id="InsertMoim" parameterType="moim.renew.backend.Moim.Entity.MoimEntity">
+    <insert id="InsertMoim" parameterType="MoimEntity">
         INSERT INTO moim (
         Moim_id, Title, Is_online, Max_people,
         Expiration_Date, Even_Date, Location,
@@ -36,7 +36,7 @@
     </insert>
 
     <!-- 모임 데이터 수정 -->
-    <update id="UpdateMoim" parameterType="moim.renew.backend.Moim.Entity.MoimEntity">
+    <update id="UpdateMoim" parameterType="MoimEntity">
         UPDATE moim
         SET
         Title = #{title},
@@ -54,7 +54,7 @@
     </update>
 
     <!-- 모임 데이터 조회 -->
-    <select id="SelectMoimById" resultMap="moimResultMap" parameterType="string">
+    <select id="SelectMoimById" resultMap="moimResultMap" parameterType="java.lang.String">
         SELECT *
         FROM moim
         WHERE Moim_id = #{moimId}
@@ -67,7 +67,7 @@
     </select>
 
     <!-- 모임 데이터 삭제 -->
-    <delete id="DeleteMoim" parameterType="string">
+    <delete id="DeleteMoim" parameterType="java.lang.String">
         DELETE FROM moim
         WHERE moim_id = #{moimId} AND organizer = #{organizer}
     </delete>

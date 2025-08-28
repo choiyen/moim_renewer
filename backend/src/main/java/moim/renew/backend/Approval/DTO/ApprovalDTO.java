@@ -8,6 +8,7 @@ import moim.renew.backend.Approval.Entity.ApprovalEntity;
 import moim.renew.backend.config.Enum.ApprovalStatus;
 import org.joda.time.DateTime;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -29,11 +30,10 @@ public class ApprovalDTO {
     private ApprovalStatus status;
 
     @NotNull(message = "requestedAt는 필수 입력값입니다.")
-    private DateTime requestedAt;
+    private LocalDateTime requestedAt;
 
     @NotNull(message = "approvalAt는 필수 입력값입니다.")
-    private DateTime approvalAt;
-
+    private LocalDateTime approvalAt;
 
     public ApprovalEntity ConvertTo()
     {

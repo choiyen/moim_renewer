@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    User_id VARCHAR(50) PRIMARY KEY,
+    userId VARCHAR(50) PRIMARY KEY,
     Password VARCHAR(100) NOT NULL,
     Nickname VARCHAR(50) NOT NULL UNIQUE,
     Review DECIMAL(3,1) DEFAULT 3.0,
@@ -8,7 +8,10 @@ CREATE TABLE users (
     Profileimg VARCHAR(100) NOT NULL,
     Birthday DATE DEFAULT (CURRENT_DATE),
     Gender VARCHAR(20) DEFAULT 'MALE',
-    Type VARCHAR(50) DEFAULT 'Member'
+    Type VARCHAR(50) DEFAULT 'MEMBER',
+    Address VARCHAR(255) NOT NULL,
+    AddressDetail VARCHAR(255) NOT NULL,
+    Interests VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE user_review (
@@ -89,11 +92,11 @@ CREATE TABLE moim_review (
 CREATE TABLE moim_approval (
   Approval_id INT AUTO_INCREMENT PRIMARY KEY,
   Moim_id VARCHAR(50) NOT NULL,
-  User_id VARCHAR(50) NOT NULL,
+  userId VARCHAR(50) NOT NULL,
   Status VARCHAR(50) DEFAULT 'Pended',
   Requested_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   Approval_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT fk_moim_approval_users FOREIGN KEY (User_id) REFERENCES users(User_id)
+  CONSTRAINT fk_moim_approval_users FOREIGN KEY (userId) REFERENCES users(userId)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
   CONSTRAINT fk_moim_approval_moim FOREIGN KEY (Moim_id) REFERENCES moim(Moim_id)
@@ -104,15 +107,15 @@ CREATE TABLE moim_approval (
 CREATE TABLE moim_favorite (
     FavoriteId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Moim_id VARCHAR(50) NOT NULL,
-    User_id VARCHAR(50) NOT NULL,
+    userId VARCHAR(50) NOT NULL,
 
     CONSTRAINT fk_dibs_moim_moim FOREIGN KEY (Moim_id)
         REFERENCES moim(Moim_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
 
-    CONSTRAINT fk_dibs_moim_user FOREIGN KEY (User_id)
-        REFERENCES users(User_id)
+    CONSTRAINT fk_dibs_moim_user FOREIGN KEY (userId)
+        REFERENCES users(userId)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -142,10 +145,11 @@ CREATE TABLE moim_consult_comment (
     Nickname VARCHAR(50) NOT NULL,
     Password VARCHAR(50) NOT NULL,
     Comments VARCHAR(100) NOT NULL,
-    CONSTRAINT fk_moim_consult_comment FOREIGN KEY (Moims_consultId) REFERENCES moim_consult(Moims_consultId)
+    CONSTRAINT fk_moim_consult_comment_consult FOREIGN KEY (Moims_consultId)
+             REFERENCES moim_consult(Moims_consultId)
              ON DELETE CASCADE
              ON UPDATE CASCADE,
-    CONSTRAINT fk_moim_consult_consult_category FOREIGN KEY (Nickname) REFERENCES users(Nickname)
+    CONSTRAINT fk_moim_consult_comment_user FOREIGN KEY (Nickname) REFERENCES users(Nickname)
              ON DELETE CASCADE
              ON UPDATE CASCADE
-)
+);

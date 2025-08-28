@@ -22,9 +22,11 @@ public class UserService
     public UserDTO FindUserID(String userId)
     {
         UserEntity userEntity = userMapper.FindUserID(userId);
+
         if(userEntity != null)
         {
             log.info("정상적으로 User 정보를 찾는데 성공하였습니다.");
+            System.out.println(userEntity);
             return userEntity.convertTo();
         }
         else
@@ -38,6 +40,8 @@ public class UserService
         UserEntity userEntity = userDTO.convertTo().convertToPassword(passwordEncoder);
         userMapper.InsertUser(userEntity);
         UserDTO userDTO2 = FindUserID(userDTO.getUserId());
+        System.out.println(userDTO2);
+
         if(userDTO2 == null)
         {
             log.error("User 정보를 생성하는데 실패하였습니다.");
@@ -97,6 +101,17 @@ public class UserService
     public Boolean getUserID(String id)
     {
         int i = userMapper.getUserID(id);
+        if(i > 0) {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public Boolean getNicname(String nickname)
+    {
+        int i = userMapper.getNickname(nickname);
         if(i > 0) {
             return true;
         }

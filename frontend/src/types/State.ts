@@ -77,6 +77,7 @@ interface UserData {
   };
   introduction: string;
   checked: boolean;
+  interests: string;
 }
 
 interface UserState {
@@ -92,6 +93,8 @@ interface UserState {
   setAddress: (basic: string, detail: string) => void;
   setIntroduction: (introduction: string) => void;
   setChecked: (checked: boolean) => void;
+  setInterests: (Interests: string) => void;
+  resetMoimData: () => void; // MoimData 초기화
 }
 
 const useUserStore = create<UserState>((set) => ({
@@ -113,13 +116,20 @@ const useUserStore = create<UserState>((set) => ({
     },
     introduction: "",
     checked: false,
-    addressDetail: undefined,
+    interests: "",
   },
   setAddressDetail: (value: string) =>
     set((state) => ({
       userData: {
         ...state.userData,
         addressDetail: value,
+      },
+    })),
+  setInterests: (interests: string) =>
+    set((state) => ({
+      userData: {
+        ...state.userData,
+        interests,
       },
     })),
   setEmail: (email: string) =>
@@ -192,6 +202,30 @@ const useUserStore = create<UserState>((set) => ({
         checked,
       },
     })),
+  resetMoimData: () => {
+    set(() => ({
+      userData: {
+        email: "",
+        password: "",
+        confirmPassword: "",
+        nickname: "",
+        profileImage: null,
+        gender: "",
+        birthdate: {
+          year: "",
+          month: "",
+          day: "",
+        },
+        address: {
+          basic: "",
+          detail: "",
+        },
+        introduction: "",
+        checked: false,
+        interests: "",
+      },
+    }));
+  },
 }));
 
 //MoimData

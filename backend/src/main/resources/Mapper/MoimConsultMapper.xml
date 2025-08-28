@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="moim.renew.backend.Consult.Mapper.ConsultMapper">
-    <resultMap id="ConsultResultMap" type="moim.renew.backend.Consult.Entity.ConsultEntity">
+    <resultMap id="ConsultResultMap" type="ConsultEntity">
         <id     property="moimConsultId"    column="Moims_consultId"/>
         <result property="nickname" column="Nickname"/>
         <result property="consultCategoryId" column="Consult_categoryId"/>
@@ -12,22 +12,22 @@
     </resultMap>
 
     <!--  상담 게시판 조회  -->
-    <select id="SelectConsult" parameterType="string" resultMap="ConsultResultMap">
+    <select id="SelectConsult" parameterType="java.lang.String" resultMap="ConsultResultMap">
         SELECT Moims_consultId, Nickname, Consult_categoryId, Consult_Comment FROM moim_consult WHERE Moims_consultId = #{moimConsultId}
     </select>
     <!--  상담 게시판 내용 생성  -->
-    <insert id="InsertConsult" parameterType="moim.renew.backend.Consult.Entity.ConsultEntity">
+    <insert id="InsertConsult" parameterType="ConsultEntity">
         INSERT INTO moim_consult(Moims_consultId, Nickname, Consult_categoryId, Consult_Comment) VALUES(#{moimConsultId}, #{nickname},#{consultCategoryId},#{consultComment})
     </insert>
     <!-- 상담 게시판 내용 수정  -->
-    <update id="UpdateConsult" parameterType="moim.renew.backend.Consult.Entity.ConsultEntity">
+    <update id="UpdateConsult" parameterType="ConsultEntity">
         UPDATE moim_consult SET nickname = #{nickname}, Consult_Comment = #{consultComment}, Consult_categoryId = #{consultCategoryId}  WHERE Moims_consultId = #{moimConsultId}
     </update>
-    <delete id="DeleteConsult" parameterType="string">
+    <delete id="DeleteConsult" parameterType="java.lang.String">
         DELETE FROM moim_consult WHERE Moims_consultId = #{moimConsultId}
     </delete>
     <!-- 전체 게시판 조회 -->
-    <select id="SelectConsultAll" resultMap="moim.renew.backend.Consult.Entity.ConsultEntity">
+    <select id="SelectConsultAll" resultMap="ConsultResultMap">
         SELECT * FROM moim_consult
     </select>
 </mapper>

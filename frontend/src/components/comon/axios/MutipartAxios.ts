@@ -1,4 +1,4 @@
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";

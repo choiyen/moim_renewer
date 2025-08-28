@@ -6,12 +6,17 @@
 
     <!-- 엔티티 패키지 별칭 자동 등록 -->
     <typeAliases>
-        <package name="moim.renew.backend.User.Entity"/>
-        <package name="moim.renew.backend.UserReview.Entity"/>
+        <package name="moim.renew.backend.Consult.Entity"/>
+        <package name="moim.renew.backend.ConsultComment.Entity"/>
+        <package name="moim.renew.backend.ConsultCategory.Entity"/>
+        <package name="moim.renew.backend.MoimCategory.Category.Entity"/>
+        <package name="moim.renew.backend.MoimCategory.CategoryDetail.Entity"/>
         <package name="moim.renew.backend.Moim.Entity"/>
         <package name="moim.renew.backend.MoimDetail.Entity"/>
+        <package name="moim.renew.backend.User.Entity"/>
+        <package name="moim.renew.backend.Approval.Entity"/>
+        <package name="moim.renew.backend.UserReview.Entity"/>
         <package name="moim.renew.backend.MoimReview.Entity"/>
         <package name="moim.renew.backend.Favorite.Entity"/>
-        <package name="moim.renew.backend.Approval.Entity"/>
     </typeAliases>
 </configuration>

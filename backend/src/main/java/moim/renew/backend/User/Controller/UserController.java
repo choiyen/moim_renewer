@@ -2,6 +2,7 @@ package moim.renew.backend.User.Controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import moim.renew.backend.S3Service.S3ImageService;
 import moim.renew.backend.Security.TokenProvider;
@@ -14,6 +15,7 @@ import moim.renew.backend.config.Exception.InsertException;
 import moim.renew.backend.config.Exception.SelectException;
 import moim.renew.backend.config.Exception.UpdateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -44,28 +47,36 @@ public class UserController
     private final S3ImageService awsS3Service;
 
 
+    // 회원가입 설정 정상동작
     @PostMapping
     public ResponseEntity<?> userPost(
-            @RequestPart("userDTO") UserDTO userDTO,   // JSON 문자열 → DTO
+            @Valid @RequestPart("userDTO") UserDTO userDTO,   // JSON 문자열 → DTO
             @RequestPart("file") MultipartFile file   // 업로드 파일
     )     {
         try
         {
-            if(file != null)
+            if(file == null)
             {
                 throw new SelectException("업로드 파일이 설정되어 있지 않습니다.");
             }
+
+
             String url = awsS3Service.upload(file);
             UserDTO userDTO2 = userDTO.convertToUrl(url);
             UserDTO userDTO1 = userService.UserIDInsert(userDTO2, passwordEncoder);
             if (userDTO1 != null)
             {
-                return ResponseEntity.ok().body(responseDTO.Response("success", responseDTO.getMessage()));
+                return ResponseEntity.ok().body(responseDTO.Response("success", "회원가입 완료", Collections.singletonList(userDTO1)));
             }
             else
             {
                 throw new InsertException();
             }
+        }
+        catch (DuplicateKeyException e)
+        {
+            return ResponseEntity.ok().body(responseDTO.Response("error", "닉네임이나 이메일에 중복이 존재합니다"));
+
         }
         catch (Exception e)
         {
@@ -204,6 +215,27 @@ public class UserController
             else
             {
                 return ResponseEntity.ok().body(responseDTO.Response("success", "이메일 중복확인"));
+            }
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.badRequest().body(responseDTO.Response("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/nickcheck")
+    public ResponseEntity<?> NicknameCheck(@RequestParam String nickname)
+    {
+        try
+        {
+            boolean bool = userService.getNicname(nickname);
+            if(bool)
+            {
+                return ResponseEntity.ok().body(responseDTO.Response("checknot", "닉네임 중복!!"));
+            }
+            else
+            {
+                return ResponseEntity.ok().body(responseDTO.Response("success", "닉네임 중복확인됨, 사용 가능"));
             }
         }
         catch (Exception e)

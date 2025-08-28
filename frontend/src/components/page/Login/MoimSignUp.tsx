@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { GET } from "../../comon/axios/axiosInstance";
 import { toast } from "react-toastify";
 import { hopper } from "../../../types/MoimType";
+import { POST_FORM } from "../../comon/axios/MutipartAxios";
+import { useNavigate } from "react-router-dom";
 
 export const ButtonWrapper = styled.div`
   display: flex;
@@ -198,6 +200,7 @@ const MoimSignUp = () => {
   const [isNickNameDuplicationDisabled, setisNickNameDuplicationDisabled] =
     useState(false);
   const nicknameButtonRef = useRef<HTMLButtonElement>(null);
+  const nativegate = useNavigate();
 
   useEffect(() => {
     if (termCheck.Market && termCheck.Privacy && termCheck.Service) {
@@ -217,6 +220,8 @@ const MoimSignUp = () => {
     setBirthdate,
     setAddress,
     setIntroduction,
+    setInterests,
+    resetMoimData,
   } = useUserStore();
 
   const handleEmailCheck = () => {
@@ -226,12 +231,13 @@ const MoimSignUp = () => {
     }).then((res) => {
       console.log(res);
       if (res.resultType == "checknot") {
-        setisEmailDuplicationDisabled(true);
-      } else if (res.resultType == "success") {
+        console.log("데이터 중복");
         toast.error("중복된 이메일입니다. 다시 입력해주세요.", {
           position: "top-center",
           autoClose: 5000,
         });
+      } else if (res.resultType == "success") {
+        setisEmailDuplicationDisabled(true);
       } else {
         toast.error(
           "설계에 반영되지 않은 결과 타입입니다. 발견시 관리자에게 문의해주세요",
@@ -246,17 +252,17 @@ const MoimSignUp = () => {
 
   const handleNicknameCheck = () => {
     GET({
-      url: "/user/check",
+      url: "/user/nickcheck",
       params: { nickname: userData.nickname },
     }).then((res) => {
-      console.log(res);
       if (res.resultType == "checknot") {
-        setisNickNameDuplicationDisabled(true);
-      } else if (res.resultType == "success") {
-        toast.error("중복된 이메일입니다. 다시 입력해주세요.", {
+        toast.error("중복된 닉네임입니다. 다시 입력해주세요.", {
           position: "top-center",
           autoClose: 5000,
         });
+      } else if (res.resultType == "success") {
+        console.log(res);
+        setisNickNameDuplicationDisabled(true);
       } else {
         toast.error(
           "설계에 반영되지 않은 결과 타입입니다. 발견시 관리자에게 문의해주세요",
@@ -271,10 +277,12 @@ const MoimSignUp = () => {
   const Profileset = () => {
     if (!(isEmailDuplicationDisabled && isNickNameDuplicationDisabled)) {
       alert("이메일과 닉네임에 대한 중복확인 과정을 진행하지 않았습니다.");
+      return;
     }
 
     if (userData.password !== userData.confirmPassword) {
       alert("비밀번호와 비밀번호 확인이 서로 다릅니다");
+      return;
     }
 
     if (
@@ -290,11 +298,57 @@ const MoimSignUp = () => {
       !userData.profileImage
     ) {
       alert("비어있는 데이터가 존재합니다.");
+      return;
     }
 
     if (!userData.checked) {
       alert("모든 주의사항이 체크되어 있지 않습니다. 체크해주세요");
+      return;
     }
+
+    const userDTO = {
+      userId: userData.email,
+      password: userData.password,
+      nickname: userData.nickname,
+      intro: userData.introduction,
+      gender: userData.gender,
+      birthDay: `${userData.birthdate.year}-${userData.birthdate.month}-${userData.birthdate.day}`,
+      address: userData.address.basic,
+      addressDetail: userData.address.detail,
+      interests: userData.interests,
+    };
+
+    const formData = new FormData();
+    formData.append(
+      "userDTO",
+      new Blob([JSON.stringify(userDTO)], { type: "application/json" })
+    );
+    formData.append("file", userData.profileImage); // 실제 파일
+
+    POST_FORM("/user", formData)
+      .then((res) => {
+        if (res.resultType == "success") {
+          console.log(res);
+          resetMoimData();
+          nativegate("/login");
+        } else if (res.resultType == "error") {
+          toast.error(res.message, {
+            position: "top-center",
+            autoClose: 5000,
+          });
+        } else {
+          toast.error(
+            "회원가입 중 예기치 못한 오류 발견시 관리자에게 문의해주세요",
+            {
+              position: "top-center",
+              autoClose: 5000,
+            }
+          );
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
   return (
     <ButtonWrapper>
@@ -354,8 +408,9 @@ const MoimSignUp = () => {
             type="button"
             ref={nicknameButtonRef}
             onClick={() => handleNicknameCheck()}
+            disabled={isNickNameDuplicationDisabled}
           >
-            중복 확인
+            {isNickNameDuplicationDisabled ? "확인 완료" : "중복 확인"}
           </CheckDuplicateButton>
         </InputRow>
         <Label htmlFor="profile-image">프로필 이미지</Label>
@@ -451,7 +506,10 @@ const MoimSignUp = () => {
           />
         </AddressInputRow>
         <Label>주요 관심사</Label>
-        <SelectInput>
+        <SelectInput
+          onChange={(e) => setInterests(e.target.value)}
+          value={userData.interests}
+        >
           {hopper.map((item, idx) => (
             <option key={idx} value={item.Category}>
               {item.Category}

@@ -21,6 +21,7 @@ import MoimDetail from "./components/page/Moim/MoimDetail";
 import ConsultInsert from "./components/page/Consult/ConsultInsert";
 import MoimMap from "./components/page/Map/MoimMap";
 import ConsultSelect from "./components/page/Consult/ConsultSelect";
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter([
   {
@@ -56,7 +57,24 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        limit={1} // 한 번에 하나만 표시
+      />
+      ;
+    </>
+  );
 }
 
 export default App;

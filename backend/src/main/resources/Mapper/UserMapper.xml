@@ -6,8 +6,8 @@
 <mapper namespace="moim.renew.backend.User.Mapper.UserMapper">
 
     <!--  user Entity와 user Table 간 매핑  -->
-    <resultMap id="userResultMap" type="moim.renew.backend.User.Entity.UserEntity">
-        <id     property="userId"    column="User_id"/>
+    <resultMap id="userResultMap" type="UserEntity">
+        <id     property="userId"    column="userId"/>
         <result property="password" column="Password"/>
         <result property="nickname" column="Nickname"/>
         <result property="intro" column="Intro"/>
@@ -23,39 +23,42 @@
     </resultMap>
 
     <!-- 유저 정보 생성   -->
-    <insert id="InsertUser" parameterType="moim.renew.backend.User.Entity.UserEntity">
-        INSERT INTO users(User_id, Password, Nickname, Intro, Review, Provider,Profileimg,Birthday,Gender, Type, Address, AddressDetail, Interests   )
+    <insert id="InsertUser" parameterType="UserEntity">
+        INSERT INTO users(userId, Password, Nickname, Intro, Review, Provider,Profileimg,Birthday,Gender, Type, Address, AddressDetail, Interests   )
         VALUES(#{userId}, #{password}, #{nickname}, #{intro}, #{review}, #{provider},
         #{profileImg}, #{birthDay}, #{gender}, #{type}, #{address}, #{addressDetail}, #{interests})
     </insert>
 
     <!-- 유저 정보 업데이트  -->
-    <update id="UpdateUser" parameterType="moim.renew.backend.User.Entity.UserEntity">
+    <update id="UpdateUser" parameterType="UserEntity">
         UPDATE users
         SET password = #{password}, nickname = #{nickname}, review = #{review}, Intro = #{Intro}, Profileimg = #{profileImg},
         Birthday = #{birthDay}, Gender = #{gender}, Type = #{type}, Address = #{address}, AddressDetail = #{addressDetail}, Interests = #{interests}
-        WHERE user_id = #{userId}
+        WHERE userId = #{userId}
     </update>
 
     <!-- 유저 정보 삭제   -->
-    <delete id="DeleteUser" parameterType="map">
-        DELETE FROM users WHERE User_id = #{userId} AND Password = #{password}
+    <delete id="DeleteUser" parameterType="UserEntity">
+        DELETE FROM users WHERE userId = #{userId} AND Password = #{password}
     </delete>
 
     <!-- 유저 비밀번호 업데이트   -->
-    <update id="UpdatePasswordByEmail" parameterType="map">
+    <update id="UpdatePasswordByEmail" parameterType="UserEntity">
         UPDATE users
         SET Password = #{password}
-        WHERE User_id = #{userId}
+        WHERE userId = #{userId}
     </update>
 
     <!--  User  Id의 존재 여부 확인  -->
-    <select id="getUserID" parameterType="string" resultType="int">
-        SELECT COUNT(*) FROM users WHERE User_id = #{userId}
+    <select id="getUserID" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM users WHERE userId = #{userId}
     </select>
-
+    <!--  Nickname의 존재 여부 확인  -->
+    <select id="getNickname" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM users WHERE Nickname = #{nickname}
+    </select>
         <!--    user 정보 찾기-->
-    <select id="FindUserID" parameterType="string" resultType="moim.renew.backend.User.Entity.UserEntity">
-        SELECT * FROM users WHERE User_id = #{userId}
+    <select id="FindUserID" parameterType="java.lang.String" resultType="UserEntity">
+        SELECT userId, Password, Nickname, Intro, Review, Provider,Profileimg,Birthday,Gender, Type, Address, AddressDetail, Interests  FROM users WHERE userId = #{userId}
     </select>
 </mapper>

@@ -6,7 +6,7 @@
 <mapper namespace="moim.renew.backend.MoimCategory.Category.Mapper.MoimCategoryMapper">
 
     <!-- 결과 매핑 -->
-    <resultMap id="MoimCategoryResultMap" type="moim.renew.backend.MoimCategory.Category.Entity.MoimCateGoryEntity">
+    <resultMap id="MoimCategoryResultMap" type="MoimCateGoryEntity">
         <id     property="categoryId"      column="Category_id"/>
         <result property="categorisation"  column="Category_name"/>
     </resultMap>
@@ -31,7 +31,7 @@
     </select>
 
     <!-- 대분류 삭제 -->
-    <delete id="DeleteCategory" parameterType="string">
+    <delete id="DeleteCategory" parameterType="java.lang.String">
         DELETE FROM category
         WHERE Category_id = #{categoryId}
     </delete>

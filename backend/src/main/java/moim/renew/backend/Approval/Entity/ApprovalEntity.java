@@ -7,6 +7,8 @@ import moim.renew.backend.Approval.DTO.ApprovalDTO;
 import moim.renew.backend.config.Enum.ApprovalStatus;
 import org.joda.time.DateTime;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor(access = AccessLevel.PUBLIC)  // 생성자 접근 수준을 PUBLIC으로 설정
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -17,8 +19,8 @@ public class ApprovalEntity
     private String moimId;
     private String userNickname;
     private String status;
-    private DateTime requestedAt;
-    private DateTime approvalAt;
+    private LocalDateTime requestedAt;
+    private LocalDateTime approvalAt;
 
     public ApprovalDTO ConvertTo()
     {

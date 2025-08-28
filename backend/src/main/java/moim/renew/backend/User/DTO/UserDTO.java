@@ -1,5 +1,6 @@
 package moim.renew.backend.User.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import moim.renew.backend.User.Entity.UserEntity;
@@ -19,6 +20,7 @@ public class UserDTO
 {
     @NotBlank(message = "이메일 데이터가 비어있습니다.")
     @Email(message = "이메일 양식에 맞게 적용되어 있지 않습니다.")
+    @JsonProperty("userId")
     private String userId; //이메일
 
     @NotBlank(message = "패스워드 데이터는 비어있을 수 없습니다.")
@@ -40,13 +42,12 @@ public class UserDTO
 
     @NotBlank(message = "자기소개 데이터는 필수 입력 사항입니다.")
     @Size(min = 20, message = "자기소개 말은 최소 20자리의 글자로 입력하셔야 합니다.")
-    private String Intro; //자기소개
+    private String intro; //자기소개
 
     @NotNull(message = "provider는 무조건 포함되어야 하는 데이터입니다.")
     private ProviderEnum provider = ProviderEnum.DEFAULT; //OAuth2 제공자, 기본 값은 노멀
     private Float review = 3.0f; // 기본값 설정
 
-    @NotBlank(message = "프로필 이미지는 무조건 포함되어야 하는 데이터입니다.")
     private String profileImg; //프로필 이미지
 
     @NotBlank(message = "생년월일 데이터는 반드시 포함되어야 합니다.")
@@ -59,8 +60,7 @@ public class UserDTO
     @NotNull(message = "성별 데이터는 반드시 포함되어야 합니다.")
     private GenderEnum gender;
 
-    @NotNull(message = "userType은 관리자와 사용자 뿐입니다.")
-    private UserTypeEnum type;
+    private UserTypeEnum type = UserTypeEnum.MEMBER;
 
     @NotBlank(message = "주소는 반드시 포함되어야 합니다.")
     private String address;
@@ -73,19 +73,21 @@ public class UserDTO
     public UserEntity convertTo()
     {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        System.out.println("type: " + this.type);
         return UserEntity.builder()
                 .userId(this.userId)
                 .password(passwordEncoder.encode(this.password))
                 .nickname(this.nickname)
                 .review(this.review)
-                .Intro(this.Intro)
+                .Intro(this.intro)
                 .provider(String.valueOf(this.provider))
                 .profileImg(this.profileImg)
                 .gender(String.valueOf(this.gender))
                 .address(this.address)
                 .addressDetail(this.addressDetail)
-                .birthday(this.birthDay)
+                .birthDay(this.birthDay)
                 .interests(this.interests)
+                .type(String.valueOf(this.type == null ? "MEMBER" : this.type))
                 .build();
     }
     public UserDTO convertToUrl(String url)
@@ -95,9 +97,9 @@ public class UserDTO
                 .password(this.password)
                 .nickname(this.nickname)
                 .review(this.review)
-                .Intro(this.Intro)
+                .intro(this.intro)
                 .provider(this.provider)
-                .profileImg(this.profileImg)
+                .profileImg(url)
                 .gender(this.gender)
                 .address(this.address)
                 .addressDetail(this.addressDetail)
