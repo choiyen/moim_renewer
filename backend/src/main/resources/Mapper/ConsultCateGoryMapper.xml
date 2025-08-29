@@ -18,11 +18,14 @@
         UPDATE consult_category SET ConsultType = #{consultType} WHERE Consult_categoryId = #{consultCategoryId}
     </update>
     <!-- 상담 테이블 분류 삭제 -->
-    <delete id="DeleteConsultCategory" parameterType="java.lang.String">
+    <delete id="DeleteConsultCategory" parameterType="java.lang.Integer">
         DELETE FROM consult_category WHERE Consult_categoryId = #{consultCategoryId}
     </delete>
     <!--  상담 테이블 분류 조회  -->
     <select id="SelectConsultCategory" resultMap="ConsultResultMap">
         SELECT * FROM consult_category
+    </select>
+    <select id="SelectConsultCategoryId" parameterType="java.lang.Integer" resultMap="ConsultResultMap">
+        SELECT Consult_categoryId, ConsultType FROM consult_category WHERE Consult_categoryId = #{consultCategoryId}
     </select>
 </mapper>

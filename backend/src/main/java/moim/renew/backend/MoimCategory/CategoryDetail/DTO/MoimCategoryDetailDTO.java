@@ -1,6 +1,9 @@
 package moim.renew.backend.MoimCategory.CategoryDetail.DTO;
 
 import lombok.*;
+import moim.renew.backend.MoimCategory.CategoryDetail.Entity.MoimCategoryDetailEntity;
+
+import java.security.SecureRandom;
 
 @Getter
 @Builder
@@ -13,4 +16,30 @@ public class MoimCategoryDetailDTO {
     private String categoryDetailId;
     private Integer categoryId;
     private String categorisationDetail;
+
+    public MoimCategoryDetailEntity ConvertTo()
+    {
+        // categoryDetailId가 null이면 랜덤 생성
+        if (this.categoryDetailId == null || this.categoryDetailId.isEmpty()) {
+            this.categoryDetailId = generateRandomId();
+        }
+
+        return MoimCategoryDetailEntity.builder()
+                .categoryId(this.categoryId)
+                .categoryDetailId(this.categoryDetailId)
+                .categorisationDetail(this.categorisationDetail)
+                .build();
+    }
+    public String generateRandomId() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(10);
+        for (int i = 0; i < 10; i++) {
+            sb.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return sb.toString();
+    }
+    public static MoimCategoryDetailDTO of(String categoryDetailsId, Integer categorysId, String name) {
+        return new MoimCategoryDetailDTO(categoryDetailsId,categorysId, name);
+    }
 }

@@ -11,6 +11,6 @@ public interface MoimCategoryMapper
     void  InsertCategory(MoimCateGoryEntity cateGoryEntity);
     void UpdateCategory(MoimCateGoryEntity moimCateGoryEntity);
     List<MoimCateGoryEntity> SelectCategory();
-    void  DeleteCategory(String categoryId);
-
+    void  DeleteCategory(Integer categoryId);
+    MoimCateGoryEntity GetByCategoryId(Integer categoryId);
 }

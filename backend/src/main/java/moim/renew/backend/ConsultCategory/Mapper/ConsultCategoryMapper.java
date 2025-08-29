@@ -10,6 +10,7 @@ public interface ConsultCategoryMapper
 {
     void InsertConsultCategory(ConsultCategoryEntity consultCategoryEntity);
     void UpdateConsultCategory(ConsultCategoryEntity consultCategoryEntity);
-    void DeleteConsultCategory(String consultCategoryId);
+    void DeleteConsultCategory(Integer consultCategoryId);
     List<ConsultCategoryEntity> SelectConsultCategory();
+    ConsultCategoryEntity SelectConsultCategoryId(Integer consultCategoryId);
 }
