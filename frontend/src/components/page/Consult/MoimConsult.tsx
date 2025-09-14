@@ -1,11 +1,9 @@
-import { FileText, Lightbulb, Star } from "lucide-react";
+import { FileText } from "lucide-react";
 import type { JSX } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  consultPosts,
-  featureRequests,
-  userReviews,
-} from "../../../types/MoimDataDummy";
+import { consultPosts } from "../../../types/MoimDataDummy";
+import { consultCategories } from "../../../types/CategoryDummy";
+import React from "react";
 
 const BoardSection = ({
   icon,
@@ -59,21 +57,18 @@ const MoimConsult = () => {
   };
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
-      <BoardSection
-        icon={<FileText size={28} className="text-blue-600" />}
-        title="서비스 운영 상담 게시판"
-        posts={consultPosts}
-      />
-      <BoardSection
-        icon={<Lightbulb size={28} className="text-yellow-500" />}
-        title="기능 개선 의견 게시판"
-        posts={featureRequests}
-      />
-      <BoardSection
-        icon={<Star size={28} className="text-pink-500" />}
-        title="이용 후기 & 경험 공유 게시판"
-        posts={userReviews}
-      />
+      {consultCategories.map((category) => (
+        <BoardSection
+          key={category.id}
+          icon={React.createElement(category.icon ?? FileText, {
+            width: 28,
+            height: 28,
+            className: "text-blue-600",
+          })}
+          title={category.ConsultCategory}
+          posts={category.post}
+        />
+      ))}
       <div className="mt-4 text-right">
         <button
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"

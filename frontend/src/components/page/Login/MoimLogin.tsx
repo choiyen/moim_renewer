@@ -4,7 +4,7 @@ import { FaGoogle } from "react-icons/fa";
 import { SiNaver, SiKakao } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import { useLoginStore } from "../../../types/State";
-import { GET } from "../../comon/axios/axiosInstance";
+import { GET, POST } from "../../comon/axios/axiosInstance";
 import { useEffect } from "react";
 
 const ButtonWrapper = styled.div`
@@ -161,6 +161,24 @@ const MoimLogin = () => {
     }
   }, []);
 
+  const Logining = () => {
+    console.log(Login.id + "에 대한 로그인을 시도합니다.");
+    POST({
+      url: "/user/signin",
+      data: {
+        userId: Login.id,
+        password: Login.password,
+      },
+    }).then((res) => {
+      alert(res.message);
+      // ✅ 토큰 저장
+      localStorage.setItem("accessToken", res.data[0].token);
+      // ✅ 사용자 정보도 저장하고 싶다면 (선택)
+      localStorage.setItem("user", JSON.stringify(res.data[0].userDTO));
+      navigate("/home");
+    });
+  };
+
   return (
     <ButtonWrapper>
       <div className="lg:w-[40vw] sm:w-[80vw] md:w-[60vw] flex flex-col items-center gap-2 justify-center border-4 border-dashed border-gray-300 rounded-lg p-6">
@@ -187,7 +205,7 @@ const MoimLogin = () => {
             value={Login.password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <LoginButton>로그인</LoginButton>
+          <LoginButton onClick={() => Logining()}>로그인</LoginButton>
           <SignupButton onClick={() => navigate("/signup")}>
             회원가입
           </SignupButton>

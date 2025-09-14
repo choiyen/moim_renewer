@@ -1,8 +1,20 @@
 import { Sparkles } from "lucide-react";
 import { Head } from "./Head";
 import { FaSearch } from "react-icons/fa";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
+  const nativeGate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      nativeGate("/login"); // 토큰 없음 → 로그인으로
+      return;
+    }
+  }, [nativeGate]);
+
   return (
     <header className="bg-gray-200 p-5 flex justify-between items-center">
       <Head

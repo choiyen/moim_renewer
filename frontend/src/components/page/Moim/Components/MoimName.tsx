@@ -5,6 +5,8 @@ import { useMoimStore } from "../../../../types/State"; // 경로는 프로젝�
 import "../Components/CKeditor.css"; // CKEditor 스타일을 위한 CSS 파일
 
 const Fieldset = styled.fieldset`
+  display: flex;
+  flex-direction: column;
   border: none;
   border-bottom: 2px solid #ccc;
   padding: 0px;
@@ -23,7 +25,7 @@ const Legend = styled.legend`
   font-size: 18px;
   font-weight: 600;
   color: #1e293b;
-  padding: 10px;
+  padding: 10px 0;
 `;
 
 const HiddenInput = styled.input`
@@ -96,6 +98,19 @@ const UnderlineInput = styled.input`
   background: transparent;
 `;
 
+// ✅ 라디오 버튼 전용 스타일
+const RadioGroup = styled.div`
+  display: flex;
+  gap: 50px;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+`;
+
+const RadioInput = styled.input`
+  margin-right: 6px;
+`;
+
 const MoimNameTitle = styled.h2`
   text-align: center;
   margin-bottom: 20px;
@@ -165,25 +180,33 @@ const MoimName = () => {
           onChange={(e) => setTitle(e.target.value)}
         />
       </Fieldset>
+
       <Fieldset>
         <Legend>온/오프라인 여부</Legend>
-        <UnderlineInput
-          type="radio"
-          name="isOnline"
-          value="true"
-          checked={moimData.isOnline === true}
-          onChange={() => setisOnline(true)}
-        />
-        True
-        <UnderlineInput
-          type="radio"
-          name="isOnline"
-          value="false"
-          checked={moimData.isOnline === false}
-          onChange={() => setisOnline(false)}
-        />
-        False
+        <RadioGroup>
+          <label>
+            <RadioInput
+              type="radio"
+              name="isOnline"
+              value="true"
+              checked={moimData.isOnline === true}
+              onChange={() => setisOnline(true)}
+            />
+            온라인
+          </label>
+          <label>
+            <RadioInput
+              type="radio"
+              name="isOnline"
+              value="false"
+              checked={moimData.isOnline === false}
+              onChange={() => setisOnline(false)}
+            />
+            오프라인
+          </label>
+        </RadioGroup>
       </Fieldset>
+
       <Fieldset2>
         <Legend>모임 타이틀 이미지</Legend>
         <FileLabel htmlFor="file-upload">

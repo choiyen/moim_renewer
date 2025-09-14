@@ -73,7 +73,6 @@ public class UserDTO
     public UserEntity convertTo()
     {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        System.out.println("type: " + this.type);
         return UserEntity.builder()
                 .userId(this.userId)
                 .password(passwordEncoder.encode(this.password))

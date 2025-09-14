@@ -78,6 +78,18 @@ public class MoimCateGoryService
             throw new SelectException("해당 넘버를 가진 모임 대분류 카테고리가 존재하지 않습니다.");
         }
     }
+    public Boolean SelectCounting(Integer moimCategoryId)
+    {
+        MoimCateGoryEntity MoimCateGoryEntity = mapper.GetByCategoryId(moimCategoryId);
+        if(MoimCateGoryEntity != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     public List<MoimCateGoryDTO> SelectAll()
     {
         List<MoimCateGoryEntity> moimCateGoryEntities = mapper.SelectCategory();

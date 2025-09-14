@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -40,7 +41,7 @@ public class WebSecurityConfig
                         sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(PASS_PATH).permitAll().anyRequest().authenticated());
         //로그인, 환율, 소켓만 비로그인 시 접속 가능 나머지는 jwt 토큰 필요
-        http.addFilterBefore(jwtAuthenticationFilter, CorsFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -61,4 +62,4 @@ public class WebSecurityConfig
 
         return source;
     }
-}//WebSocket에서 동작하지 않음
+}

@@ -6,6 +6,9 @@ import moim.renew.backend.User.Entity.UserEntity;
 import moim.renew.backend.User.Mapper.UserMapper;
 import moim.renew.backend.config.Exception.InsertException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +29,7 @@ public class UserService
         if(userEntity != null)
         {
             log.info("정상적으로 User 정보를 찾는데 성공하였습니다.");
-            System.out.println(userEntity);
+
             return userEntity.convertTo();
         }
         else
@@ -121,10 +124,12 @@ public class UserService
         }
     }
     // 로그인
-    public UserEntity getByCredentials(String email, String password, PasswordEncoder passwordEncoder) {
+    public UserDTO getByCredentials(String email, String password, PasswordEncoder passwordEncoder) {
         UserEntity originalUser = userMapper.FindUserID(email);
+        String sData = passwordEncoder.encode(email);
         if(originalUser != null && passwordEncoder.matches(password, originalUser.getPassword())) {
-            return originalUser;
+            System.out.println(originalUser);
+            return originalUser.convertTo();
         }
         return null;
     }
@@ -197,5 +202,11 @@ public class UserService
     {
         // 랜덤 문자열 생성 로직 (예: UUID 등)
         return UUID.randomUUID().toString();
+    }
+
+    public boolean isLoggedIn() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken);
     }
 }

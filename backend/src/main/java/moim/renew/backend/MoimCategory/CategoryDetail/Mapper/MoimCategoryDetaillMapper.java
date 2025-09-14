@@ -9,7 +9,7 @@ import java.util.List;
 public interface MoimCategoryDetaillMapper
 {
     MoimCategoryDetailEntity selectCategoryDetailById(String categoryDetailId);
-    List<MoimCategoryDetailEntity> selectCategoryDetailByCategoryId(String categoryId);
+    List<MoimCategoryDetailEntity> selectCategoryDetailByCategoryId(Integer categoryId);
     void insertCategoryDetail(MoimCategoryDetailEntity moimCategoryDetailEntity);
     void updateCategoryDetail(MoimCategoryDetailEntity moimCategoryDetailEntity);
     void deleteCategoryDetail(String categoryDetailId);

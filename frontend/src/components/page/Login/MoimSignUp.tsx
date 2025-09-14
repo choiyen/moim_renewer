@@ -226,53 +226,63 @@ const MoimSignUp = () => {
 
   const handleEmailCheck = () => {
     GET({
-      url: "/user/check",
+      url: "/user/mailcheck",
       params: { email: userData.email },
-    }).then((res) => {
-      console.log(res);
-      if (res.resultType == "checknot") {
-        console.log("데이터 중복");
-        toast.error("중복된 이메일입니다. 다시 입력해주세요.", {
-          position: "top-center",
-          autoClose: 5000,
-        });
-      } else if (res.resultType == "success") {
-        setisEmailDuplicationDisabled(true);
-      } else {
-        toast.error(
-          "설계에 반영되지 않은 결과 타입입니다. 발견시 관리자에게 문의해주세요",
-          {
+    })
+      .then((res) => {
+        console.log(res);
+        if (res.resultType == "checknot") {
+          console.log("데이터 중복");
+          toast.error("중복된 이메일입니다. 다시 입력해주세요.", {
             position: "top-center",
             autoClose: 5000,
-          }
-        );
-      }
-    });
+          });
+        } else if (res.resultType == "success") {
+          setisEmailDuplicationDisabled(true);
+        } else {
+          toast.error(
+            "설계에 반영되지 않은 결과 타입입니다. 발견시 관리자에게 문의해주세요",
+            {
+              position: "top-center",
+              autoClose: 5000,
+            }
+          );
+        }
+      })
+      .catch((err) => {
+        alert(err.response.data.message);
+      });
   };
 
   const handleNicknameCheck = () => {
     GET({
       url: "/user/nickcheck",
       params: { nickname: userData.nickname },
-    }).then((res) => {
-      if (res.resultType == "checknot") {
-        toast.error("중복된 닉네임입니다. 다시 입력해주세요.", {
-          position: "top-center",
-          autoClose: 5000,
-        });
-      } else if (res.resultType == "success") {
+    })
+      .then((res) => {
         console.log(res);
-        setisNickNameDuplicationDisabled(true);
-      } else {
-        toast.error(
-          "설계에 반영되지 않은 결과 타입입니다. 발견시 관리자에게 문의해주세요",
-          {
+        alert(res);
+        if (res.resultType == "checknot") {
+          toast.error("중복된 닉네임입니다. 다시 입력해주세요.", {
             position: "top-center",
             autoClose: 5000,
-          }
-        );
-      }
-    });
+          });
+        } else if (res.resultType == "success") {
+          console.log(res);
+          setisNickNameDuplicationDisabled(true);
+        } else {
+          toast.error(
+            "설계에 반영되지 않은 결과 타입입니다. 발견시 관리자에게 문의해주세요",
+            {
+              position: "top-center",
+              autoClose: 5000,
+            }
+          );
+        }
+      })
+      .catch((err) => {
+        alert(err.response.data.message);
+      });
   };
   const Profileset = () => {
     if (!(isEmailDuplicationDisabled && isNickNameDuplicationDisabled)) {
@@ -330,6 +340,7 @@ const MoimSignUp = () => {
         if (res.resultType == "success") {
           console.log(res);
           resetMoimData();
+          alert("고객님의 회원 가입을 환영합니다.");
           nativegate("/login");
         } else if (res.resultType == "error") {
           toast.error(res.message, {
@@ -347,7 +358,7 @@ const MoimSignUp = () => {
         }
       })
       .catch((err) => {
-        console.error(err);
+        alert(err.response.data.data[0]);
       });
   };
   return (

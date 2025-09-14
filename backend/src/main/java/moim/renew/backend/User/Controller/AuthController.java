@@ -52,7 +52,7 @@ public class AuthController
                 userDTO = userService.UserCreate(userInfo,oAuth2Type);
             }
 
-            String jwt = tokenProvider.createToken(userDTO.convertTo());
+            String jwt = tokenProvider.createToken(userDTO);
             //반환 받은 UserDTO를 토대로 jwt 토큰 생성
 
             return ResponseEntity.ok().body(responseDTO.Response("success", "OAuth2 인증 완료", Collections.singletonList(Map.of("token", "null", "user", userInfo))));

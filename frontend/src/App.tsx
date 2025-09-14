@@ -22,11 +22,22 @@ import ConsultInsert from "./components/page/Consult/ConsultInsert";
 import MoimMap from "./components/page/Map/MoimMap";
 import ConsultSelect from "./components/page/Consult/ConsultSelect";
 import { ToastContainer } from "react-toastify";
+import CommonManagerPage from "./components/comon/frame/CommonManagerPage";
+import MoimCategory from "./components/page/Manager/MoimCategory";
+import MoimLicenseComponent from "./components/page/Manager/MoimLicenseComponent";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Navigate to="/home" replace />,
+  },
+  {
+    element: <CommonManagerPage />,
+    errorElement: <GlobalErrorBoundary />,
+    children: [
+      { path: "/category/Moim", element: <MoimCategory /> },
+      { path: "/category/Consult", element: <MoimLicenseComponent /> },
+    ],
   },
   {
     element: <CommonPage />,
@@ -72,7 +83,6 @@ function App() {
         pauseOnHover
         limit={1} // 한 번에 하나만 표시
       />
-      ;
     </>
   );
 }

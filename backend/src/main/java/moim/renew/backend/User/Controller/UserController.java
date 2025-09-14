@@ -3,9 +3,14 @@ package moim.renew.backend.User.Controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import moim.renew.backend.S3Service.S3ImageService;
 import moim.renew.backend.Security.TokenProvider;
+import moim.renew.backend.User.DTO.LoginDTO;
 import moim.renew.backend.User.DTO.UserDTO;
 import moim.renew.backend.User.DTO.UserTokenDTO;
 import moim.renew.backend.User.Entity.UserEntity;
@@ -16,14 +21,19 @@ import moim.renew.backend.config.Exception.SelectException;
 import moim.renew.backend.config.Exception.UpdateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.lang.module.FindException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +41,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
+@Validated
 public class UserController
 {
     @Autowired
@@ -53,8 +64,7 @@ public class UserController
             @Valid @RequestPart("userDTO") UserDTO userDTO,   // JSON 문자열 → DTO
             @RequestPart("file") MultipartFile file   // 업로드 파일
     )     {
-        try
-        {
+
             if(file == null)
             {
                 throw new SelectException("업로드 파일이 설정되어 있지 않습니다.");
@@ -72,16 +82,6 @@ public class UserController
             {
                 throw new InsertException();
             }
-        }
-        catch (DuplicateKeyException e)
-        {
-            return ResponseEntity.ok().body(responseDTO.Response("error", "닉네임이나 이메일에 중복이 존재합니다"));
-
-        }
-        catch (Exception e)
-        {
-            return ResponseEntity.ok().body(responseDTO.Response("error", e.getMessage()));
-        }
     }
     @PutMapping
     public ResponseEntity<?> UserPut(@AuthenticationPrincipal String userId,  @RequestPart("userDTO") UserDTO userDTO,   // JSON 문자열 → DTO
@@ -127,11 +127,11 @@ public class UserController
             UserDTO userDTO = userService.FindUserID(userId);
             if (userDTO != null)
             {
-                return ResponseEntity.ok().body(responseDTO.Response("success", responseDTO.getMessage()));
+                return ResponseEntity.ok().body(responseDTO.Response("success", "회원정보를 반환합니다.", Collections.singletonList(userDTO)));
             }
             else
             {
-                throw new SelectException();
+                throw new SelectException("유저 정보를 찾는데 실패하였습니다. 아무래도 JWT 토큰이 만료된 것 같아요");
             }
         }
         catch (AuthenticationException e)
@@ -143,6 +143,9 @@ public class UserController
             return ResponseEntity.badRequest().body(responseDTO.Response("error", e.getMessage()));
         }
     }
+
+
+
     @PutMapping("/change/password")
     public ResponseEntity<?> UserPutPassword(@AuthenticationPrincipal String userId, @RequestParam String Password)
     {
@@ -202,32 +205,79 @@ public class UserController
         }
     }
 
-    @GetMapping("/check")
-    public ResponseEntity<?> EmailCheck(@RequestParam String email)
-    {
-        try
-        {
-            boolean bool = userService.getUserID(email);
-            if(bool)
-            {
-                return ResponseEntity.ok().body(responseDTO.Response("checknot", "이메일 중복!!"));
+    @GetMapping("/mailcheck")
+    public ResponseEntity<?> EmailCheck(@RequestParam String email) {
+        try {
+            // 1. 빈 값 체크
+            if (email == null || email.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(
+                        responseDTO.Response("error", "이메일은 비어있을 수 없습니다.")
+                );
             }
-            else
-            {
-                return ResponseEntity.ok().body(responseDTO.Response("success", "이메일 중복확인"));
+
+            // 2. 길이 체크
+            if (email.length() > 50) {
+                return ResponseEntity.badRequest().body(
+                        responseDTO.Response("error", "이메일은 50자 이하로 입력해야 합니다.")
+                );
             }
-        }
-        catch (Exception e)
-        {
-            return ResponseEntity.badRequest().body(responseDTO.Response("error", e.getMessage()));
+
+            // 3. 이메일 형식 체크 (간단한 정규식)
+            if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+                return ResponseEntity.badRequest().body(
+                        responseDTO.Response("error", "이메일 형식이 올바르지 않습니다.")
+                );
+            }
+
+            // 4. 중복 체크
+            boolean exists = userService.getUserID(email);
+            if (exists) {
+                return ResponseEntity.ok().body(
+                        responseDTO.Response("checknot", "이메일이 이미 사용 중입니다.")
+                );
+            } else {
+                return ResponseEntity.ok().body(
+                        responseDTO.Response("success", "사용 가능한 이메일입니다.")
+                );
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    responseDTO.Response("error", e.getMessage())
+            );
         }
     }
+
 
     @GetMapping("/nickcheck")
     public ResponseEntity<?> NicknameCheck(@RequestParam String nickname)
     {
         try
         {
+
+
+            // 1. 빈 값 체크
+            if (nickname == null || nickname.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(
+                        responseDTO.Response("error", "닉네임은 비어있을 수 없습니다.")
+                );
+            }
+
+            // 2. 길이 체크
+            if (nickname.length() < 5 || nickname.length() > 20) {
+                return ResponseEntity.badRequest().body(
+                        responseDTO.Response("error", "닉네임은 5자 이상 20자 이하로 입력해야 합니다.")
+                );
+            }
+
+            // 3. 정규식 체크 (한글, 영어, 숫자만 허용)
+            if (!nickname.matches("^[a-zA-Z0-9가-힣]+$")) {
+                return ResponseEntity.badRequest().body(
+                        responseDTO.Response("error", "닉네임은 한글, 영어, 숫자만 입력할 수 있습니다.")
+                );
+            }
+
+
             boolean bool = userService.getNicname(nickname);
             if(bool)
             {
@@ -246,13 +296,13 @@ public class UserController
 
     // 로그인
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO){
+    public ResponseEntity<?> authenticate(@RequestBody LoginDTO loginDTO){
         try{
-            UserEntity user = userService.getByCredentials(userDTO.getUserId(), userDTO.getPassword(), passwordEncoder);
+            UserDTO user = userService.getByCredentials(loginDTO.getUserId(), loginDTO.getPassword(), passwordEncoder);
             if(user != null)
             {
                 String token = tokenProvider.createToken(user);
-                UserTokenDTO responseUserDTO = user.convertTo().convertTo(token);
+                UserTokenDTO responseUserDTO = user.convertTo(token);
                 List<Object> list = new ArrayList<>();
                 list.add(responseUserDTO);
                 return ResponseEntity.ok().body(responseDTO.Response("success", "오늘도 저희 서비스에 방문해주셔서 감사드려요!!!", list));
@@ -281,5 +331,18 @@ public class UserController
 
         return ResponseEntity.ok().body(responseDTO.Response("success", "로그아웃 완료"));
     } // 프론트엔드 연결 후 기능 정상 동작 여부 확인해야 함.
+
+    @GetMapping("/check")
+    public ResponseEntity<String> checkLogin() {
+        boolean loggedIn = userService.isLoggedIn();
+        if (loggedIn) {
+            return ResponseEntity.ok("로그인 상태입니다 ✅");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("로그인이 필요합니다 ❌");
+        }
+    }
+
+
 
 }

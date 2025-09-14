@@ -1,6 +1,5 @@
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import axiosInstance from "./axiosInstance";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 /**
@@ -11,28 +10,15 @@ export const POST_FORM = async (
   formData: FormData,
   config?: AxiosRequestConfig
 ): Promise<AxiosResponse["data"]> => {
-  try {
-    const response = await axiosInstance.post(url, formData, {
-      ...config,
-      headers: {
-        "Content-Type": "multipart/form-data",
-        ...config?.headers,
-      },
-      timeout: 260000, // 1분 또는 그 이상으로 설정
-    });
-    return response.data;
-  } catch (error) {
-    toast.error("파일 업로드 중 오류가 발생했습니다. 다시 시도해주세요.", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-    throw error;
-  }
+  const response = await axiosInstance.post(url, formData, {
+    ...config,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      ...config?.headers,
+    },
+    timeout: 260000, // 1분 또는 그 이상으로 설정
+  });
+  return response.data;
 };
 
 /**

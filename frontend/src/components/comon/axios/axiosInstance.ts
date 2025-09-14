@@ -12,7 +12,12 @@ const TIMEOUT = timeout ? parseInt(timeout, 10) : undefined;
 
 const requestInterceptor = {
   onFulfilled: (config: InternalAxiosRequestConfig) => {
-    // withCredentials는 인스턴스 생성 시 설정했으니 보통 여기선 안 해도 됨
+    const token = localStorage.getItem("accessToken"); // JWT 저장 위치
+    console.log(token);
+    if (token) {
+      config.headers = config.headers ?? {};
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
     return config;
   },
   onRejected: (error: AxiosError) => Promise.reject(error),

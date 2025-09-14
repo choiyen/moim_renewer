@@ -64,7 +64,6 @@ public class GoogleOAuth2Service implements OAuth2Service
         }
         catch (Exception e)
         {
-            System.out.println("dfdfs"+ e);
             throw new RuntimeException("Google access token 요청 실패", e);
         }
     }

@@ -30,19 +30,6 @@ public class UserEntity
 
     public UserDTO convertTo()
     {
-        System.out.println("userId: " + this.userId);
-        System.out.println("nickname: " + this.nickname);
-        System.out.println("review: " + this.review);
-        System.out.println("password: " + this.password);
-        System.out.println("Intro: " + this.Intro);
-        System.out.println("provider: " + this.provider);
-        System.out.println("profileImg: " + this.profileImg);
-        System.out.println("gender: " + this.gender);
-        System.out.println("address: " + this.address);
-        System.out.println("addressDetail: " + this.addressDetail);
-        System.out.println("birthDay: " + this.birthDay);
-        System.out.println("interests: " + this.interests);
-        System.out.println("type: " + this.type);
         return UserDTO.builder()
                 .userId(this.userId)
                 .nickname(this.nickname)
@@ -81,7 +68,7 @@ public class UserEntity
     {
         return UserEntity.builder()
                 .userId(this.userId)
-                .password(passwordEncoder.encode(this.password))
+                .password(this.password)
                 .nickname(this.nickname)
                 .review(this.review)
                 .Intro(this.Intro)

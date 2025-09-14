@@ -24,7 +24,7 @@ public class MoimCategoryDetaillService
     @Autowired
     MoimCategoryDetaillMapper moimCategoryDetaillMapper;
 
-    public List<MoimCategoryDetailDTO> SelectAll(String categoryId)
+    public List<MoimCategoryDetailDTO> SelectAll(Integer categoryId)
     {
         List<MoimCategoryDetailEntity> moimCategoryDetailEntities = moimCategoryDetaillMapper.selectCategoryDetailByCategoryId(categoryId);
         if(moimCategoryDetailEntities.isEmpty())
