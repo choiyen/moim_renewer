@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum UserTypeEnum
 {
-    MANAGER, MEMBER;
+    MANAGER, MEMBER,OWNER;
 
     @JsonCreator
     public static UserTypeEnum from(String value) {

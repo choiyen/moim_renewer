@@ -45,7 +45,10 @@ public class UserDTO
     private String intro; //자기소개
 
     @NotNull(message = "provider는 무조건 포함되어야 하는 데이터입니다.")
+    @Builder.Default
     private ProviderEnum provider = ProviderEnum.DEFAULT; //OAuth2 제공자, 기본 값은 노멀
+
+    @Builder.Default
     private Float review = 3.0f; // 기본값 설정
 
     private String profileImg; //프로필 이미지
@@ -60,6 +63,7 @@ public class UserDTO
     @NotNull(message = "성별 데이터는 반드시 포함되어야 합니다.")
     private GenderEnum gender;
 
+    @Builder.Default
     private UserTypeEnum type = UserTypeEnum.MEMBER;
 
     @NotBlank(message = "주소는 반드시 포함되어야 합니다.")

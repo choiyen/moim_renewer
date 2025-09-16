@@ -122,7 +122,6 @@ public class TokenProvider {
         } catch (Exception e) {
             log.error("Unhandled exception in getUsernameFromToken: {}", e.getMessage());
         }
-        System.out.println("tokenUserId: " + tokenUserId);
         return tokenUserId;
     }
 

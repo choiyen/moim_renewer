@@ -19,6 +19,8 @@ public class UserEntity
     private String nickname;
     private String Intro;
     private String provider;
+
+    @Builder.Default
     private Float review = 3.0f; // 기본값 설정
     private String profileImg; //프로필 이미지
     private String gender;//성별

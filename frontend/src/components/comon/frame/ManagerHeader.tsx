@@ -5,16 +5,60 @@ import {
   Settings,
   Users,
   Home,
+  Lock,
 } from "lucide-react";
 import { Head } from "./Head";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GET } from "../axios/axiosInstance";
+import { FaCrown, FaBolt, FaUser } from "react-icons/fa";
+import { DELETE, GET } from "../axios/axiosInstance";
 
 interface Props {
   expanded: boolean;
 }
+interface RoleBadgeProps {
+  role: "OWNER" | "MANAGER" | "MEMBER";
+}
+
+const Badge = styled.span<{ color: string }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: ${(props) => props.color};
+  color: white;
+`;
+
+const RoleBadge = ({ role }: RoleBadgeProps) => {
+  let icon, color, label;
+
+  switch (role) {
+    case "OWNER":
+      icon = <FaCrown />;
+      color = "#FACC15"; // 노란색
+      label = "운영자";
+      break;
+    case "MANAGER":
+      icon = <FaBolt />;
+      color = "#F97316"; // 주황색
+      label = "매니저";
+      break;
+    case "MEMBER":
+      icon = <FaUser />;
+      color = "#3B82F6"; // 파란색
+      label = "멤버";
+      break;
+  }
+
+  return (
+    <Badge color={color}>
+      {icon} {label}
+    </Badge>
+  );
+};
 
 // Header: 너비 토글, 애니메이션 적용
 const Header = styled.header<Props>`
@@ -89,20 +133,52 @@ const TypeButton = styled.div<Props>`
   }
 `;
 
+interface UserProps {
+  nickname: string;
+  type: "MANAGER" | "MEMBER";
+  userId: string;
+}
+
 const ManagerHeader = () => {
   const [expanded, setExpanded] = useState(true);
+  const [loginState, setloginState] = useState(false);
+  const [UserState] = useState<UserProps>(() => {
+    const userString = localStorage.getItem("user");
+    return userString
+      ? JSON.parse(userString)
+      : { nickname: "", type: "MEMBER", userId: "" };
+  });
+
+  useEffect(() => {
+    GET({
+      url: "/user/check",
+    }).then((res) => {
+      console.log(res);
+      if (res.resultType == "success") setloginState(true);
+      else setloginState(false);
+    });
+  }, []);
 
   const handleClick = () => {
     setExpanded((prev) => !prev); // 클릭 시 토글
   };
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // You can add side effects here if needed
-    GET({
-      url: "/user/check",
-    });
-  }, []);
+  const Logining = () => {
+    console.log("현재 로그인 상태 : " + loginState);
+    if (loginState) {
+      DELETE({
+        url: "/user/signout",
+      }).then((res) => {
+        alert("로그아웃 기능 동작 완료");
+        localStorage.clear();
+        console.log(res);
+        navigate("/home");
+      });
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <Header expanded={expanded}>
@@ -166,13 +242,34 @@ const ManagerHeader = () => {
         </TypeButton>
       </div>
       <div>
-        <LogoutContainer expanded={expanded}>
-          <LogOut size={expanded ? 32 : 24} style={{ cursor: "pointer" }} />
-          <span>로그아웃</span>
+        <LogoutContainer expanded={expanded} onClick={() => Logining()}>
+          {loginState ? (
+            <>
+              <LogOut size={expanded ? 32 : 24} style={{ cursor: "pointer" }} />
+              <span>로그아웃</span>
+            </>
+          ) : (
+            <>
+              <Lock size={expanded ? 32 : 24} style={{ cursor: "pointer" }} />
+              <span>로그인</span>
+            </>
+          )}
         </LogoutContainer>
         <ManagerContainer expanded={expanded}>
-          <div>최연철</div>
-          <div>choi@example.com</div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: "5px",
+            }}
+          >
+            <RoleBadge
+              role={UserState.type as "OWNER" | "MANAGER" | "MEMBER"}
+            />
+            {UserState.nickname}
+          </div>
+          <div>{UserState.userId}</div>
         </ManagerContainer>
       </div>
     </Header>

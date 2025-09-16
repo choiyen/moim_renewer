@@ -333,13 +333,13 @@ public class UserController
     } // 프론트엔드 연결 후 기능 정상 동작 여부 확인해야 함.
 
     @GetMapping("/check")
-    public ResponseEntity<String> checkLogin() {
+    public ResponseEntity<ResponseDTO> checkLogin() {
         boolean loggedIn = userService.isLoggedIn();
         if (loggedIn) {
-            return ResponseEntity.ok("로그인 상태입니다 ✅");
+            return ResponseEntity.ok().body(responseDTO.Response("success", "로그인 상태입니다 ✅"));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("로그인이 필요합니다 ❌");
+                    .body(responseDTO.Response("error", "로그인이 필요합니다 ❌"));
         }
     }
 

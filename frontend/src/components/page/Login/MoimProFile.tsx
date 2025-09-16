@@ -3,7 +3,7 @@ import star from "../../comon/frame/image/star.png";
 import PasswordModal from "../Model/PasswordModel";
 import { useNavigate } from "react-router-dom";
 import { useModelStore } from "../../../types/State";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GET } from "../../comon/axios/axiosInstance";
 
 const ProfileWrapper = styled.img`
@@ -167,8 +167,40 @@ const FooterItem = styled.button`
   }
 `;
 
+interface UserState {
+  address: string;
+  addressDetail: string;
+  birthDay: string;
+  gender: string;
+  interests: string; // ✅ 특정 문자열 하나가 아니라 어떤 문자열도 허용
+  intro: string;
+  nickname: string;
+  password: string;
+  profileImg: string;
+  provider: "DEFAULT" | "KAKAO" | "NAVER" | "GOOGLE"; // ✅ enum처럼 관리 가능
+  review: number;
+  type: "MEMBER" | "ADMIN"; // ✅ 사용자 유형 제한
+  userId: string;
+}
+
 const MoimProfile = () => {
   const nativegate = useNavigate();
+  const [UserProfile, setUserProfile] = useState<UserState>({
+    address: "",
+    addressDetail: "",
+    birthDay: "",
+    gender: "",
+    interests: "",
+    intro: "",
+    nickname: "",
+    password: "",
+    profileImg: "",
+    provider: "DEFAULT",
+    review: 0,
+    type: "MEMBER",
+    userId: "",
+  });
+
   const handleProfileEdit = () => {
     nativegate("/profile/edit");
   };
@@ -187,7 +219,7 @@ const MoimProfile = () => {
       url: "/user",
     })
       .then((res) => {
-        console.log(res);
+        setUserProfile(res.data[0]);
       })
       .catch((err) => {
         console.log(err);
@@ -218,7 +250,7 @@ const MoimProfile = () => {
         }}
       >
         <div>
-          <ProfileWrapper src={star} alt="프로필 이미지" />
+          <ProfileWrapper src={UserProfile.profileImg} alt="프로필 이미지" />
           <div
             style={{
               textAlign: "center",
@@ -227,16 +259,18 @@ const MoimProfile = () => {
               marginTop: "10px",
             }}
           >
-            홍사운드 스토리
+            {UserProfile.nickname}
           </div>
         </div>
         <ProfileInfo>
           <p>사용자 이메일</p>
-          <p> adsxaf@naver.com</p>
+          <p> {UserProfile.userId}</p>
           <p>가입일</p>
-          <p> 2023-10-01</p>
+          {/* 가입일 추가 필요 */}
+          <p> {UserProfile.birthDay}</p>
           <p>최근 활동</p>
-          <p> 2023-10-01</p>
+          <p> {new Date().toLocaleString()}</p>
+          {/* 로그인할 때 해당 값 변경, 로그아웃 시에 해당 값을 저장하는 구조로 */}
           <button
             style={{
               padding: "10px 20px",
@@ -295,10 +329,7 @@ const MoimProfile = () => {
             borderRadius: "8px",
           }}
         >
-          나는 모임을 사랑하는 사람입니다. 다양한 사람들과의 만남을 통해 새로운
-          경험을 쌓고, 서로의 이야기를 나누는 것을 즐깁니다. 모임을 통해 친구를
-          만들고, 지식을 공유하며, 함께 성장하는 것을 목표로 합니다. 앞으로도
-          많은 모임에 참여하여 더 많은 사람들과 소통하고 싶습니다.
+          {UserProfile.intro}
         </p>
       </div>
       {/* 찜목록 섹션 */}

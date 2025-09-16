@@ -174,7 +174,14 @@ const MoimLogin = () => {
       // ✅ 토큰 저장
       localStorage.setItem("accessToken", res.data[0].token);
       // ✅ 사용자 정보도 저장하고 싶다면 (선택)
-      localStorage.setItem("user", JSON.stringify(res.data[0].userDTO));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: res.data[0].userDTO.type,
+          nickname: res.data[0].userDTO.nickname,
+          userId: res.data[0].userDTO.userId,
+        })
+      );
       navigate("/home");
     });
   };
