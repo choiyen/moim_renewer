@@ -6,6 +6,7 @@ import moim.renew.backend.ConsultCategory.Entity.ConsultCategoryEntity;
 import moim.renew.backend.MoimCategory.Category.DTO.MoimCateGoryDTO;
 import moim.renew.backend.MoimCategory.Category.Entity.MoimCateGoryEntity;
 import moim.renew.backend.MoimCategory.Category.Mapper.MoimCategoryMapper;
+import moim.renew.backend.config.Exception.EmptyException;
 import moim.renew.backend.config.Exception.InsertException;
 import moim.renew.backend.config.Exception.SelectException;
 import moim.renew.backend.config.Exception.UpdateException;
@@ -22,37 +23,40 @@ public class MoimCateGoryService
     @Autowired
     MoimCategoryMapper mapper;
 
-    public MoimCateGoryDTO Insert(MoimCateGoryDTO moimCateGoryDTO)
-    {
-        MoimCateGoryEntity moimCateGoryEntity = moimCateGoryDTO.ConvertTo();
-        mapper.InsertCategory(moimCateGoryEntity);
-        MoimCateGoryEntity moimCateGoryEntity1 = mapper.GetByCategoryId(moimCateGoryDTO.getCategoryId());
-        if (moimCateGoryEntity1 != null)
-        {
+    public MoimCateGoryDTO Insert(MoimCateGoryDTO moimCateGoryDTO) {
+        // DTO -> Entity 변환
+        MoimCateGoryEntity entity = moimCateGoryDTO.ConvertTo();
+
+        // Insert 실행 (자동 PK 주입)
+        mapper.InsertCategory(entity);
+
+        // Insert 직후 PK 확인
+        if (entity.getCategoryId() != null) {
             log.info("정상적으로 모임 카테고리 생성에 성공하였습니다.");
-            return moimCateGoryEntity1.ConvertTo();
-        }
-        else
-        {
+            return entity.ConvertTo(); // 바로 DTO 반환
+        } else {
             log.warn("모임 카테고리 생성에 실패하였으니, 개발자에게 문의하세요");
             throw new InsertException("모임 카테고리 생성에 실패하였습니다.");
         }
     }
-    public MoimCateGoryDTO Update(MoimCateGoryDTO moimCateGoryDTO)
-    {
+
+    public MoimCateGoryDTO Update(MoimCateGoryDTO moimCateGoryDTO) {
         MoimCateGoryEntity moimCateGoryEntity = moimCateGoryDTO.ConvertTo();
-        mapper.UpdateCategory(moimCateGoryEntity);
-        MoimCateGoryEntity moimCateGoryEntity1 = mapper.GetByCategoryId(moimCateGoryEntity.getCategoryId());
-        if(moimCateGoryEntity1.equals(moimCateGoryEntity))
-        {
-            log.info("모임 카테고리 업데이트에 성공하였습니다.");
-            return moimCateGoryEntity1.ConvertTo();
+
+        int updatedRows = mapper.UpdateCategory(moimCateGoryEntity);
+        if (updatedRows == 0) {
+            log.warn("업데이트 실패: categoryId={} 가 존재하지 않음", moimCateGoryEntity.getCategoryId());
+            throw new UpdateException("해당 categoryId가 존재하지 않아 업데이트 실패");
         }
-        else
-        {
-            log.warn("모임 카테고리 업데이트에 실패하였습니다. 개발자에게 문의하세요");
-            throw new UpdateException("데이터 업데이트에 실패하였습니다.");
+
+        MoimCateGoryEntity updatedEntity = mapper.GetByCategoryId(moimCateGoryEntity.getCategoryId());
+        if (updatedEntity == null) {
+            log.error("업데이트는 되었으나 DB에서 categoryId={} 조회 실패", moimCateGoryEntity.getCategoryId());
+            throw new UpdateException("업데이트 후 조회 실패");
         }
+
+        log.info("업데이트 성공: {}", updatedEntity);
+        return updatedEntity.ConvertTo();
     }
     public Boolean Delete(Integer moimCategoryId)
     {
@@ -96,7 +100,7 @@ public class MoimCateGoryService
         if(moimCateGoryEntities.isEmpty())
         {
             log.warn("조회를 시도하였으나, 데이터가 현재 비어있습니다.");
-            throw new SelectException("조회를 시도하였으나, 데이터가 비어있습니다.");
+            throw new EmptyException("조회를 시도하였으나, 데이터가 비어있습니다.");
         }
         else
         {

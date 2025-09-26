@@ -35,13 +35,19 @@ public class GobalExceptionHandler {
     // 2️⃣ DB 중복, 파일 선택 등 사용자 정의 예외 처리
     @ExceptionHandler({DuplicateKeyException.class, SelectException.class, InsertException.class})
     public ResponseEntity<?> handleCustomExceptions(Exception ex) {
-        return ResponseEntity.ok()
+        return ResponseEntity.badRequest()
                 .body(responseDTO.Response("error", ex.getMessage()));
     }
 
 
+    @ExceptionHandler(EmptyException.class)
+    public ResponseEntity<?> handleEmptyException(Exception ex)
+    {
+        return ResponseEntity.badRequest().body(responseDTO.Response("empty", ex.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleAllExceptions(Exception ex) {
-        return ResponseEntity.ok().body(responseDTO.Response("error", ex.getMessage()));
+        return ResponseEntity.badRequest().body(responseDTO.Response("error", ex.getMessage()));
     }
 }

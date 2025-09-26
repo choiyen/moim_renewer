@@ -1,5 +1,6 @@
 package moim.renew.backend.MoimCategory.Category.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import moim.renew.backend.MoimCategory.Category.Entity.MoimCateGoryEntity;
 
@@ -11,7 +12,9 @@ import moim.renew.backend.MoimCategory.Category.Entity.MoimCateGoryEntity;
 @EqualsAndHashCode
 public class MoimCateGoryDTO
 {
+    @JsonProperty("MoimCategoryId")
     private Integer categoryId;
+    @JsonProperty("categorisation")
     private String categorisation;
 
     public MoimCateGoryEntity ConvertTo()

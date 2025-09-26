@@ -12,7 +12,7 @@
     </resultMap>
 
     <!-- 대분류 삽입 -->
-    <insert id="InsertCategory" parameterType="moim.renew.backend.MoimCategory.Category.Entity.MoimCateGoryEntity">
+    <insert id="InsertCategory" parameterType="moim.renew.backend.MoimCategory.Category.Entity.MoimCateGoryEntity"  useGeneratedKeys="true" keyProperty="categoryId">
         INSERT INTO category (Category_name)
         VALUES (#{categorisation})
     </insert>

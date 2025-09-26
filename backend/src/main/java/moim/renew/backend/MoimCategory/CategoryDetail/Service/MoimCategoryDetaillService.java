@@ -7,6 +7,7 @@ import moim.renew.backend.MoimCategory.Category.Mapper.MoimCategoryMapper;
 import moim.renew.backend.MoimCategory.CategoryDetail.DTO.MoimCategoryDetailDTO;
 import moim.renew.backend.MoimCategory.CategoryDetail.Entity.MoimCategoryDetailEntity;
 import moim.renew.backend.MoimCategory.CategoryDetail.Mapper.MoimCategoryDetaillMapper;
+import moim.renew.backend.config.Exception.EmptyException;
 import moim.renew.backend.config.Exception.SelectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class MoimCategoryDetaillService
         if(moimCategoryDetailEntities.isEmpty())
         {
             log.warn("조회를 시도하였으나, 데이터가 현재 비어있습니다.");
-            throw new SelectException("조회를 시도하였으나, 데이터가 비어있습니다.");
+            throw new EmptyException("조회를 시도하였으나, 데이터가 비어있습니다.");
         }
         else
         {
@@ -48,6 +49,7 @@ public class MoimCategoryDetaillService
         if(moimCategoryMapper.GetByCategoryId(moimCategoryDetailDTO.getCategoryId()) != null)
         {
             MoimCategoryDetailEntity moimCategoryDetailEntity = moimCategoryDetailDTO.ConvertTo();
+            System.out.println(moimCategoryDetailEntity);
             moimCategoryDetaillMapper.insertCategoryDetail(moimCategoryDetailEntity);
             MoimCategoryDetailEntity moimCategoryDetailEntity2 = moimCategoryDetaillMapper.selectCategoryDetailById(moimCategoryDetailEntity.getCategoryDetailId());
             if(moimCategoryDetailEntity2 != null)

@@ -1,5 +1,6 @@
 package moim.renew.backend.MoimCategory.CategoryDetail.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import moim.renew.backend.MoimCategory.CategoryDetail.Entity.MoimCategoryDetailEntity;
 
@@ -13,8 +14,11 @@ import java.security.SecureRandom;
 @EqualsAndHashCode
 public class MoimCategoryDetailDTO {
 
+    @JsonProperty("MoimcategoryDetailId")
     private String categoryDetailId;
+    @JsonProperty("MoimCategoryId")
     private Integer categoryId;
+    @JsonProperty("MoimcategorisationDetail")
     private String categorisationDetail;
 
     public MoimCategoryDetailEntity ConvertTo()

@@ -9,7 +9,7 @@ import java.util.List;
 public interface MoimCategoryMapper
 {
     void  InsertCategory(MoimCateGoryEntity cateGoryEntity);
-    void UpdateCategory(MoimCateGoryEntity moimCateGoryEntity);
+    int  UpdateCategory(MoimCateGoryEntity moimCateGoryEntity);
     List<MoimCateGoryEntity> SelectCategory();
     void  DeleteCategory(Integer categoryId);
     MoimCateGoryEntity GetByCategoryId(Integer categoryId);

@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
-import { ArrowRight, Plus, Trash2 } from "lucide-react"; // TrashIcon 대체
-import { useState } from "react";
-import { hopper } from "../../../../types/MoimType";
+import { ArrowRight, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { DELETE, GET, POST, PUT } from "../../../comon/axios/axiosInstance";
+import { type MoimCategorySub } from "../../../../types/MoimType";
 
 const SubContainer = styled.div`
   width: 100%;
@@ -43,60 +44,206 @@ const HopperStyle = styled.div`
     font-size: inherit;
   }
 `;
+
+interface MoimCategory {
+  MoimCategoryId: number;
+  categorisation: string;
+  SubCategory: MoimCategorySub[];
+}
+
 const MoimSubCategory = () => {
-  const [categories, setCategories] = useState(hopper);
-  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
-
+  const [categories, setCategories] = useState<MoimCategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<MoimCategorySub[]>(
+    []
+  );
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [subEditingId, setSubEditingId] = useState<number | null>(null);
-
+  const [subEditingId, setSubEditingId] = useState<number | string | null>(
+    null
+  );
   const [draggedItem, setDraggedItem] = useState<{
     type: "main" | "sub";
     index: number;
   } | null>(null);
-
   const [isDragging, setIsDragging] = useState(false);
+  const [SelectCategory, setSelectCategory] = useState<number>(0);
 
-  const handleSaveMain = (id: number, value: string) => {
+  // 초기 데이터 불러오기
+  useEffect(() => {
+    GET({ url: "/category" })
+      .then((res) => {
+        console.log(res.data);
+        if (res.resultType === "success") setCategories(res.data);
+      })
+      .catch((err) => {
+        if (err.response?.data?.resultType === "empty")
+          alert(err.response.data.message);
+        else console.log(err);
+      });
+  }, []);
+
+  const handleSaveMain = async (id: number, value: string) => {
     if (value.trim() === "") {
-      setCategories((prev) => prev.filter((cat) => cat.id !== id));
-    } else {
+      DELETE({
+        url: "/category",
+        data: { MoimCategoryId: id },
+      }).then((res) => {
+        console.log(res);
+        // 빈 값 → 삭제
+        setCategories((prev) =>
+          (prev ?? []).filter((cat) => cat.MoimCategoryId !== id)
+        );
+      });
+    } else if (id < 0) {
+      // 음수 id → 신규 생성
+      const res = await POST({
+        url: "/category",
+        data: { categorisation: value },
+      });
+      const newId = res.data.MoimCategoryId;
+
       setCategories((prev) =>
-        prev.map((cat) => (cat.id === id ? { ...cat, Category: value } : cat))
+        (prev ?? []).map((cat) =>
+          cat.MoimCategoryId === id
+            ? { ...cat, MoimCategoryId: newId, categorisation: value }
+            : cat
+        )
+      );
+    } else {
+      // 양수 id → 수정
+      await PUT({
+        url: "/category",
+        data: { MoimCategoryId: id, categorisation: value },
+      });
+
+      setCategories((prev) =>
+        (prev ?? []).map((cat) =>
+          cat.MoimCategoryId === id ? { ...cat, categorisation: value } : cat
+        )
       );
     }
+
     setEditingId(null);
   };
 
-  const handleSaveSub = (index: number, value: string) => {
+  // Sub Category 저장
+  const handleSaveSub = (id: string, value: string) => {
     const newSub = [...selectedCategory];
+    const index = newSub.findIndex((sub) => sub.id === id);
+    if (index === -1) return;
+    if (SelectCategory == 0) {
+      alert("데이터 저장 불가능!!");
+      window.location.reload();
+    }
     if (value.trim() === "") {
-      newSub.splice(index, 1);
+      console.log(id);
+      DELETE({
+        url: "/CategoryDetail",
+        data: {
+          categoryDetailId: id,
+        },
+      }).then((res) => {
+        console.log(res);
+        newSub.splice(index, 1);
+        setSelectedCategory(newSub);
+      });
     } else {
-      newSub[index] = value;
-    }
-    setSelectedCategory(newSub);
-    setSubEditingId(null);
-  };
-
-  const dragging = (
-    draggedItem: { type: "main" | "sub"; index: number } | null
-  ) => {
-    if (!draggedItem) return;
-
-    if (draggedItem.type === "main") {
-      const newCats = [...categories];
-      newCats.splice(draggedItem.index, 1);
-      setCategories(newCats);
-    }
-    if (draggedItem.type === "sub") {
-      const newSub = [...selectedCategory];
-      newSub.splice(draggedItem.index, 1);
+      if (id == "Space") {
+        POST({
+          url: "/CategoryDetail",
+          data: {
+            MoimCategoryId: SelectCategory,
+            MoimcategorisationDetail: value,
+          },
+        });
+      } else {
+        PUT({
+          url: "/CategoryDetail",
+          data: {
+            MoimCategoryId: SelectCategory,
+            MoimcategoryDetailId: id,
+            MoimcategorisationDetail: value,
+          },
+        });
+      }
+      newSub[index].SubCategoryName = value;
       setSelectedCategory(newSub);
     }
 
-    setDraggedItem(null);
-    setIsDragging(false);
+    setSubEditingId(null);
+  };
+
+  // 드래그 삭제 처리
+  const dragging = (
+    draggedItem: { type: "main" | "sub"; index: number } | null
+  ) => {
+    if (
+      confirm(
+        "정말로 데이터를 삭제하시겠습니까?(메인 카테고리 삭제 시 서브 카테고리도 삭제)"
+      )
+    ) {
+      if (!draggedItem) return;
+      if (draggedItem.type === "main") {
+        const category = categories[draggedItem.index];
+        console.log(category);
+
+        DELETE({
+          url: "/category",
+          data: { MoimCategoryId: category.MoimCategoryId },
+        }).then((res) => {
+          console.log(res);
+          // 빈 값 → 삭제
+          const newCats = [...categories];
+          newCats.splice(draggedItem.index, 1);
+          setCategories(newCats);
+        });
+      }
+      if (draggedItem.type === "sub") {
+        const category = selectedCategory[draggedItem.index];
+        console.log(category);
+        DELETE({
+          url: "/CategoryDetail",
+          data: {
+            categoryDetailId: category.id,
+          },
+        }).then((res) => {
+          console.log(res);
+        });
+        const newSub = [...selectedCategory];
+        newSub.splice(draggedItem.index, 1);
+        setSelectedCategory(newSub);
+      }
+      setDraggedItem(null);
+      setIsDragging(false);
+    } else {
+      return;
+    }
+  };
+  const SelectedCategory = (id: number) => {
+    POST({
+      url: "/CategoryDetail/get",
+      data: {
+        MoimCategoryId: id,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        setSelectedCategory(
+          res.data.map(
+            (data: {
+              MoimcategoryDetailId: string;
+              MoimcategorisationDetail: string;
+            }) => ({
+              id: data.MoimcategoryDetailId,
+              SubCategoryName: data.MoimcategorisationDetail,
+            })
+          )
+        );
+      })
+      .catch((err) => {
+        if (err.response.data.resultType == "empty") {
+          setSelectedCategory([]);
+        }
+      });
   };
 
   return (
@@ -105,65 +252,81 @@ const MoimSubCategory = () => {
       <SubContainer>
         <div style={{ textAlign: "center" }}>Main Category</div>
         <CategoryItem>
-          {categories.map((item, idx) => (
-            <HopperStyle
-              key={item.id}
-              draggable
-              onDragStart={() => {
-                setDraggedItem({ type: "main", index: idx });
-                setIsDragging(true);
-              }}
-              onDragEnd={() => {
-                setDraggedItem(null);
-                setIsDragging(false);
-              }}
-              onClick={() => setSelectedCategory(item.SubCategory)}
-              onDoubleClick={() => setEditingId(item.id)}
-            >
-              {editingId === item.id ? (
-                <input
-                  autoFocus
-                  defaultValue={item.Category}
-                  onBlur={(e) => handleSaveMain(item.id, e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter")
-                      handleSaveMain(
-                        item.id,
-                        (e.target as HTMLInputElement).value
-                      );
-                    if (e.key === "Escape") setEditingId(null);
-                  }}
-                />
-              ) : (
-                item.Category
-              )}
-            </HopperStyle>
-          ))}
+          {categories.length === 0 ? (
+            <div style={{ color: "#aaa", textAlign: "center" }}>
+              No categories found
+            </div>
+          ) : (
+            categories &&
+            categories.map((item, idx) => (
+              <HopperStyle
+                key={idx}
+                draggable
+                onDragStart={() => {
+                  setDraggedItem({ type: "main", index: idx });
+                  setIsDragging(true);
+                }}
+                onDragEnd={() => {
+                  setDraggedItem(null);
+                  setIsDragging(false);
+                }}
+                onClick={() => {
+                  setSelectCategory(item.MoimCategoryId);
+                  SelectedCategory(item.MoimCategoryId);
+                }}
+                onDoubleClick={() => setEditingId(item.MoimCategoryId)}
+              >
+                {editingId === item.MoimCategoryId ? (
+                  <input
+                    autoFocus
+                    defaultValue={item.categorisation ?? ""}
+                    onBlur={(e) =>
+                      handleSaveMain(item.MoimCategoryId, e.target.value)
+                    }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter")
+                        handleSaveMain(
+                          item.MoimCategoryId,
+                          (e.target as HTMLInputElement).value
+                        );
+                      if (e.key === "Escape") {
+                        setCategories((prev) => {
+                          if (!prev) return prev; // null이면 그대로
+                          return prev.filter((cat) => {
+                            return cat.MoimCategoryId > 0;
+                          });
+                          // ID가 비어있는 임시 newCat 제거
+                        });
+                        setEditingId(null);
+                      }
+                    }}
+                  />
+                ) : (
+                  item.categorisation ?? ""
+                )}
+              </HopperStyle>
+            ))
+          )}
 
           {/* 플러스 / 휴지통 버튼 */}
           <button
             onClick={() => {
               if (!isDragging) {
                 const newCat = {
-                  id: Date.now(),
-                  Category: "",
+                  MoimCategoryId: Date.now() * -1, // 음수 id
+                  categorisation: "",
                   SubCategory: [],
                 };
-                setCategories((prev) => [...prev, newCat]);
-                setEditingId(newCat.id);
+                setCategories((prev) => [...(prev ?? []), newCat]);
+                setEditingId(newCat.MoimCategoryId);
               } else if (draggedItem?.type === "main") {
-                // 삭제 처리
                 const newCats = [...categories];
                 newCats.splice(draggedItem.index, 1);
                 setCategories(newCats);
               }
             }}
-            onDragOver={(e) => {
-              e.preventDefault(); // drop 허용
-            }}
-            onDrop={() => {
-              dragging(draggedItem);
-            }}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={() => dragging(draggedItem)}
             style={{
               marginTop: "8px",
               width: "100%",
@@ -191,42 +354,65 @@ const MoimSubCategory = () => {
       <SubContainer>
         <div style={{ textAlign: "center" }}>Sub Category</div>
         <CategoryItem>
-          {selectedCategory.map((item, idx) => (
-            <HopperStyle
-              key={idx}
-              draggable
-              onDragStart={() => {
-                setDraggedItem({ type: "sub", index: idx });
-                setIsDragging(true);
-              }}
-              onDragEnd={() => {
-                setDraggedItem(null);
-                setIsDragging(false);
-              }}
-              onDoubleClick={() => setSubEditingId(idx)}
-            >
-              {subEditingId === idx ? (
-                <input
-                  autoFocus
-                  defaultValue={item}
-                  onBlur={(e) => handleSaveSub(idx, e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter")
-                      handleSaveSub(idx, (e.target as HTMLInputElement).value);
-                    if (e.key === "Escape") setSubEditingId(null);
-                  }}
-                />
-              ) : (
-                item
-              )}
-            </HopperStyle>
-          ))}
+          {selectedCategory.length === 0 ? (
+            <div style={{ color: "#aaa", textAlign: "center" }}>
+              No subcategories found
+            </div>
+          ) : (
+            selectedCategory &&
+            selectedCategory.map((item) => (
+              <HopperStyle
+                key={item.id}
+                draggable
+                onDragStart={() => {
+                  const idx = selectedCategory.findIndex(
+                    (sub) => sub.id === item.id
+                  );
+                  setDraggedItem({ type: "sub", index: idx });
+                  setIsDragging(true);
+                }}
+                onDragEnd={() => {
+                  setDraggedItem(null);
+                  setIsDragging(false);
+                }}
+                onDoubleClick={() => setSubEditingId(item.id)}
+              >
+                {subEditingId === item.id ? (
+                  <input
+                    autoFocus
+                    defaultValue={item.SubCategoryName}
+                    onBlur={(e) => handleSaveSub(item.id, e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter")
+                        handleSaveSub(
+                          item.id,
+                          (e.target as HTMLInputElement).value
+                        );
+                      if (e.key === "Escape") {
+                        setSubEditingId(null);
+                        setSelectedCategory((prev) => {
+                          if (!prev) return prev; // null이면 그대로
+                          return prev.filter((cat) => {
+                            return cat.id !== "Space";
+                          });
+                          // ID가 비어있는 임시 newCat 제거
+                        });
+                      }
+                    }}
+                  />
+                ) : (
+                  item.SubCategoryName
+                )}
+              </HopperStyle>
+            ))
+          )}
 
           <button
             onClick={() => {
               if (!isDragging) {
-                setSelectedCategory((prev) => [...prev, ""]);
-                setSubEditingId(selectedCategory.length);
+                const newSub = { id: "Space", SubCategoryName: "" };
+                setSelectedCategory((prev) => [...(prev ?? []), newSub]);
+                setSubEditingId(newSub.id);
               }
               if (draggedItem?.type === "sub") {
                 const newSub = [...selectedCategory];
@@ -234,12 +420,8 @@ const MoimSubCategory = () => {
                 setSelectedCategory(newSub);
               }
             }}
-            onDragOver={(e) => {
-              e.preventDefault(); // drop 허용
-            }}
-            onDrop={() => {
-              dragging(draggedItem);
-            }}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={() => dragging(draggedItem)}
             style={{
               marginTop: "8px",
               width: "100%",
