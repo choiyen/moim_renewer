@@ -82,46 +82,51 @@ const MoimSubCategory = () => {
   }, []);
 
   const handleSaveMain = async (id: number, value: string) => {
-    if (value.trim() === "") {
-      DELETE({
-        url: "/category",
-        data: { MoimCategoryId: id },
-      }).then((res) => {
-        console.log(res);
-        // 빈 값 → 삭제
+    if (id > 0) {
+      if (value.trim() === "") {
+        DELETE({
+          url: "/category",
+          data: { MoimCategoryId: id },
+        }).then((res) => {
+          console.log(res);
+          // 빈 값 → 삭제
+          setCategories((prev) =>
+            (prev ?? []).filter((cat) => cat.MoimCategoryId !== id)
+          );
+        });
+      } else {
+        // 양수 id → 수정
+        await PUT({
+          url: "/category",
+          data: { MoimCategoryId: id, categorisation: value },
+        });
+
         setCategories((prev) =>
-          (prev ?? []).filter((cat) => cat.MoimCategoryId !== id)
+          (prev ?? []).map((cat) =>
+            cat.MoimCategoryId === id ? { ...cat, categorisation: value } : cat
+          )
         );
-      });
-    } else if (id < 0) {
-      // 음수 id → 신규 생성
-      const res = await POST({
-        url: "/category",
-        data: { categorisation: value },
-      });
-      const newId = res.data.MoimCategoryId;
-
-      setCategories((prev) =>
-        (prev ?? []).map((cat) =>
-          cat.MoimCategoryId === id
-            ? { ...cat, MoimCategoryId: newId, categorisation: value }
-            : cat
-        )
-      );
+      }
     } else {
-      // 양수 id → 수정
-      await PUT({
-        url: "/category",
-        data: { MoimCategoryId: id, categorisation: value },
-      });
-
-      setCategories((prev) =>
-        (prev ?? []).map((cat) =>
-          cat.MoimCategoryId === id ? { ...cat, categorisation: value } : cat
-        )
-      );
+      if (value.trim() === "") {
+        setCategories(categories.filter((res) => res.MoimCategoryId > 0));
+      } else {
+        // 음수 id → 신규 생성
+        const res = await POST({
+          url: "/category",
+          data: { categorisation: value },
+        });
+        const newId = res.data[0].MoimCategoryId;
+        console.log(newId);
+        setCategories((prev) =>
+          (prev ?? []).map((cat) =>
+            cat.MoimCategoryId === id
+              ? { ...cat, MoimCategoryId: newId, categorisation: value }
+              : cat
+          )
+        );
+      }
     }
-
     setEditingId(null);
   };
 
@@ -134,26 +139,37 @@ const MoimSubCategory = () => {
       alert("데이터 저장 불가능!!");
       window.location.reload();
     }
-    if (value.trim() === "") {
-      console.log(id);
-      DELETE({
-        url: "/CategoryDetail",
-        data: {
-          categoryDetailId: id,
-        },
-      }).then((res) => {
-        console.log(res);
-        newSub.splice(index, 1);
-        setSelectedCategory(newSub);
-      });
-    } else {
-      if (id == "Space") {
+    if (id == "Space") {
+      if (value.trim() === "") {
+        const newSub = [...selectedCategory];
+        const newSubData = newSub.filter((sub) => sub.id !== "Space");
+        setSelectedCategory(newSubData);
+      } else {
         POST({
           url: "/CategoryDetail",
           data: {
             MoimCategoryId: SelectCategory,
             MoimcategorisationDetail: value,
           },
+        }).then((res) => {
+          console.log(res.data[0].MoimcategoryDetailId);
+          newSub[index].SubCategoryName = value;
+          newSub[index].id = res.data[0].MoimcategoryDetailId;
+          setSelectedCategory(newSub);
+        });
+      }
+    } else {
+      if (value.trim() === "") {
+        console.log(id);
+        DELETE({
+          url: "/CategoryDetail",
+          data: {
+            categoryDetailId: id,
+          },
+        }).then((res) => {
+          console.log(res);
+          newSub.splice(index, 1);
+          setSelectedCategory(newSub);
         });
       } else {
         PUT({
@@ -164,11 +180,10 @@ const MoimSubCategory = () => {
             MoimcategorisationDetail: value,
           },
         });
+        newSub[index].SubCategoryName = value;
+        setSelectedCategory(newSub);
       }
-      newSub[index].SubCategoryName = value;
-      setSelectedCategory(newSub);
     }
-
     setSubEditingId(null);
   };
 
@@ -360,9 +375,9 @@ const MoimSubCategory = () => {
             </div>
           ) : (
             selectedCategory &&
-            selectedCategory.map((item) => (
+            selectedCategory.map((item, keyId) => (
               <HopperStyle
-                key={item.id}
+                key={keyId}
                 draggable
                 onDragStart={() => {
                   const idx = selectedCategory.findIndex(
@@ -377,7 +392,7 @@ const MoimSubCategory = () => {
                 }}
                 onDoubleClick={() => setSubEditingId(item.id)}
               >
-                {subEditingId === item.id ? (
+                {subEditingId === keyId ? (
                   <input
                     autoFocus
                     defaultValue={item.SubCategoryName}
@@ -412,7 +427,7 @@ const MoimSubCategory = () => {
               if (!isDragging) {
                 const newSub = { id: "Space", SubCategoryName: "" };
                 setSelectedCategory((prev) => [...(prev ?? []), newSub]);
-                setSubEditingId(newSub.id);
+                setSubEditingId(selectedCategory.length);
               }
               if (draggedItem?.type === "sub") {
                 const newSub = [...selectedCategory];

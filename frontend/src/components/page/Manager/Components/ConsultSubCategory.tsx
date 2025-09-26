@@ -66,6 +66,16 @@ const ConsultStyle = styled.div`
     font-size: inherit;
   }
 `;
+
+const WarningMessage = styled.div`
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+  border-radius: 4px;
+  color: red;
+`;
+
 const ConsultSubCategory = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [draggedItem, setDraggedItem] = useState<number | null>(null);
@@ -102,45 +112,47 @@ const ConsultSubCategory = () => {
       <TitleStyle>상담 카테고리 설정</TitleStyle>
       <SubContainer>
         <SubCategoryConsultContainer>
-          {ConsultCategory.map((item) => (
-            <ConsultStyle
-              key={item.id}
-              onDoubleClick={() => setEditingId(item.id)}
-              draggable
-              onDragStart={() => {
-                setDraggedItem(item.id);
-                setIsDragging(true);
-              }}
-              onDragEnd={() => {
-                setDraggedItem(null);
-                setIsDragging(false);
-              }}
-            >
-              {editingId === item.id ? (
-                <input
-                  type="text"
-                  defaultValue={item.Category}
-                  autoFocus
-                  onBlur={(e) => handleSave(item.id, e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      const inputValue = (e.target as HTMLInputElement).value;
-                      if (inputValue.trim() === "") {
-                        setEditingId(null);
-                        return;
-                      } else {
+          {ConsultCategory.length > 0 ? (
+            ConsultCategory &&
+            ConsultCategory.map((item) => (
+              <ConsultStyle
+                key={item.id}
+                onDoubleClick={() => setEditingId(item.id)}
+                draggable
+                onDragStart={() => {
+                  setDraggedItem(item.id);
+                  setIsDragging(true);
+                }}
+                onDragEnd={() => {
+                  setDraggedItem(null);
+                  setIsDragging(false);
+                }}
+              >
+                {editingId === item.id ? (
+                  <input
+                    type="text"
+                    defaultValue={item.Category}
+                    autoFocus
+                    onBlur={(e) => handleSave(item.id, e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        const inputValue = (e.target as HTMLInputElement).value;
                         handleSave(item.id, inputValue);
+                      } else if (e.key === "Escape") {
+                        setEditingId(null);
                       }
-                    } else if (e.key === "Escape") {
-                      setEditingId(null);
-                    }
-                  }}
-                />
-              ) : (
-                item.Category
-              )}
-            </ConsultStyle>
-          ))}
+                    }}
+                  />
+                ) : (
+                  item.Category
+                )}
+              </ConsultStyle>
+            ))
+          ) : (
+            <WarningMessage>
+              Empty Consult fields cannot be saved.
+            </WarningMessage>
+          )}
           <button
             onClick={() => {
               const newCategory = {
