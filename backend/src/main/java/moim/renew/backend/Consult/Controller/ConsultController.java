@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +23,7 @@ public class ConsultController
 
     private ResponseDTO responseDTO = new ResponseDTO();
 
+    @PostMapping
     public ResponseEntity<ResponseDTO> Insert(@AuthenticationPrincipal String userId, @RequestBody ConsultDTO consultDTO)
     {
         if(userId == null || userId.isEmpty())
@@ -35,6 +33,8 @@ public class ConsultController
         ConsultDTO consultDTO1 = consultService.Insert(consultDTO);
         return ResponseEntity.ok().body(responseDTO.Response("success", "모임 건의글 생성완료", Collections.singletonList(consultDTO1)));
     }
+
+    @DeleteMapping
     public ResponseEntity<ResponseDTO> Delete(@AuthenticationPrincipal String userId, @RequestBody DeleteConsultDTO deleteConsultDTO)
     {
         if(userId == null || userId.isEmpty())
@@ -51,6 +51,7 @@ public class ConsultController
             throw new DeleteException("데이터 삭제 실패");
         }
     }
+    @PutMapping
     public ResponseEntity<ResponseDTO> Update(@AuthenticationPrincipal String userId, @RequestBody ConsultDTO consultDTO)
     {
         if(userId == null || userId.isEmpty())
@@ -60,6 +61,8 @@ public class ConsultController
         ConsultDTO consultDTO1 = consultService.Update(consultDTO);
         return ResponseEntity.ok().body(responseDTO.Response("success", "모임 데이터 업데이트 완료", Collections.singletonList(consultDTO1)));
     }
+
+    @GetMapping
     public ResponseEntity<ResponseDTO> Select(@AuthenticationPrincipal String userId, @RequestParam String ConsultId)
     {
         if(userId == null || userId.isEmpty())
@@ -69,6 +72,8 @@ public class ConsultController
         ConsultDTO consultDTO = consultService.Select(ConsultId);
         return ResponseEntity.ok().body(responseDTO.Response("success", "데이터 조회", Collections.singletonList(consultDTO)));
     }
+
+    @GetMapping("/all")
     public ResponseEntity<ResponseDTO> SelectAll(@AuthenticationPrincipal String userId, @RequestParam Integer MoimCategoryId)
     {
         if(userId == null || userId.isEmpty())
