@@ -26,6 +26,7 @@ public class ConsultCategoryService
         ConsultCategoryEntity consultCategoryEntity = consultCategoryDTO.ConvertTo();
         consultCategoryMapper.InsertConsultCategory(consultCategoryEntity);
         ConsultCategoryEntity consultCategoryEntity1 = consultCategoryMapper.SelectConsultCategoryId(consultCategoryEntity.getConsultCategoryId());
+        System.out.println(consultCategoryEntity1);
         if(consultCategoryEntity1 != null)
         {
             return consultCategoryEntity1.ConvertTo();

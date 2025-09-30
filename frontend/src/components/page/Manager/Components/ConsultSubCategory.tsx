@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ConsultType } from "../../../../types/MoimDataDummy";
 import { Plus, Trash2 } from "lucide-react";
+import { DELETE, GET, POST, PUT } from "../../../comon/axios/axiosInstance";
 
 const SubCategoryContainer = styled.div`
   width: 100%;
@@ -38,8 +39,8 @@ const SubCategoryConsultContainer = styled.div`
   overflow-y: auto;
 `;
 interface ConsultCategory {
-  id: number;
-  Category: string;
+  consultCategoryId: number;
+  consultType: string;
 }
 const ConsultStyle = styled.div`
   display: flex;
@@ -82,29 +83,97 @@ const ConsultSubCategory = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [ConsultCategory, setConsultCategory] = useState<ConsultCategory[]>(
     Object.values(ConsultType).map((cat, idx) => ({
-      id: idx,
-      Category: cat as string,
+      consultCategoryId: idx,
+      consultType: cat as string,
     }))
   );
 
+  useEffect(() => {
+    GET({
+      url: "/ConsultCategory",
+    })
+      .then((res) => {
+        console.log(res);
+        setConsultCategory(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setConsultCategory([]);
+      });
+  }, []);
+
   const handleSave = (id: number, newValue: string) => {
-    if (newValue.trim() === "") {
-      // 값이 비어있으면 추가된 항목 제거
-      setConsultCategory((prev) => prev.filter((cat) => cat.id !== id));
+    if (id > 0) {
+      if (newValue.trim() === "") {
+        DELETE({
+          url: "/ConsultCategory",
+          params: {
+            consultCategoryId: id,
+          },
+        }).then((res) => {
+          console.log(res);
+        });
+        setConsultCategory((prev) =>
+          prev.filter((cat) => cat.consultCategoryId !== id)
+        );
+      } else {
+        PUT({
+          url: "/ConsultCategory",
+          data: {
+            consultCategoryId: id,
+            consultType: newValue,
+          },
+        }).then((res) => {
+          console.log(res);
+          setConsultCategory((prev) =>
+            prev.map((item) =>
+              item.consultCategoryId === id
+                ? { ...item, consultType: newValue }
+                : item
+            )
+          );
+        });
+      }
     } else {
-      setConsultCategory((prev) =>
-        prev.map((cat) =>
-          cat.id === id ? { ...cat, Category: newValue } : cat
-        )
-      );
+      if (newValue.trim() === "") {
+        setConsultCategory((prev) =>
+          prev.filter((cat) => cat.consultCategoryId !== id)
+        );
+      } else {
+        POST({
+          url: "/ConsultCategory",
+          data: {
+            consultType: newValue,
+          },
+        }).then((res) => {
+          console.log(res);
+        });
+        setConsultCategory((prev) =>
+          prev.map((cat) =>
+            cat.consultCategoryId === id
+              ? { ...cat, consultType: newValue }
+              : cat
+          )
+        );
+      }
     }
     setEditingId(null);
   };
   const dragging = (draggedId: number | null) => {
     if (draggedId === null) return;
-    setConsultCategory((prev) => prev.filter((cat) => cat.id !== draggedId));
-    setIsDragging(false);
-    setDraggedItem(null);
+    if (confirm("정말로 게시판을 삭제하시겠습니까?(데이터 전부 삭제됨)")) {
+      DELETE({
+        url: "/ConsultCategory",
+        params: {
+          consultCategoryId: draggedId,
+        },
+      });
+      setConsultCategory((prev) =>
+        prev.filter((cat) => cat.consultCategoryId !== draggedId)
+      );
+      setIsDragging(false);
+      setDraggedItem(null);
+    }
   };
 
   return (
@@ -114,13 +183,13 @@ const ConsultSubCategory = () => {
         <SubCategoryConsultContainer>
           {ConsultCategory.length > 0 ? (
             ConsultCategory &&
-            ConsultCategory.map((item) => (
+            ConsultCategory.map((item, keyId) => (
               <ConsultStyle
-                key={item.id}
-                onDoubleClick={() => setEditingId(item.id)}
+                key={keyId}
+                onDoubleClick={() => setEditingId(keyId)}
                 draggable
                 onDragStart={() => {
-                  setDraggedItem(item.id);
+                  setDraggedItem(item.consultCategoryId);
                   setIsDragging(true);
                 }}
                 onDragEnd={() => {
@@ -128,23 +197,25 @@ const ConsultSubCategory = () => {
                   setIsDragging(false);
                 }}
               >
-                {editingId === item.id ? (
+                {editingId === keyId ? (
                   <input
                     type="text"
-                    defaultValue={item.Category}
+                    defaultValue={item.consultType}
                     autoFocus
-                    onBlur={(e) => handleSave(item.id, e.target.value)}
+                    onBlur={(e) =>
+                      handleSave(item.consultCategoryId, e.target.value)
+                    }
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         const inputValue = (e.target as HTMLInputElement).value;
-                        handleSave(item.id, inputValue);
+                        handleSave(item.consultCategoryId, inputValue);
                       } else if (e.key === "Escape") {
                         setEditingId(null);
                       }
                     }}
                   />
                 ) : (
-                  item.Category
+                  item.consultType
                 )}
               </ConsultStyle>
             ))
@@ -156,15 +227,11 @@ const ConsultSubCategory = () => {
           <button
             onClick={() => {
               const newCategory = {
-                id:
-                  ConsultCategory.length > 0
-                    ? ConsultCategory[ConsultCategory.length - 1].id + 1
-                    : 1,
-                Category: "",
-                SubCategory: [],
+                consultCategoryId: -1,
+                consultType: "",
               };
               setConsultCategory((prev) => [...prev, newCategory]);
-              setEditingId(newCategory.id);
+              setEditingId(ConsultCategory.length);
             }}
             style={{
               textAlign: "center",

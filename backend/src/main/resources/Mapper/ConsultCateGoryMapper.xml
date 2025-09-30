@@ -10,7 +10,7 @@
     </resultMap>
 
     <!--  상담 테이블 분류  -->
-    <insert id="InsertConsultCategory" parameterType="ConsultCategoryEntity">
+    <insert id="InsertConsultCategory" parameterType="ConsultCategoryEntity"  useGeneratedKeys="true" keyProperty="consultCategoryId">
         INSERT INTO consult_category(Consult_categoryId, ConsultType) VALUES(#{consultCategoryId},#{consultType})
     </insert>
     <!--상담 테이블 분류 수정 -->

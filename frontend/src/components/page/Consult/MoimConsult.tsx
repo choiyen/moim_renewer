@@ -2,8 +2,12 @@ import { FileText } from "lucide-react";
 import type { JSX } from "react";
 import { useNavigate } from "react-router-dom";
 import { consultPosts } from "../../../types/MoimDataDummy";
-import { consultCategories } from "../../../types/CategoryDummy";
-import React from "react";
+import {
+  consultCategories,
+  type ConsultCategory,
+} from "../../../types/CategoryDummy";
+import React, { useEffect, useState } from "react";
+import { GET } from "../../comon/axios/axiosInstance";
 
 const BoardSection = ({
   icon,
@@ -15,7 +19,6 @@ const BoardSection = ({
   posts: typeof consultPosts;
 }) => {
   const navigate = useNavigate();
-
   return (
     <div className="mt-12">
       <div className="flex items-center gap-2 mb-6">
@@ -51,24 +54,42 @@ const BoardSection = ({
 
 const MoimConsult = () => {
   const navigate = useNavigate();
+  const [consultCategory, setConsultCategories] = useState<ConsultCategory[]>();
+
+  useEffect(() => {
+    GET({
+      url: "/ConsultCategory",
+    }).then((res) => {
+      console.log(res);
+
+      const updated = consultCategories.map((item, index) => ({
+        ...item,
+        // 서버 응답의 문자열 필드를 넣기
+        ConsultCategory: res.data[index]?.consultType ?? item.ConsultCategory,
+      }));
+
+      setConsultCategories(updated);
+    });
+  }, []);
 
   const handleClick = () => {
     navigate("/consult/insert");
   };
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
-      {consultCategories.map((category) => (
-        <BoardSection
-          key={category.id}
-          icon={React.createElement(category.icon ?? FileText, {
-            width: 28,
-            height: 28,
-            className: "text-blue-600",
-          })}
-          title={category.ConsultCategory}
-          posts={category.post}
-        />
-      ))}
+      {consultCategory &&
+        consultCategory.map((category) => (
+          <BoardSection
+            key={category.id}
+            icon={React.createElement(category.icon ?? FileText, {
+              width: 28,
+              height: 28,
+              className: "text-blue-600",
+            })}
+            title={category.ConsultCategory}
+            posts={category.post}
+          />
+        ))}
       <div className="mt-4 text-right">
         <button
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"

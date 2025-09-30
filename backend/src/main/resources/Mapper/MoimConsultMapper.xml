@@ -27,7 +27,7 @@
         DELETE FROM moim_consult WHERE Moims_consultId = #{moimConsultId}
     </delete>
     <!-- 전체 게시판 조회 -->
-    <select id="SelectConsultAll" resultMap="ConsultResultMap">
-        SELECT * FROM moim_consult
+    <select id="SelectConsultBYCategoryId" parameterType="java.lang.Integer" resultMap="ConsultResultMap">
+        SELECT * FROM moim_consult WHERE Consult_categoryId = #{consultCategoryId}
     </select>
 </mapper>

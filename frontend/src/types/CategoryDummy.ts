@@ -68,7 +68,7 @@ export const categories: CategoryWithSub[] = [
   },
 ];
 
-interface ConsultCategory {
+export interface ConsultCategory {
   id: number;
   ConsultCategory: string;
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;

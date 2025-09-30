@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/ConsultCategory")
+@Validated
 public class ConsultCategoryController
 {
     private ResponseDTO responseDTO = new ResponseDTO();
@@ -31,8 +33,7 @@ public class ConsultCategoryController
     @PostMapping
     public ResponseEntity<?> Insert(@AuthenticationPrincipal String userId, @RequestBody ConsultCategoryDTO consultCategoryDTO)
     {
-        try
-        {
+
             // 인증 사용자 확인
             if (userId == null || userId.isEmpty()) {
                 throw new BadCredentialsException("로그인된 사용자 정보가 없습니다.");
@@ -47,33 +48,19 @@ public class ConsultCategoryController
             {
                 throw new BadCredentialsException("인증 권한을 보유하지 않은 사용자입니다 : 관리자만 확인 가능");
             }
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(responseDTO.Response("error", e.getMessage()));
-        }
     }
-    public ResponseEntity<?> SelectAll(@AuthenticationPrincipal String userId)
+
+    @GetMapping
+    public ResponseEntity<?> SelectAll()
     {
-        try
-        {
-            // 인증 사용자 확인
-            if (userId == null || userId.isEmpty()) {
-                throw new BadCredentialsException("로그인된 사용자 정보가 없습니다.");
-            }
             List<ConsultCategoryDTO> consultCategoryDTOS = consultCategoryService.SelectAll();
             return ResponseEntity.ok().body(responseDTO.Response("success", "게시판 카테고리 조회 완료", consultCategoryDTOS));
-
-        }
-        catch (Exception e)
-        {
-            return ResponseEntity.badRequest().body(responseDTO.Response("error", e.getMessage()));
-        }
-
     }
+
+    @PutMapping
     public ResponseEntity<?> Update(@AuthenticationPrincipal String userId, @RequestBody ConsultCategoryDTO consultCategoryDTO)
     {
-        try
-        {
+
             // 인증 사용자 확인
             if (userId == null || userId.isEmpty()) {
                 throw new BadCredentialsException("로그인된 사용자 정보가 없습니다.");
@@ -88,15 +75,11 @@ public class ConsultCategoryController
             {
                 throw new BadCredentialsException("인증 권한을 보유하지 않은 사용자입니다 : 관리자만 확인 가능");
             }
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(responseDTO.Response("error", e.getMessage()));
-        }
     }
+    @DeleteMapping
     public ResponseEntity<?> Delete(@AuthenticationPrincipal String userId, @RequestParam Integer consultCategoryId)
     {
-        try
-        {
+
             if (userId == null || userId.isEmpty()) {
                 throw new BadCredentialsException("로그인된 사용자 정보가 없습니다.");
             }
@@ -117,11 +100,5 @@ public class ConsultCategoryController
             {
                 throw new BadCredentialsException("인증 권한을 보유하지 않은 사용자입니다 : 관리자만 확인 가능");
             }
-        }
-        catch (Exception e)
-        {
-            return ResponseEntity.badRequest().body(responseDTO.Response("error", e.getMessage()));
-        }
-
     }
 }

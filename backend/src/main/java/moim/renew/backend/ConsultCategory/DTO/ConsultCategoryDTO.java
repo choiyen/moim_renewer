@@ -1,5 +1,6 @@
 package moim.renew.backend.ConsultCategory.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import moim.renew.backend.ConsultCategory.Entity.ConsultCategoryEntity;
 
@@ -11,7 +12,9 @@ import moim.renew.backend.ConsultCategory.Entity.ConsultCategoryEntity;
 @EqualsAndHashCode
 public class ConsultCategoryDTO
 {
+    @JsonProperty("consultCategoryId")
     private Integer consultCategoryId;
+    @JsonProperty("consultType")
     private String consultType;
 
 

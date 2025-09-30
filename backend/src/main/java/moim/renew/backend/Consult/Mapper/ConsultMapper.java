@@ -12,5 +12,5 @@ public interface ConsultMapper
     void InsertConsult(ConsultEntity consultEntity);
     void UpdateConsult(ConsultEntity consultEntity);
     void DeleteConsult(String moimConsultId);
-    List<ConsultEntity> SelectConsultAll();
+    List<ConsultEntity> SelectConsultBYCategoryId(Integer consultCategoryId);
 }

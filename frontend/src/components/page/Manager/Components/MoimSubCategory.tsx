@@ -210,6 +210,8 @@ const MoimSubCategory = () => {
           const newCats = [...categories];
           newCats.splice(draggedItem.index, 1);
           setCategories(newCats);
+          setSelectCategory(0);
+          setSelectedCategory([]);
         });
       }
       if (draggedItem.type === "sub") {
