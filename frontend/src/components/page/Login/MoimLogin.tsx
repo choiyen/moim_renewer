@@ -180,6 +180,7 @@ const MoimLogin = () => {
           type: res.data[0].userDTO.type,
           nickname: res.data[0].userDTO.nickname,
           userId: res.data[0].userDTO.userId,
+          profileImg: res.data[0].userDTO.profileImg,
         })
       );
       navigate("/home");

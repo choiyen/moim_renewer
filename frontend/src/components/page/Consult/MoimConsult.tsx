@@ -1,13 +1,14 @@
 import { FileText } from "lucide-react";
 import type { JSX } from "react";
 import { useNavigate } from "react-router-dom";
-import { consultPosts } from "../../../types/MoimDataDummy";
+import { type Posts } from "../../../types/MoimDataDummy";
 import {
   consultCategories,
   type ConsultCategory,
 } from "../../../types/CategoryDummy";
 import React, { useEffect, useState } from "react";
 import { GET } from "../../comon/axios/axiosInstance";
+import { ConsultCategorying } from "./function/Consult";
 
 const BoardSection = ({
   icon,
@@ -16,36 +17,48 @@ const BoardSection = ({
 }: {
   icon: JSX.Element;
   title: string;
-  posts: typeof consultPosts;
+  posts: Posts[];
 }) => {
   const navigate = useNavigate();
   return (
     <div className="mt-12">
-      <div className="flex items-center gap-2 mb-6">
-        {icon}
+      <div className="flex items-center gap-2 mb-3">
+        <span className="flex-shrink-0">{icon}</span>
         <h2 className="text-xl font-semibold">{title}</h2>
       </div>
 
       <table className="w-full table-auto border border-gray-200">
         <thead className="bg-gray-100 text-gray-700 text-left">
           <tr>
-            <th className="p-3 w-1/2">제목</th>
-            <th className="p-3 w-1/4">작성자</th>
-            <th className="p-3 w-1/4">작성일</th>
+            <th className="p-3 w-3/6">제목</th>
+            <th className="p-3 w-2/6">작성일/수정일</th>
+            <th className="p-3 w-1/6">작성자</th>
           </tr>
         </thead>
         <tbody>
-          {posts.map((post) => (
-            <tr
-              key={post.id}
-              className="border-t hover:bg-gray-50 cursor-pointer"
-              onClick={() => navigate(`/consult/select/${post.id}`)} // ← 여기서 navigate 실행
-            >
-              <td className="p-3 text-blue-600">{post.title}</td>
-              <td className="p-3">{post.author}</td>
-              <td className="p-3">{post.date}</td>
+          {posts.length > 0 ? (
+            posts.map((post) => (
+              <tr
+                key={post.moimConsultId}
+                className="border-t hover:bg-gray-50 cursor-pointer"
+                onClick={() =>
+                  navigate(`/consult/select/${post.moimConsultId}`)
+                } // ← 여기서 navigate 실행
+              >
+                <td className="p-3 text-blue-600">{post.Title}</td>
+                <td className="p-3">
+                  {new Date(post.createDate).toLocaleString("ko-KR")}
+                </td>
+                <td className="p-3">{post.Nickname}</td>
+              </tr>
+            ))
+          ) : (
+            <tr className="border-t">
+              <td className="p-3 text-center" colSpan={3}>
+                저장된 데이터 없습니다
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
@@ -59,15 +72,16 @@ const MoimConsult = () => {
   useEffect(() => {
     GET({
       url: "/ConsultCategory",
-    }).then((res) => {
-      console.log(res);
-
-      const updated = consultCategories.map((item, index) => ({
-        ...item,
-        // 서버 응답의 문자열 필드를 넣기
-        ConsultCategory: res.data[index]?.consultType ?? item.ConsultCategory,
-      }));
-
+    }).then(async (res) => {
+      const updated = await Promise.all(
+        consultCategories.map(async (item, index) => ({
+          ...item,
+          ConsultCategory: res.data[index]?.consultType ?? item.ConsultCategory,
+          post: await ConsultCategorying(res.data[index]?.consultCategoryId),
+          // 보통 .data를 꺼내야 실제 서버 응답 본문이 들어감
+        }))
+      );
+      console.log(updated);
       setConsultCategories(updated);
     });
   }, []);
@@ -76,7 +90,7 @@ const MoimConsult = () => {
     navigate("/consult/insert");
   };
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10">
+    <div className="max-w-4xl mx-auto px-4 py-10">
       {consultCategory &&
         consultCategory.map((category) => (
           <BoardSection
@@ -87,7 +101,7 @@ const MoimConsult = () => {
               className: "text-blue-600",
             })}
             title={category.ConsultCategory}
-            posts={category.post}
+            posts={category.post != null ? category.post : []}
           />
         ))}
       <div className="mt-4 text-right">

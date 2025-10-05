@@ -94,7 +94,7 @@ public class ConsultService
         List<ConsultEntity> consultEntities = consultMapper.SelectConsultBYCategoryId(CategoryId);
         if(consultEntities.isEmpty())
         {
-            throw new EmptyException("모임 리뷰를 검색하였으나, 현재는 비어있는 것 같습니다.");
+            throw new EmptyException("모임 카테고리를 검색하였으나, 현재는 비어있는 것 같습니다.");
         }
         else
         {

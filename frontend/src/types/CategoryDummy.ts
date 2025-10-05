@@ -1,10 +1,5 @@
 import { FileText, Lightbulb, Star } from "lucide-react";
-import {
-  consultPosts,
-  featureRequests,
-  userReviews,
-  type Posts,
-} from "./MoimDataDummy";
+import { type Posts } from "./MoimDataDummy";
 
 interface CategoryDummy {
   id: number;
@@ -72,7 +67,7 @@ export interface ConsultCategory {
   id: number;
   ConsultCategory: string;
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  post: Posts[];
+  post: Posts[] | null;
 }
 
 export const consultCategories: ConsultCategory[] = [
@@ -80,18 +75,18 @@ export const consultCategories: ConsultCategory[] = [
     id: 1,
     ConsultCategory: "서비스 운영",
     icon: FileText,
-    post: consultPosts,
+    post: null,
   },
   {
     id: 2,
     ConsultCategory: "이용 후기 & 경험",
     icon: Lightbulb,
-    post: featureRequests,
+    post: null,
   },
   {
     id: 3,
     ConsultCategory: "이용 후기",
     icon: Star,
-    post: userReviews,
+    post: null,
   },
 ];

@@ -1,10 +1,13 @@
 package moim.renew.backend.Consult.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import moim.renew.backend.Consult.Entity.ConsultEntity;
 import moim.renew.backend.MoimCategory.CategoryDetail.Entity.MoimCategoryDetailEntity;
+import org.joda.time.DateTime;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -15,10 +18,17 @@ import java.security.SecureRandom;
 public class ConsultDTO {
 
     private String moimConsultId;
+
+    @JsonProperty("Nickname")
     private String nickname;
+    @JsonProperty("Title")
+    private String title;
+    @JsonProperty("consultCategoryId")
     private Integer consultCategoryId;
+    @JsonProperty("consultComment")
     private String consultComment;
 
+    private LocalDateTime createDate;
     public String generateRandomId() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         SecureRandom random = new SecureRandom();
@@ -39,6 +49,9 @@ public class ConsultDTO {
                 .moimConsultId(this.moimConsultId)
                 .consultCategoryId(this.consultCategoryId)
                 .consultComment(this.consultComment)
+                .title(this.title)
+                .nickname(this.nickname)
+                .createDate(this.createDate)
                 .build();
     }
 }

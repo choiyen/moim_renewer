@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/consult")
+@Validated
 public class ConsultController
 {
     @Autowired
@@ -26,6 +28,7 @@ public class ConsultController
     @PostMapping
     public ResponseEntity<ResponseDTO> Insert(@AuthenticationPrincipal String userId, @RequestBody ConsultDTO consultDTO)
     {
+        System.out.println(consultDTO);
         if(userId == null || userId.isEmpty())
         {
             throw new BadCredentialsException("로그인이 되어 있지 않은 회원은 문의글을 남길 수 없습니다.");

@@ -128,8 +128,10 @@ CREATE TABLE consult_category (
 CREATE TABLE moim_consult (
     Moims_consultId VARCHAR(50) PRIMARY KEY,
     Nickname VARCHAR(50) NOT NULL,
+    Title VARCHAR(50) NOT NULL,
     Consult_categoryId INT NOT NULL,
     Consult_Comment LONGTEXT NOT NULL,
+    Create_Date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 작성일, 자동 입력
 
     CONSTRAINT fk_moim_consult_users FOREIGN KEY (Nickname) REFERENCES users(Nickname)
           ON DELETE CASCADE

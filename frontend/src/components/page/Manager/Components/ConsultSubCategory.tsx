@@ -227,7 +227,7 @@ const ConsultSubCategory = () => {
           <button
             onClick={() => {
               const newCategory = {
-                consultCategoryId: -1,
+                consultCategoryId: Date.now() * -1,
                 consultType: "",
               };
               setConsultCategory((prev) => [...prev, newCategory]);

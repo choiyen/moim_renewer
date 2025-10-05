@@ -7,12 +7,12 @@ interface MoimDataDummy {
 }
 
 export interface Posts {
-  id: number;
-  title: string;
-  author: string;
-  date: string;
-  comment: string;
-  ConsultType: ConsultType;
+  Nickname: string;
+  Title: string;
+  consultCategoryId: number;
+  consultComment: string;
+  createDate: string;
+  moimConsultId: string;
 }
 
 export const ConsultType = {
@@ -21,7 +21,7 @@ export const ConsultType = {
   REVIEW: "이용후기",
 } as const;
 
-export const consultPosts: Posts[] = [
+export const consultPosts = [
   {
     id: 1,
     title: "모임 삭제가 안돼요",
@@ -51,7 +51,7 @@ export const consultPosts: Posts[] = [
   },
 ];
 
-export const featureRequests: Posts[] = [
+export const featureRequests = [
   {
     id: 4,
     title: "모임에 공지 고정 기능이 있었으면 해요",
@@ -72,7 +72,7 @@ export const featureRequests: Posts[] = [
   },
 ];
 
-export const userReviews: Posts[] = [
+export const userReviews = [
   {
     id: 6,
     title: "첫 모임 참여했는데 정말 좋았어요",

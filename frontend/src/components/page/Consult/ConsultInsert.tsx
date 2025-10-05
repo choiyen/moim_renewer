@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
-import { ConsultType } from "../../../types/MoimDataDummy";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AiOutlineAlignLeft,
   AiOutlineAlignCenter,
@@ -12,6 +11,7 @@ import {
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+import { GET, POST } from "../../comon/axios/axiosInstance";
 
 // =================== Styled Components ===================
 const ConsultContainer = styled.div`
@@ -74,12 +74,19 @@ const ButtonSpace = styled.div`
   padding: 15px;
 `;
 
-const BoardEditor = styled.textarea<{ bgColor: string }>`
+const BoardEditor = styled.div<{ bgColor: string }>`
   width: 100%;
   min-height: 600px;
   border: 1px solid #ccc;
   overflow: auto;
   background-color: ${({ bgColor }) => bgColor};
+  padding: 8px;
+
+  /* placeholder 스타일 */
+  &[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: #888;
+  }
 `;
 
 // 툴바 버튼 스타일
@@ -117,18 +124,81 @@ const BoardButton = styled.button<{ bgColor: string }>`
   }
 `;
 
+interface consult {
+  consultCategoryId: number;
+  consultType: string;
+}
+
 // =================== Component ===================
 const ConsultInsert = () => {
-  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
   const [bgColor] = useState("#ffffff");
-  const [titleType, settitleType] = useState<ConsultType>("서비스");
-  const nativeGate = useNavigate();
+  const [titleType, setTitleType] = useState<consult[]>([
+    {
+      consultCategoryId: 0,
+      consultType: "ssddsdsdds",
+    },
+  ]);
+  const [nickname, setNickname] = useState("");
+  const [title, setTitle] = useState("");
+  const [type, settype] = useState("");
+  const navigate = useNavigate();
+  // consultCategoryId: 1, consultType: '서비스
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      const userType = JSON.parse(user);
+      console.log(userType);
+      GET({
+        url: "/ConsultCategory",
+      }).then((res) => {
+        console.log(res);
+        setTitleType(res.data);
+        setNickname(userType.nickname);
+      });
+    }
+  }, []);
+
   const applyStyle = (command: string, value?: string) => {
     document.execCommand(command, false, value);
   };
-  const Backed = () => {
-    nativeGate("/consult/");
+
+  const handleBack = () => {
+    navigate("/consult/");
   };
+
+  //10월 1일 함수 수정 필요
+  const handleSubmit = async () => {
+    try {
+      const contentHTML = editorRef.current?.innerHTML || "";
+      const number = titleType.filter((e) => {
+        return e.consultType == type;
+      });
+      const body = {
+        Nickname: nickname,
+        Title: title,
+        consultCategoryId: number[0].consultCategoryId,
+        consultComment: contentHTML,
+      };
+      console.log(body);
+
+      const res = await POST({
+        url: "/consult", // 실제 API 엔드포인트
+        data: body,
+      });
+      console.log(res.resultType);
+      if (res.resultType === "success") {
+        alert("게시글 작성 완료!");
+        navigate("/consult/");
+      } else {
+        alert("작성 실패");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("서버 오류 발생");
+    }
+  };
+
   return (
     <ConsultContainer>
       <div
@@ -137,55 +207,63 @@ const ConsultInsert = () => {
           padding: "25px",
           marginBottom: "20px",
           display: "flex",
-          justifyContent: "flex-end", // 오른쪽 정렬
+          justifyContent: "flex-end",
         }}
       >
         <button
           className="flex items-center gap-2 p-3 border bg-gray-200 rounded shadow-md hover:bg-gray-300 hover:shadow-lg transition-all duration-200"
-          onClick={() => {
-            Backed();
-          }}
+          onClick={handleBack}
         >
           <FaArrowLeft size={20} />
           이전
         </button>
       </div>
       <HandleContainer>
-        {/* 타이틀 */}
-        <Consulttitle>{titleType} 게시판</Consulttitle>
+        <Consulttitle> 게시판</Consulttitle>
+
         {/* 닉네임 + 카테고리 선택 */}
         <ConsultSpace>
-          <input type="text" placeholder="닉네임" />
+          <input
+            type="text"
+            placeholder="닉네임"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            readOnly
+          />
           <ConSultSelect
-            value={titleType}
+            value={type}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              settitleType(e.target.value as ConsultType)
+              settype(e.target.value as string)
             }
           >
-            {Object.values(ConsultType).map((label) => (
-              <option key={label} value={label}>
-                {label}
+            {titleType.map((label) => (
+              <option key={label.consultCategoryId} value={label.consultType}>
+                {label.consultType}
               </option>
             ))}
           </ConSultSelect>
         </ConsultSpace>
+
         {/* 스타일 옵션 툴바 */}
         <div
           style={{
             display: "flex",
-            flexWrap: "nowrap", // 한 줄로 고정
-            backgroundColor: "white", // 오타 수정: while → white
-            justifyContent: "flex-end", // 오른쪽 정렬
-            alignItems: "center", // 수직 중앙 정렬
-            gap: "8px", // 아이템 간 간격
-            overflowX: "auto", // 화면이 좁으면 스크롤 가능
+            flexWrap: "nowrap",
+            backgroundColor: "white",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            gap: "8px",
+            overflowX: "auto",
             border: "1px solid #ccc",
             paddingRight: "5px",
           }}
         >
-          {/* 글 제목 입력 */}
-          <ConSultInput type="text" placeholder="제목" />
-          {/* 글자 굵게 / 기울임 / 밑줄 / 취소선 */}
+          <ConSultInput
+            type="text"
+            placeholder="제목"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
           <ToolbarButton onClick={() => applyStyle("bold")}>
             <AiOutlineBold size={20} />
           </ToolbarButton>
@@ -193,27 +271,23 @@ const ConsultInsert = () => {
             <AiOutlineItalic size={20} />
           </ToolbarButton>
           <ToolbarButton onClick={() => applyStyle("underline")}>
-            <AiOutlineStrikethrough size={20} />
-          </ToolbarButton>
-          <ToolbarButton onClick={() => applyStyle("strikeThrough")}>
             <AiOutlineUnderline size={20} />
           </ToolbarButton>
+          <ToolbarButton onClick={() => applyStyle("strikeThrough")}>
+            <AiOutlineStrikethrough size={20} />
+          </ToolbarButton>
 
-          {/* 글자색 */}
           <input
             type="color"
             onChange={(e) => applyStyle("foreColor", e.target.value)}
             title="글자색"
           />
-
-          {/* 배경색 */}
           <input
             type="color"
             onChange={(e) => applyStyle("hiliteColor", e.target.value)}
             title="배경색"
           />
 
-          {/* 글자 크기 */}
           <select
             onChange={(e) => applyStyle("fontSize", e.target.value)}
             title="글자 크기"
@@ -227,11 +301,9 @@ const ConsultInsert = () => {
           <ToolbarButton onClick={() => applyStyle("justifyLeft")}>
             <AiOutlineAlignLeft size={20} />
           </ToolbarButton>
-
           <ToolbarButton onClick={() => applyStyle("justifyCenter")}>
             <AiOutlineAlignCenter size={20} />
           </ToolbarButton>
-
           <ToolbarButton onClick={() => applyStyle("justifyRight")}>
             <AiOutlineAlignRight size={20} />
           </ToolbarButton>
@@ -244,16 +316,14 @@ const ConsultInsert = () => {
           suppressContentEditableWarning
           bgColor={bgColor}
           spellCheck={false}
-          placeholder=" 여기에 글 내용을 작성하세요..."
+          data-placeholder="여기에 글 내용을 작성하세요..."
         />
+
         <ButtonSpace>
-          <BoardButton bgColor={"#28a745"}>작성</BoardButton>
-          <BoardButton
-            bgColor={"#dc3545"}
-            onClick={() => {
-              nativeGate("/consult/");
-            }}
-          >
+          <BoardButton bgColor={"#28a745"} onClick={handleSubmit}>
+            작성
+          </BoardButton>
+          <BoardButton bgColor={"#dc3545"} onClick={handleBack}>
             취소
           </BoardButton>
         </ButtonSpace>

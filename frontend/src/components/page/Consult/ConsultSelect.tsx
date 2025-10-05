@@ -1,15 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  consultPosts,
-  featureRequests,
-  userReviews,
-} from "../../../types/MoimDataDummy";
+import { type Posts } from "../../../types/MoimDataDummy";
 import styled from "@emotion/styled";
-import star from "../../comon/frame/image/star.png";
 import { FaArrowLeft } from "react-icons/fa";
 
 import styleds from "../Consult/Consult.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { GET, POST } from "../../comon/axios/axiosInstance";
 
 const ConsultContainer = styled.div`
   display: flex;
@@ -41,20 +37,26 @@ interface CommentType {
 
 const ConsultSelect = () => {
   const { id } = useParams<{ id: string }>(); // id는 문자열로 들어옴
-  const allPosts = [...consultPosts, ...featureRequests, ...userReviews];
-  const targetPost = allPosts.find((post) => post.id === Number(id as string));
+  const [targetPost, settargetPost] = useState<Posts>();
   const [comment, setcomment] = useState<CommentType[]>([]);
   const [commenting, setcommenting] = useState<string>("");
+  const user = localStorage.getItem("user");
+
   const nativeGate = useNavigate();
   const settingcomment = () => {
-    if (targetPost?.author !== undefined) {
+    if (user) console.log(JSON.parse(user));
+    if (user && JSON.parse(user).nickname !== undefined) {
+      POST({
+        url: "dddddddddddddddddd",
+      });
+
       setcomment([
         ...comment,
         {
-          name: targetPost?.author,
+          name: JSON.parse(user).nickname,
           comment: commenting,
           commentDate: new Date(),
-          star: star,
+          star: JSON.parse(user).profileImg,
         },
       ]);
       setcommenting("");
@@ -62,6 +64,18 @@ const ConsultSelect = () => {
       alert("댓글 작성 동작 : 로그인 정보 없음");
     }
   };
+  useEffect(() => {
+    GET({
+      url: "/consult",
+      params: {
+        ConsultId: id,
+      },
+    }).then((res) => {
+      console.log(res.data[0]);
+      settargetPost(res.data[0]);
+    });
+  }, []);
+
   const Backed = () => {
     nativeGate("/consult/");
   };
@@ -99,14 +113,14 @@ const ConsultSelect = () => {
       <WhiteContainer>
         <div className={styleds.postHeader}>
           <span className={styleds.postType}>
-            {targetPost?.ConsultType} - {targetPost?.id}
+            {targetPost?.consultCategoryId} - {targetPost?.moimConsultId}
           </span>
-          <span className={styleds.postTitle}>{targetPost?.title}</span>
+          <span className={styleds.postTitle}>{targetPost?.Title}</span>
         </div>
 
         <div className={styleds.postMeta}>
-          <span>{targetPost?.author}</span>
-          <span>{targetPost?.date}</span>
+          <span>{targetPost?.Nickname}</span>
+          <span>{targetPost?.createDate}</span>
         </div>
 
         <div className={styleds.postStats}>
@@ -115,8 +129,10 @@ const ConsultSelect = () => {
           <span>댓글 : 0</span>
         </div>
 
-        <div className={styleds.postComment}>{targetPost?.comment}</div>
-
+        <div
+          className={styleds.postComment}
+          dangerouslySetInnerHTML={{ __html: targetPost?.consultComment ?? "" }}
+        />
         <div className={styleds.commentForm}>
           <input
             type="text"
@@ -179,8 +195,20 @@ const ConsultSelect = () => {
               >
                 {c.comment}
               </span>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <button className={styleds.commentbutton}>댓글 수정</button>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "15px",
+                }}
+              >
+                <button
+                  className={styleds.commentbutton}
+                  style={{ backgroundColor: "green" }}
+                >
+                  댓글 수정
+                </button>
+                <button className={styleds.commentbutton}>댓글 삭제</button>
               </div>
             </div>
           ))}
