@@ -10,7 +10,7 @@ public interface ConsultCommentMapper
 {
     void InsertConsultComment(ConsultCommentEntity consultCommentEntity);
     void UpdateConsultComment(ConsultCommentEntity consultCommentEntity);
-    void DeleteConsultComment(String moimConsultCommentId);
+    void DeleteConsultComment(String moimConsultCommentId, String password);
     List<ConsultCommentEntity> SelectConsultComments(String moimConsultId);
     ConsultCommentEntity SelectConsultComment(String moimConsultId);
 

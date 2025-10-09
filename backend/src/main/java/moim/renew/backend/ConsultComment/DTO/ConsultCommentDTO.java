@@ -4,6 +4,7 @@ import lombok.*;
 import moim.renew.backend.ConsultComment.Entity.ConsultCommentEntity;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -18,7 +19,8 @@ public class ConsultCommentDTO
     private String nickname;
     private String password;
     private String comments;
-
+    private LocalDateTime updateDate;
+    private String profileImg;
 
     public String generateRandomId() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -43,6 +45,8 @@ public class ConsultCommentDTO
                 .nickname(this.nickname)
                 .password(this.password)
                 .comments(this.comments)
+                .updateDate(this.updateDate)
+                .profileImg(this.profileImg)
                 .build();
     }
 }

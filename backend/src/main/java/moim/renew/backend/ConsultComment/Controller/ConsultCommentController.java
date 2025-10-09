@@ -2,6 +2,7 @@ package moim.renew.backend.ConsultComment.Controller;
 
 import moim.renew.backend.Consult.Service.ConsultService;
 import moim.renew.backend.ConsultComment.DTO.ConsultCommentDTO;
+import moim.renew.backend.ConsultComment.DTO.DeletedCommentDTO;
 import moim.renew.backend.ConsultComment.Service.ConsultCommentService;
 import moim.renew.backend.config.DTO.ResponseDTO;
 import moim.renew.backend.config.Exception.SelectException;
@@ -49,6 +50,7 @@ public class ConsultCommentController
     @PostMapping
     public ResponseEntity<ResponseDTO> Insert(@AuthenticationPrincipal String userId, @RequestBody ConsultCommentDTO consultCommentDTO)
     {
+        System.out.println(consultCommentDTO);
         if(userId == null || userId.isEmpty())
         {
             throw new BadCredentialsException("로그인이 되어 있지 않은 회원은 문의글을 남길 수 없습니다.");
@@ -67,13 +69,14 @@ public class ConsultCommentController
         return ResponseEntity.ok().body(responseDTO.Response("success", "데이터 업데이트", Collections.singletonList(consultCommentDTO1)));
     }
     @DeleteMapping
-    public ResponseEntity<ResponseDTO> Delete(@AuthenticationPrincipal String userId,  @RequestParam String MoimConsultCommentId)
+    public ResponseEntity<ResponseDTO> Delete(@AuthenticationPrincipal String userId,  @RequestBody DeletedCommentDTO deletedCommentDTO)
     {
+        System.out.println(deletedCommentDTO);
         if(userId == null || userId.isEmpty())
         {
             throw new BadCredentialsException("로그인이 되어 있지 않은 회원은 문의글을 남길 수 없습니다.");
         }
-        Boolean bool = consultCommentService.Delete(MoimConsultCommentId);
+        Boolean bool = consultCommentService.Delete(deletedCommentDTO);
         if(bool)
         {
             return ResponseEntity.ok().body(responseDTO.Response("success", "데이터 업데이트"));

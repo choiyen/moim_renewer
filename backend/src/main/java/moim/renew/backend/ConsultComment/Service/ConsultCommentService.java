@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import moim.renew.backend.Consult.Mapper.ConsultMapper;
 import moim.renew.backend.Consult.Service.ConsultService;
 import moim.renew.backend.ConsultComment.DTO.ConsultCommentDTO;
+import moim.renew.backend.ConsultComment.DTO.DeletedCommentDTO;
 import moim.renew.backend.ConsultComment.Entity.ConsultCommentEntity;
 import moim.renew.backend.ConsultComment.Mapper.ConsultCommentMapper;
 import moim.renew.backend.config.Exception.DeleteException;
@@ -31,10 +32,14 @@ public class ConsultCommentService
         if(consultMapper.SelectConsult(consultCommentDTO.getMoimConsultId()) != null)
         {
             ConsultCommentEntity consultCommentEntity = consultCommentDTO.convertTo();
+            System.out.println(consultCommentEntity);
             consultCommentMapper.InsertConsultComment(consultCommentEntity);
+            System.out.println(consultCommentEntity.getMoimConsultCommentId());
             ConsultCommentEntity consultComment = consultCommentMapper.SelectConsultComment(consultCommentEntity.getMoimConsultCommentId());
+            System.out.println(consultComment);
             if(consultComment != null)
             {
+
                 return  consultComment.convertTo();
             }
             else
@@ -68,12 +73,14 @@ public class ConsultCommentService
             throw new SelectException("업데이트 대상을 찾을 수 없습니다.");
         }
     }
-    public Boolean Delete(String MoimConsultCommentId)
+    public Boolean Delete(DeletedCommentDTO deletedCommentDTO)
     {
-        if(consultCommentMapper.SelectConsultComment(MoimConsultCommentId) != null)
+        ConsultCommentEntity consultCommentEntity = consultCommentMapper.SelectConsultComment(deletedCommentDTO.getMoimConsultCommentId());
+        if(consultCommentEntity != null && consultCommentEntity.getPassword().equals(deletedCommentDTO.getPassword()))
         {
-            consultCommentMapper.DeleteConsultComment(MoimConsultCommentId);
-            if(consultCommentMapper.SelectConsultComment(MoimConsultCommentId) != null)
+            System.out.println(consultCommentEntity);
+            consultCommentMapper.DeleteConsultComment(deletedCommentDTO.getMoimConsultCommentId(), deletedCommentDTO.getPassword());
+            if(consultCommentMapper.SelectConsultComment(deletedCommentDTO.getMoimConsultCommentId()) != null)
             {
                return false;
             }

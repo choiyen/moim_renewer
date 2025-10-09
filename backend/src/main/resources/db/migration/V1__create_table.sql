@@ -147,6 +147,8 @@ CREATE TABLE moim_consult_comment (
     Nickname VARCHAR(50) NOT NULL,
     Password VARCHAR(50) NOT NULL,
     Comments VARCHAR(100) NOT NULL,
+    Profileimg VARCHAR(100) NOT NULL,
+    Update_Date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 작성일, 자동 입력
     CONSTRAINT fk_moim_consult_comment_consult FOREIGN KEY (Moims_consultId)
              REFERENCES moim_consult(Moims_consultId)
              ON DELETE CASCADE
