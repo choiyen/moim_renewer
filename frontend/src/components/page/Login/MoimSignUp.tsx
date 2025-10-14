@@ -358,6 +358,7 @@ const MoimSignUp = () => {
         }
       })
       .catch((err) => {
+        console.log(err);
         alert(err.response.data.data[0]);
       });
   };

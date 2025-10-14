@@ -186,7 +186,6 @@ const ManagerHeader = () => {
         title="Moim 프로젝트"
         description="많은 사람들과 만나보아요? Moim에서...!"
       />
-
       <Container>
         <Logo expanded={expanded}>
           {expanded ? (

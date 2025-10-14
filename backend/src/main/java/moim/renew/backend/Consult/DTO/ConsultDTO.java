@@ -29,6 +29,8 @@ public class ConsultDTO {
     private String consultComment;
 
     private LocalDateTime createDate;
+    private String viewcount;
+
     public String generateRandomId() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         SecureRandom random = new SecureRandom();
@@ -52,6 +54,7 @@ public class ConsultDTO {
                 .title(this.title)
                 .nickname(this.nickname)
                 .createDate(this.createDate)
+                .viewcount(this.viewcount)
                 .build();
     }
 }

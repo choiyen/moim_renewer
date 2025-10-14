@@ -5,7 +5,8 @@ import { FaArrowLeft } from "react-icons/fa";
 
 import styleds from "../Consult/Consult.module.css";
 import { useEffect, useState } from "react";
-import { DELETE, GET, POST } from "../../comon/axios/axiosInstance";
+import { DELETE, GET, POST, PUT } from "../../comon/axios/axiosInstance";
+import PrivateRoute from "../../comon/frame/PrivateRoute";
 
 const ConsultContainer = styled.div`
   display: flex;
@@ -96,12 +97,15 @@ const ConsultSelect = () => {
         MoimConsultId: id,
       },
     }).then((res) => {
-      console.log(res.data);
       setcomment(res.data);
     });
     setcommenting("");
     setPassword("");
   }, []);
+
+  useEffect(() => {
+    console.log(comment);
+  }, [comment]);
 
   const Backed = () => {
     nativeGate("/consult/");
@@ -128,6 +132,53 @@ const ConsultSelect = () => {
   const UpdatedComment = () => {
     console.log(UpdateCommenting);
     console.log(UpdatedComment);
+    if (UpdateCommenting == "" || UpdateCommenting == undefined) {
+      alert("빈댓글은 작성할 수 없습니다.");
+      return;
+    }
+    if (UpdatingComment == undefined) {
+      alert("수정할 댓글이 선택되지 않았습니다.");
+      return;
+    }
+    const CheckedMemo = comment[UpdatingComment].moimConsultCommentId;
+    const password = window.prompt(
+      "댓글 작성 시 입력한 비밀번호를 입력하세요."
+    );
+    console.log(CheckedMemo);
+    console.log(password);
+    if (!password) {
+      alert("비밀번호를 입력해야 수정할 수 있습니다.");
+      return;
+    }
+    if (user) {
+      PUT({
+        url: "/consultComment",
+        data: {
+          moimConsultId: id,
+          moimConsultCommentId: CheckedMemo,
+          comments: UpdateCommenting,
+          nickname: JSON.parse(user).nickname,
+          password: password,
+          profileImg: JSON.parse(user).profileImg,
+        },
+      }).then((res) => {
+        console.log(res);
+        if (res.resultType == "success") {
+          const UpdatedMemo = comment.map((res) => {
+            if (res.moimConsultCommentId == CheckedMemo) {
+              return { ...res, comments: UpdateCommenting! };
+            }
+            return res;
+          });
+          setcomment(UpdatedMemo);
+          setUpdatingComment(undefined);
+          setUpdateCommenting("");
+        }
+        alert("댓글 수정이 완료되었습니다.");
+      });
+    } else {
+      alert("댓글 수정 동작 : 로그인 정보 없음");
+    }
   };
 
   const Removing = (idx: number) => {
@@ -167,178 +218,189 @@ const ConsultSelect = () => {
   };
 
   return (
-    <ConsultContainer>
-      <div
-        style={{
-          width: "100%",
-          padding: "25px",
-          marginBottom: "20px",
-          display: "flex",
-          justifyContent: "flex-end", // 오른쪽 정렬
-        }}
-      >
-        <button
-          className="flex items-center gap-2 p-3 border bg-gray-200 rounded shadow-md hover:bg-gray-300 hover:shadow-lg transition-all duration-200"
-          onClick={() => {
-            Backed();
-          }}
-        >
-          <FaArrowLeft size={20} />
-          이전
-        </button>
-      </div>
-      <WhiteContainer>
-        <div className={styleds.postHeader}>
-          <span className={styleds.postType}>
-            {targetPost?.consultCategoryId} - {targetPost?.moimConsultId}
-          </span>
-          <span className={styleds.postTitle}>{targetPost?.Title}</span>
-        </div>
-
-        <div className={styleds.postMeta}>
-          <span>{targetPost?.Nickname}</span>
-          <span>{targetPost?.createDate}</span>
-        </div>
-
-        <div className={styleds.postStats}>
-          <span>추천 : 0</span>
-          <span>조회 : 0</span>
-          <span>댓글 : 0</span>
-        </div>
-
-        <div
-          className={styleds.postComment}
-          dangerouslySetInnerHTML={{ __html: targetPost?.consultComment ?? "" }}
-        />
-        <div className={styleds.commentForm}>
-          <input
-            type="text"
-            placeholder="댓글을 입력하세요"
-            value={commenting}
-            onChange={(e) => setcommenting(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="패스워드을 입력하세요"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button onClick={() => settingcomment()}>입력</button>
-        </div>
-        {user && targetPost?.Nickname == JSON.parse(user).nickname ? (
-          <div className={styleds.commentRemoveContainer}>
-            <button>수정</button>
+    <PrivateRoute name={"상세 상담 게시판"}>
+      <>
+        <ConsultContainer>
+          <div
+            style={{
+              width: "100%",
+              padding: "25px",
+              marginBottom: "20px",
+              display: "flex",
+              justifyContent: "flex-end", // 오른쪽 정렬
+            }}
+          >
             <button
+              className="flex items-center gap-2 p-3 border bg-gray-200 rounded shadow-md hover:bg-gray-300 hover:shadow-lg transition-all duration-200"
               onClick={() => {
-                RemovingConsult();
+                Backed();
               }}
             >
-              삭제
+              <FaArrowLeft size={20} />
+              이전
             </button>
           </div>
-        ) : null}
-      </WhiteContainer>
-      {comment.length > 0 ? (
-        <div className={styleds.commentList}>
-          {comment.map((c, idx) => (
-            <div key={idx} className={styleds.commentItem}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    backgroundColor: "#ffe4e1",
-                    padding: "15px",
-                    borderRadius: "15%",
-                  }}
-                >
-                  <img src={c.profileImg} className={styleds.commentimg} />
-                  <span style={{ fontSize: "25px" }}>{c.nickname}</span>
-                </div>
-                <span
-                  style={{
-                    textAlign: "center",
-                    width: "300px",
-                    padding: "10px",
-                    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)",
-                  }}
-                >
-                  {c.updateDate.toLocaleString()}
-                </span>
-              </div>
-              <span
-                style={{
-                  textAlign: "center",
-                  fontSize: "25px",
-                  border: "1px solid #ccc",
-                  padding: "25px",
-                  margin: "25px 0px",
-                  borderRadius: "15px",
-                  backgroundColor: "beige",
-                }}
-              >
-                {UpdatingComment == idx ? (
-                  <input
-                    type="text"
-                    placeholder="수정할 내용 입력"
-                    value={UpdateCommenting}
-                    onChange={(e) => {
-                      setUpdateCommenting(e.target.value);
-                    }}
-                  />
-                ) : (
-                  c.comments
-                )}
+          <WhiteContainer>
+            <div className={styleds.postHeader}>
+              <span className={styleds.postType}>
+                {targetPost?.consultCategoryId} - {targetPost?.moimConsultId}
               </span>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "15px",
-                }}
-              >
-                {UpdatingComment == idx ? (
-                  <button
-                    className={styleds.commentbutton}
-                    style={{ backgroundColor: "green" }}
-                    onClick={() => UpdatedComment()}
-                  >
-                    수정하기
-                  </button>
-                ) : (
-                  <button
-                    className={styleds.commentbutton}
-                    style={{ backgroundColor: "green" }}
-                    onClick={() => {
-                      setUpdatingComment(idx);
-                      setUpdateCommenting(c.comments);
-                    }}
-                  >
-                    댓글 수정
-                  </button>
-                )}
+              <span className={styleds.postTitle}>{targetPost?.Title}</span>
+            </div>
 
+            <div className={styleds.postMeta}>
+              <span>{targetPost?.Nickname}</span>
+              <span>{targetPost?.createDate}</span>
+            </div>
+
+            <div className={styleds.postStats}>
+              <span>조회 : 0</span>
+              <span>댓글 : {comment.length}</span>
+            </div>
+
+            <div
+              className={styleds.postComment}
+              dangerouslySetInnerHTML={{
+                __html: targetPost?.consultComment ?? "",
+              }}
+            />
+            <div className={styleds.commentForm}>
+              <input
+                type="text"
+                placeholder="댓글을 입력하세요"
+                value={commenting}
+                onChange={(e) => setcommenting(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="패스워드을 입력하세요"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button onClick={() => settingcomment()}>입력</button>
+            </div>
+            {user && targetPost?.Nickname == JSON.parse(user).nickname ? (
+              <div className={styleds.commentRemoveContainer}>
                 <button
-                  className={styleds.commentbutton}
-                  onClick={() => Removing(idx)}
+                  onClick={() =>
+                    nativeGate("/consult/modify/" + targetPost?.moimConsultId)
+                  }
                 >
-                  댓글 삭제
+                  수정
+                </button>
+                <button
+                  onClick={() => {
+                    RemovingConsult();
+                  }}
+                >
+                  삭제
                 </button>
               </div>
+            ) : null}
+          </WhiteContainer>
+          {comment.length > 0 ? (
+            <div className={styleds.commentList}>
+              {comment.map((c, idx) => (
+                <div key={idx} className={styleds.commentItem}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        backgroundColor: "#ffe4e1",
+                        padding: "15px",
+                        borderRadius: "15%",
+                      }}
+                    >
+                      <img src={c.profileImg} className={styleds.commentimg} />
+                      <span style={{ fontSize: "25px" }}>{c.nickname}</span>
+                    </div>
+                    <span
+                      style={{
+                        textAlign: "center",
+                        width: "300px",
+                        padding: "10px",
+                        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)",
+                      }}
+                    >
+                      {c.updateDate.toLocaleString()}
+                    </span>
+                  </div>
+                  <span
+                    style={{
+                      textAlign: "center",
+                      fontSize: "25px",
+                      border: "1px solid #ccc",
+                      padding: "25px",
+                      margin: "25px 0px",
+                      borderRadius: "15px",
+                      backgroundColor: "beige",
+                    }}
+                  >
+                    {UpdatingComment == idx ? (
+                      <input
+                        type="text"
+                        placeholder="수정할 내용 입력"
+                        value={UpdateCommenting}
+                        onChange={(e) => {
+                          setUpdateCommenting(e.target.value);
+                        }}
+                      />
+                    ) : (
+                      c.comments
+                    )}
+                  </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      gap: "15px",
+                    }}
+                  >
+                    {UpdatingComment == idx ? (
+                      <button
+                        className={styleds.commentbutton}
+                        style={{ backgroundColor: "green" }}
+                        onClick={() => UpdatedComment()}
+                      >
+                        수정하기
+                      </button>
+                    ) : (
+                      <button
+                        className={styleds.commentbutton}
+                        style={{ backgroundColor: "green" }}
+                        onClick={() => {
+                          setUpdatingComment(idx);
+                          setUpdateCommenting(c.comments);
+                        }}
+                      >
+                        댓글 수정
+                      </button>
+                    )}
+
+                    <button
+                      className={styleds.commentbutton}
+                      onClick={() => Removing(idx)}
+                    >
+                      댓글 삭제
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className={styleds.noComment}>아직 댓글이 없습니다.</div>
-      )}
-    </ConsultContainer>
+          ) : (
+            <div className={styleds.noComment}>아직 댓글이 없습니다.</div>
+          )}
+        </ConsultContainer>
+      </>
+    </PrivateRoute>
   );
 };
 

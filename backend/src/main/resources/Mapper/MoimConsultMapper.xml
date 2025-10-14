@@ -11,6 +11,7 @@
         <result property="consultComment" column="Consult_Comment"/>
         <result property="title" column="Title"/>
         <result property="createDate" column="Create_Date"/>
+        <result property="viewcount" column="View_count" />
     </resultMap>
 
     <!--  상담 게시판 조회  -->
@@ -32,4 +33,9 @@
     <select id="SelectConsultBYCategoryId" parameterType="java.lang.Integer" resultMap="ConsultResultMap">
         SELECT * FROM moim_consult WHERE Consult_categoryId = #{consultCategoryId}
     </select>
+    <update id="UpdateViewCount" parameterType="java.lang.String">
+        UPDATE moim_consult
+        SET view_count = view_count + 1
+        WHERE Moims_consultId = #{moimConsultId}
+    </update>
 </mapper>

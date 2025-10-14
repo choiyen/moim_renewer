@@ -59,6 +59,7 @@ public class ConsultCommentService
         {
             consultCommentMapper.UpdateConsultComment(consultCommentDTO.convertTo());
             ConsultCommentEntity consultCommentEntity2 = consultCommentMapper.SelectConsultComment(consultCommentDTO.getMoimConsultCommentId());
+            System.out.println(consultCommentEntity2);
             if(consultCommentEntity2.equals(consultCommentDTO.convertTo()))
             {
                 return consultCommentEntity2.convertTo();

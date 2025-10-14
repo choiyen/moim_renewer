@@ -59,7 +59,7 @@ public class ConsultService
             }
             else
             {
-                throw new UpdateException("모임 홈페이지 문의 글에 대한 업데이트가 완료되었습니다.");
+                throw new UpdateException("모임 홈페이지 문의 글에 대한 업데이트에 실패하였습니다.");
             }
         }
         else
@@ -116,4 +116,9 @@ public class ConsultService
             throw new SelectException("해당 코드를 가진 모임 홈페이지 건의 및 상담 글은 존재하지 않는 것 같아요. 관리자에게 문의하세요");
         }
     }
+//    public Integer SelectCount(String moimConsultId)
+//    {
+//        consultMapper.UpdateViewCount(moimConsultId);
+//
+//    }
 }

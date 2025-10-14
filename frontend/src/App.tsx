@@ -18,13 +18,13 @@ import MoimSignUp from "./components/page/Login/MoimSignUp";
 import MoimProfileEdit from "./components/page/Login/MoimProfileEdit";
 import MoimConsult from "./components/page/Consult/MoimConsult";
 import MoimDetail from "./components/page/Moim/MoimDetail";
-import ConsultInsert from "./components/page/Consult/ConsultInsert";
 import MoimMap from "./components/page/Map/MoimMap";
-import ConsultSelect from "./components/page/Consult/ConsultSelect";
 import { ToastContainer } from "react-toastify";
 import CommonManagerPage from "./components/comon/frame/CommonManagerPage";
 import MoimCategory from "./components/page/Manager/MoimCategory";
 import MoimLicenseComponent from "./components/page/Manager/MoimLicenseComponent";
+import ConsultSelect from "./components/page/Consult/ConsultSelect";
+import SaveConsult from "./components/page/Consult/saveConsult";
 
 const router = createBrowserRouter([
   {
@@ -46,7 +46,9 @@ const router = createBrowserRouter([
       { path: "/home", element: <MainPage /> }, // 홈 페이지
       { path: "/map", element: <MoimMap /> }, // 지도 페이지
       { path: "/consult", element: <MoimConsult /> }, // 상담 페이지
-      { path: "/consult/insert", element: <ConsultInsert /> }, //상담 생성 페이지
+      { path: "/consult/insert", element: <SaveConsult /> }, //상담 생성 페이지
+      { path: "/consult/modify/:id", element: <SaveConsult /> }, //상담 수정 페이지
+      { path: "/consult/modify", element: <Navigate to="/consult" replace /> }, // id 없으면 consult로
       { path: "/login", element: <MoimLogin /> }, // 로그인 페이지
       { path: "/profile", element: <MoimProfile /> }, // 마이페이지
       { path: "/profile/edit", element: <MoimProfileEdit /> }, // 프로필 수정 페이지

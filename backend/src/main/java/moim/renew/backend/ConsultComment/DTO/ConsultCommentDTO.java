@@ -1,5 +1,6 @@
 package moim.renew.backend.ConsultComment.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import moim.renew.backend.ConsultComment.Entity.ConsultCommentEntity;
 
@@ -18,7 +19,7 @@ public class ConsultCommentDTO
     private String moimConsultId;
     private String nickname;
     private String password;
-    private String comments;
+     private String comments;
     private LocalDateTime updateDate;
     private String profileImg;
 

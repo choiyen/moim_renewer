@@ -18,6 +18,9 @@ public class ConsultEntity {
     private Integer consultCategoryId;
     private String consultComment;
     private String title;
+    private String viewcount;
+
+    @EqualsAndHashCode.Exclude
     private LocalDateTime createDate;
 
     public ConsultDTO ConvertTo()
@@ -30,6 +33,7 @@ public class ConsultEntity {
                 .title(this.title)
                 .nickname(this.nickname)
                 .createDate(this.createDate)
+                .viewcount(this.viewcount)
                 .build();
     }
 }

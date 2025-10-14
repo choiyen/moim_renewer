@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import moim.renew.backend.ConsultCategory.DTO.ConsultCategoryDTO;
 import moim.renew.backend.ConsultCategory.Entity.ConsultCategoryEntity;
 import moim.renew.backend.ConsultCategory.Mapper.ConsultCategoryMapper;
-import moim.renew.backend.config.Exception.DeleteException;
-import moim.renew.backend.config.Exception.InsertException;
-import moim.renew.backend.config.Exception.SelectException;
-import moim.renew.backend.config.Exception.UpdateException;
+import moim.renew.backend.config.Exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +38,7 @@ public class ConsultCategoryService
         List<ConsultCategoryEntity> consultCategoryEntities = consultCategoryMapper.SelectConsultCategory();
         if(consultCategoryEntities.isEmpty())
         {
-            throw new SelectException("조회를 시도하였으나, 데이터가 비어있습니다.");
+            throw new EmptyException("조회를 시도하였으나, 데이터가 비어있습니다.");
         }
         else
         {

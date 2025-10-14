@@ -17,6 +17,7 @@ public class ConsultCommentEntity
     private String nickname;
     private String password;
     private String comments;
+    @EqualsAndHashCode.Exclude
     private LocalDateTime updateDate;
     private String profileImg;
 

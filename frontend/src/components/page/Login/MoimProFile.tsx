@@ -214,19 +214,6 @@ const MoimProfile = () => {
     useModelStore.getState().setPasswordModalOpen(false);
   };
 
-  useEffect(() => {
-    GET({
-      url: "/user",
-    })
-      .then((res) => {
-        setUserProfile(res.data[0]);
-      })
-      .catch((err) => {
-        console.log(err);
-        nativegate("/login");
-      });
-  }, []);
-
   return (
     <div
       style={{

@@ -61,6 +61,7 @@ public class ConsultController
         {
             throw new BadCredentialsException("로그인이 되어 있지 않은 회원은 문의글을 남길 수 없습니다.");
         }
+        System.out.println(consultDTO);
         ConsultDTO consultDTO1 = consultService.Update(consultDTO);
         return ResponseEntity.ok().body(responseDTO.Response("success", "모임 데이터 업데이트 완료", Collections.singletonList(consultDTO1)));
     }

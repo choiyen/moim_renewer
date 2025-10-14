@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import PrivateRoute from "../../comon/frame/PrivateRoute";
 
 // 카카오맵 전역 객체 선언
 declare global {
@@ -51,13 +52,15 @@ const MoimMap = () => {
   }, []);
 
   return (
-    <div>
-      <h2>지역 별 모임 지도</h2>
-      <div
-        id="map"
-        style={{ width: "100%", height: "500px", border: "1px solid #ccc" }}
-      />
-    </div>
+    <PrivateRoute name={"지역 별 모임 지도"}>
+      <>
+        <h2>지역 별 모임 지도</h2>
+        <div
+          id="map"
+          style={{ width: "100%", height: "500px", border: "1px solid #ccc" }}
+        />
+      </>
+    </PrivateRoute>
   );
 };
 

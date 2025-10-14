@@ -132,7 +132,7 @@ CREATE TABLE moim_consult (
     Consult_categoryId INT NOT NULL,
     Consult_Comment LONGTEXT NOT NULL,
     Create_Date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 작성일, 자동 입력
-
+    view_count INTEGER DEFAULT 0,
     CONSTRAINT fk_moim_consult_users FOREIGN KEY (Nickname) REFERENCES users(Nickname)
           ON DELETE CASCADE
           ON UPDATE CASCADE,

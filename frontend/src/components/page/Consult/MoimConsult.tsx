@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { GET } from "../../comon/axios/axiosInstance";
 import { ConsultCategorying } from "./function/Consult";
+import PrivateRoute from "../../comon/frame/PrivateRoute";
 
 const BoardSection = ({
   icon,
@@ -72,47 +73,61 @@ const MoimConsult = () => {
   useEffect(() => {
     GET({
       url: "/ConsultCategory",
-    }).then(async (res) => {
-      const updated = await Promise.all(
-        consultCategories.map(async (item, index) => ({
-          ...item,
-          ConsultCategory: res.data[index]?.consultType ?? item.ConsultCategory,
-          post: await ConsultCategorying(res.data[index]?.consultCategoryId),
-          // 보통 .data를 꺼내야 실제 서버 응답 본문이 들어감
-        }))
-      );
-      console.log(updated);
-      setConsultCategories(updated);
-    });
+    })
+      .then(async (res) => {
+        const updated = await Promise.all(
+          consultCategories.map(async (item, index) => ({
+            ...item,
+            ConsultCategory:
+              res.data[index]?.consultType ?? item.ConsultCategory,
+            post: await ConsultCategorying(res.data[index]?.consultCategoryId),
+            // 보통 .data를 꺼내야 실제 서버 응답 본문이 들어감
+          }))
+        );
+        console.log(updated);
+        setConsultCategories(updated);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        if (err.response.data.resultType === "empty") {
+          alert("현재 상담 기능은 준비 중입니다. 전화번호로 문의 바랍니다.");
+          navigate("/home");
+        }
+      });
   }, []);
 
   const handleClick = () => {
     navigate("/consult/insert");
   };
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
-      {consultCategory &&
-        consultCategory.map((category) => (
-          <BoardSection
-            key={category.id}
-            icon={React.createElement(category.icon ?? FileText, {
-              width: 28,
-              height: 28,
-              className: "text-blue-600",
-            })}
-            title={category.ConsultCategory}
-            posts={category.post != null ? category.post : []}
-          />
-        ))}
-      <div className="mt-4 text-right">
-        <button
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-          onClick={() => handleClick()}
-        >
-          글쓰기
-        </button>
-      </div>
-    </div>
+    <PrivateRoute name={"상담 게시판"}>
+      <>
+        <div className="max-w-4xl mx-auto px-4 py-10">
+          {consultCategory &&
+            consultCategory.map((category) => (
+              <BoardSection
+                key={category.id}
+                icon={React.createElement(category.icon ?? FileText, {
+                  width: 28,
+                  height: 28,
+                  className: "text-blue-600",
+                })}
+                title={category.ConsultCategory}
+                posts={category.post != null ? category.post : []}
+              />
+            ))}
+          <div className="mt-4 text-right">
+            <button
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+              onClick={() => handleClick()}
+            >
+              글쓰기
+            </button>
+          </div>
+        </div>
+      </>
+    </PrivateRoute>
   );
 };
 
