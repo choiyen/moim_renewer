@@ -16,7 +16,7 @@
 
     <!--  상담 게시판 조회  -->
     <select id="SelectConsult" parameterType="java.lang.String" resultMap="ConsultResultMap">
-        SELECT Moims_consultId, Nickname, Consult_categoryId, Consult_Comment,title,Create_Date FROM moim_consult WHERE Moims_consultId = #{moimConsultId}
+        SELECT Moims_consultId, Nickname, Consult_categoryId, Consult_Comment,title,Create_Date, view_count FROM moim_consult WHERE Moims_consultId = #{moimConsultId}
     </select>
     <!--  상담 게시판 내용 생성  -->
     <insert id="InsertConsult" parameterType="ConsultEntity">

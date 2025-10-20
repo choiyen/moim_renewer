@@ -241,7 +241,6 @@ export interface MoimData {
   description: string;
   tag: string[];
   location: string;
-  category: string;
   categoryDetail: string;
 }
 export interface MoimDetailStore {
@@ -272,7 +271,6 @@ export interface MoimDataStore {
   setOrganizer: (organizer: string) => void;
   setDate: (expirationDate: Date, evenDate: Date) => void;
   setLocation: (location: string) => void;
-  setcategory: (category: string) => void;
   setcategoryDetail: (categoryDetail: string) => void;
 }
 
@@ -289,7 +287,6 @@ const useMoimStore = create<{ MoimDataStore: MoimDataStore }>((set) => ({
       expirationDate: new Date(),
       evenDate: new Date(),
       location: "",
-      category: "",
       categoryDetail: "",
     },
     moimDetail: {
@@ -364,17 +361,6 @@ const useMoimStore = create<{ MoimDataStore: MoimDataStore }>((set) => ({
           },
         },
       })),
-    setcategory: (category: string) =>
-      set((state) => ({
-        MoimDataStore: {
-          ...state.MoimDataStore,
-          moimData: {
-            ...state.MoimDataStore.moimData,
-            category,
-          },
-        },
-      })),
-
     setcategoryDetail: (categoryDetail: string) =>
       set((state) => ({
         MoimDataStore: {

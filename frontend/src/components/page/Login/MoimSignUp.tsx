@@ -186,7 +186,10 @@ const SelectInput = styled.select`
   background-color: white;
   cursor: pointer;
 `;
-
+interface Category {
+  MoimCategoryId: number;
+  categorisation: string;
+}
 const MoimSignUp = () => {
   const setTermsChecked = useUserStore((state) => state.setChecked);
   const termsChecked = useUserStore((state) => state.userData.checked);
@@ -201,7 +204,7 @@ const MoimSignUp = () => {
     useState(false);
   const nicknameButtonRef = useRef<HTMLButtonElement>(null);
   const nativegate = useNavigate();
-
+  const [hopperData, setHopperData] = useState<Category[]>([]);
   useEffect(() => {
     if (termCheck.Market && termCheck.Privacy && termCheck.Service) {
       setTermsChecked(true);
@@ -209,6 +212,20 @@ const MoimSignUp = () => {
       setTermsChecked(false);
     }
   }, [setTermsChecked, termCheck.Market, termCheck.Privacy, termCheck.Service]);
+
+  useEffect(() => {
+    const GetData = async () => {
+      const Getting = await GET({ url: "/category" });
+      setHopperData(Getting.data);
+    };
+
+    GetData();
+  }, []);
+
+  useEffect(() => {
+    console.log(hopperData);
+  }, [hopperData]);
+
   const {
     userData,
     setEmail,
@@ -522,11 +539,17 @@ const MoimSignUp = () => {
           onChange={(e) => setInterests(e.target.value)}
           value={userData.interests}
         >
-          {hopper.map((item, idx) => (
-            <option key={idx} value={item.Category}>
-              {item.Category}
-            </option>
-          ))}
+          {hopperData && hopperData.length > 0
+            ? hopperData.map((item, idx) => (
+                <option key={idx} value={item.MoimCategoryId}>
+                  {item.categorisation}
+                </option>
+              ))
+            : hopper.map((item, idx) => (
+                <option key={idx} value={idx}>
+                  {item.Category}
+                </option>
+              ))}
         </SelectInput>
         <Label htmlFor="introduction">자기소개</Label>
         <InputRow>

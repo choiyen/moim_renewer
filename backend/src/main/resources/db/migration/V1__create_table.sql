@@ -11,7 +11,7 @@ CREATE TABLE users (
     Type VARCHAR(50) DEFAULT 'MEMBER',
     Address VARCHAR(255) NOT NULL,
     AddressDetail VARCHAR(255) NOT NULL,
-    Interests VARCHAR(255) NOT NULL
+    Interests INTEGER NOT NULL
 );
 
 CREATE TABLE user_review (

@@ -116,9 +116,18 @@ public class ConsultService
             throw new SelectException("해당 코드를 가진 모임 홈페이지 건의 및 상담 글은 존재하지 않는 것 같아요. 관리자에게 문의하세요");
         }
     }
-//    public Integer SelectCount(String moimConsultId)
-//    {
-//        consultMapper.UpdateViewCount(moimConsultId);
-//
-//    }
+    public Integer SelectCount(String moimConsultId)
+    {
+        ConsultEntity consultEntity = consultMapper.SelectConsult(moimConsultId);
+        consultMapper.UpdateViewCount(moimConsultId);
+        ConsultEntity consultEntity2 = consultMapper.SelectConsult(moimConsultId);
+        if(consultEntity.getViewcount() < consultEntity2.getViewcount())
+        {
+            return consultEntity2.getViewcount();
+        }
+        else
+        {
+            throw new UpdateException("접속 횟수 업데이트에 실패하였습니다. 죄송합니다.");
+        }
+    }
 }

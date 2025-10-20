@@ -29,7 +29,7 @@ public class ConsultDTO {
     private String consultComment;
 
     private LocalDateTime createDate;
-    private String viewcount;
+    private Integer viewcount;
 
     public String generateRandomId() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

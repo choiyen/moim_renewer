@@ -4,8 +4,6 @@ import { useState } from "react";
 import { useMoimStore } from "../../../../types/State";
 
 const MoimPayContainer = styled.div`
-  width: 70vw;
-  max-width: 800px;
   background-color: #f0f4f8;
   padding: 50px;
   border-radius: 8px;
@@ -13,7 +11,6 @@ const MoimPayContainer = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
   align-items: center;
 `;
 const Fieldset = styled.fieldset`
@@ -25,7 +22,6 @@ const Fieldset = styled.fieldset`
   border-bottom: 2px solid #ccc;
   padding: 0px;
   margin-bottom: 30px;
-  width: 100%;
 `;
 const Legend = styled.legend`
   display: flex;

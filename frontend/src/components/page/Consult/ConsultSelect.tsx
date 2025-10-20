@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import { FaArrowLeft } from "react-icons/fa";
 
 import styleds from "../Consult/Consult.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DELETE, GET, POST, PUT } from "../../comon/axios/axiosInstance";
 import PrivateRoute from "../../comon/frame/PrivateRoute";
 
@@ -47,6 +47,8 @@ const ConsultSelect = () => {
   const nativeGate = useNavigate();
   const [UpdatingComment, setUpdatingComment] = useState<number>();
   const [UpdateCommenting, setUpdateCommenting] = useState<string>();
+  const viewed = useRef(false);
+
   const settingcomment = () => {
     if (user) console.log(JSON.parse(user));
     if (commenting == "") {
@@ -80,28 +82,50 @@ const ConsultSelect = () => {
       alert("댓글 작성 동작 : 로그인 정보 없음");
     }
   };
-  useEffect(() => {
-    GET({
-      url: "/consult",
-      params: {
-        ConsultId: id,
-      },
-    }).then((res) => {
-      console.log(res.data[0]);
-      settargetPost(res.data[0]);
-    });
 
-    GET({
-      url: "/consultComment/all",
-      params: {
-        MoimConsultId: id,
-      },
-    }).then((res) => {
-      setcomment(res.data);
-    });
-    setcommenting("");
-    setPassword("");
-  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // 게시글 조회
+        const res = await GET({ url: "/consult", params: { ConsultId: id } });
+        const post = res.data[0];
+        settargetPost(post);
+
+        // 이미 조회수 반영했으면 중단
+        if (viewed.current) return;
+
+        // ✅ PUT 실행 전 바로 true 처리
+        viewed.current = true;
+
+        const update = await PUT({
+          url: "/consult/check",
+          params: { ConsultId: id },
+        });
+        if (update.resultType === "success") {
+          console.log(update);
+          // 클라이언트 viewcount 반영
+          settargetPost((prev) =>
+            prev ? { ...prev, viewcount: prev.viewcount + 1 } : prev
+          );
+        }
+
+        // 댓글 조회
+        const commentRes = await GET({
+          url: "/consultComment/all",
+          params: { MoimConsultId: id },
+        });
+        setcomment(commentRes.data);
+
+        // 입력 필드 초기화
+        setcommenting("");
+        setPassword("");
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   useEffect(() => {
     console.log(comment);
@@ -254,7 +278,7 @@ const ConsultSelect = () => {
             </div>
 
             <div className={styleds.postStats}>
-              <span>조회 : 0</span>
+              <span>조회 : {targetPost?.viewcount}</span>
               <span>댓글 : {comment.length}</span>
             </div>
 

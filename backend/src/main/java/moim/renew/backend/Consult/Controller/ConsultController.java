@@ -88,4 +88,15 @@ public class ConsultController
         return ResponseEntity.ok().body(responseDTO.Response("success", "데이터 조회", consultDTOS));
     }
 
+    @PutMapping("/check")
+    public ResponseEntity<ResponseDTO> UpdateViewCount(@AuthenticationPrincipal String userId,@RequestParam String ConsultId)
+    {
+        if(userId == null || userId.isEmpty())
+        {
+            throw new BadCredentialsException("로그인이 되어 있지 않은 회원은 문의글을 남길 수 없습니다.");
+        }
+        Integer ViewCount = consultService.SelectCount(ConsultId);
+        return ResponseEntity.ok().body(responseDTO.Response("success", "접속자 확인", ViewCount));
+    }
+
 }

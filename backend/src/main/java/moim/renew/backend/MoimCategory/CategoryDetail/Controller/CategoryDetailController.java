@@ -95,7 +95,7 @@ public class CategoryDetailController
     @PostMapping("/get")
     public ResponseEntity<?> Getting(@AuthenticationPrincipal String userId, @RequestBody GettingCategoryRequest gettingCategoryRequest)
     {
-
+        System.out.println(gettingCategoryRequest);
             if (userId == null || userId.isEmpty()) {
                 throw new BadCredentialsException("로그인된 사용자 정보가 없습니다.");
             }

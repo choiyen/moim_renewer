@@ -4,6 +4,7 @@ import lombok.*;
 import jakarta.validation.constraints.*;
 import moim.renew.backend.Moim.Entity.MoimEntity;
 
+import java.security.SecureRandom;
 import java.util.Date;
 
 @Getter
@@ -15,7 +16,6 @@ import java.util.Date;
 public class MoimDTO
 {
 
-    @NotNull(message = "moimId는 null일 수 없습니다.")
     private String moimId;
 
     @NotBlank(message = "제목은 필수 입력 항목입니다.")
@@ -57,8 +57,24 @@ public class MoimDTO
     private String categoryDetailId;
 
 
+    public String generateRandomId() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(10);
+        for (int i = 0; i < 10; i++) {
+            sb.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return sb.toString();
+    }
+
     public MoimEntity convertTo()
     {
+        // categoryDetailId가 null이면 랜덤 생성
+        if (this.moimId == null || this.moimId.isEmpty())
+        {
+            this.moimId = generateRandomId();
+        }
+
         return MoimEntity.builder()
                 .moimId(this.moimId)
                 .categoryDetailId(this.categoryDetailId)

@@ -13,6 +13,7 @@ export interface Posts {
   consultComment: string;
   createDate: string;
   moimConsultId: string;
+  viewcount: number;
 }
 
 export const ConsultType = {
@@ -117,7 +118,6 @@ export const MoimDataDummys: MoimDataDummy = {
     expirationDate: new Date(),
     evenDate: new Date(new Date().setDate(new Date().getDate() + 7)),
     location: "경상남도 진주",
-    category: "스포츠 & 액티비티",
     categoryDetail: "농구",
     moimId: "BASKET2025",
   },

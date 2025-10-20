@@ -14,6 +14,7 @@ public class ResponseDTO<T>
     private String resultType; //어떤 유형의 데이터인지 확인
     private String message; // error message - fail
     private List<T> data; // response data - success
+    private T OneData;            // 단일 데이터 (성공 시 단건 반환용)
 
     public ResponseDTO<T> Response(String result, String message, List<T> list)
     {
@@ -23,6 +24,15 @@ public class ResponseDTO<T>
                 .resultType(result)
                 .message(message)
                 .data(list) // List<T> 그대로 사용
+                .build();
+    }
+    public ResponseDTO<T> Response(String result, String message,T Onedata)
+    {
+
+        return ResponseDTO.<T>builder()
+                .resultType(result)
+                .message(message)
+                .OneData(Onedata)
                 .build();
     }
     public ResponseDTO<T> Response(String result, String message)

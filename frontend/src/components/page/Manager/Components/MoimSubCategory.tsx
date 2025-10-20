@@ -93,6 +93,8 @@ const MoimSubCategory = () => {
           setCategories((prev) =>
             (prev ?? []).filter((cat) => cat.MoimCategoryId !== id)
           );
+          setSelectCategory(0);
+          setSelectedCategory([]);
         });
       } else {
         // 양수 id → 수정
@@ -127,6 +129,32 @@ const MoimSubCategory = () => {
         );
       }
     }
+    console.log(categories.length);
+    await POST({
+      url: "/CategoryDetail/get",
+      data: {
+        MoimCategoryId: categories.length > 0 ? categories.length : 0,
+      },
+    })
+      .then((data) => {
+        setSelectedCategory(
+          data.data.map(
+            (data: {
+              MoimcategoryDetailId: string;
+              MoimcategorisationDetail: string;
+            }) => ({
+              id: data.MoimcategoryDetailId,
+              SubCategoryName: data.MoimcategorisationDetail,
+            })
+          )
+        );
+      })
+      .catch((err) => {
+        if (err.response.data.resultType == "empty") {
+          setSelectedCategory([]);
+          setSelectCategory(categories.length > 0 ? categories.length : 0);
+        }
+      });
     setEditingId(null);
   };
 
@@ -153,6 +181,7 @@ const MoimSubCategory = () => {
           },
         }).then((res) => {
           console.log(res.data[0].MoimcategoryDetailId);
+          console.log(res.data[0].MoimCategoryId);
           newSub[index].SubCategoryName = value;
           newSub[index].id = res.data[0].MoimcategoryDetailId;
           setSelectedCategory(newSub);

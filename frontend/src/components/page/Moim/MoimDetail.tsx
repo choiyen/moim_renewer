@@ -78,7 +78,6 @@ const MoimDetail = () => {
           {MoimDataDummys.MoimData.title}
         </div>
         <div className={styleds.MoimDetailCateGory}>
-          {MoimDataDummys.MoimData.category} -
           {MoimDataDummys.MoimData.categoryDetail}
         </div>
         <div className={styleds.MoimDetailContent}>

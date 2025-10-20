@@ -18,7 +18,7 @@ public class ConsultEntity {
     private Integer consultCategoryId;
     private String consultComment;
     private String title;
-    private String viewcount;
+    private Integer viewcount;
 
     @EqualsAndHashCode.Exclude
     private LocalDateTime createDate;
