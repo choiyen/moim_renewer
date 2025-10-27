@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="moim.renew.backend.domain.Moim.MoimMain.Mapper.MoimMapper">
+
+    <!-- 모임 Entity와 모임 Table 간 매핑 -->
+    <resultMap id="moimResultMap" type="MoimEntity">
+        <id     property="moimId"       column="Moim_id"/>
+        <result property="title"        column="Title"/>
+        <result property="isOnline"     column="Is_online"/>
+        <result property="maxPeople"    column="Max_people"/>
+        <result property="expirationDate" column="Expiration_Date"/>
+        <result property="evenDate"     column="Even_Date"/>
+        <result property="location"     column="Location"/>
+        <result property="representImg" column="Represent_img"/>
+        <result property="organizer"    column="Organizer" />
+        <result property="description"  column="Description"/>
+        <result property="tag" column="Tag" typeHandler="moim.renew.backend.domain.Moim.MoimApproval.Handler.StringArrayJsonTypeHandler"/>
+        <result property="categoryDetailId" column="CateGoryDetail_id" />
+    </resultMap>
+
+    <!-- 모임 데이터 생성 -->
+    <insert id="InsertMoim" parameterType="MoimEntity">
+        INSERT INTO moim (
+        Moim_id, Title, Is_online, Max_people,
+        Expiration_Date, Even_Date, Location,
+        Represent_img, Organizer,Description, Tag,CateGoryDetail_id
+        ) VALUES (
+        #{moimId}, #{title}, #{isOnline}, #{maxPeople},
+        #{expirationDate}, #{evenDate}, #{location},
+        #{representImg}, #{organizer},
+        #{description},#{tag},#{categoryDetailId}
+        )
+    </insert>
+
+    <!-- 모임 데이터 수정 -->
+    <update id="UpdateMoim" parameterType="MoimEntity">
+        UPDATE moim
+        SET
+        Title = #{title},
+        Is_online = #{isOnline},
+        Max_people = #{maxPeople},
+        Expiration_Date = #{expirationDate},
+        Even_Date = #{evenDate},
+        Location = #{location},
+        Represent_img = #{representImg},
+        Organizer = #{organizer},
+        Description =  #{description},
+        Tag = #{tag},
+        CateGoryDetail_id = #{categoryDetailId}
+        WHERE Moim_id = #{moimId}
+    </update>
+
+    <!-- 모임 데이터 조회 -->
+    <select id="SelectMoimById" resultMap="moimResultMap" parameterType="java.lang.String">
+        SELECT *
+        FROM moim
+        WHERE Moim_id = #{moimId}
+    </select>
+
+    <!-- 전체 모임 정보 : 메인 페이지 용 -->
+    <select id="SelectAllMoims" resultMap="moimResultMap">
+        SELECT *
+        FROM moim
+    </select>
+
+    <!-- 모임 데이터 삭제 -->
+    <delete id="DeleteMoim" parameterType="java.lang.String">
+        DELETE FROM moim
+        WHERE moim_id = #{moimId} AND organizer = #{organizer}
+    </delete>
+
+</mapper>
