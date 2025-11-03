@@ -2,6 +2,8 @@ package moim.renew.backend.domain.Moim.MoimReview.Controller;
 
 import moim.renew.backend.domain.Moim.MoimReview.DTO.MoimReviewDTO;
 import moim.renew.backend.domain.Moim.MoimReview.Service.MoimReviewService;
+import moim.renew.backend.domain.User.UserMain.DTO.UserDTO;
+import moim.renew.backend.domain.User.UserMain.Service.UserService;
 import moim.renew.backend.gobal.config.DTO.ResponseDTO;
 import moim.renew.backend.gobal.Exception.DeleteException;
 import moim.renew.backend.gobal.Exception.SelectException;
@@ -24,6 +26,7 @@ public class MoimReviewController
     MoimReviewService moimReviewService;
 
 
+
     @GetMapping
     public ResponseEntity<?> MoimReviewSelect(@AuthenticationPrincipal String userId, @RequestParam String moimId)
     {
@@ -34,7 +37,7 @@ public class MoimReviewController
                 throw new BadCredentialsException("로그인을 위한 JWT 오류");
             }
 
-            MoimReviewDTO moimReviewDTO = moimReviewService.getReviewByMoimId(moimId);
+            MoimReviewDTO moimReviewDTO = moimReviewService.getReviewByMoimId(moimId, userId);
             if (moimReviewDTO == null)
             {
                 throw new SelectException("데이터를 찾을 수 없습니다.");
@@ -76,7 +79,7 @@ public class MoimReviewController
             {
                 throw new BadCredentialsException("JWT 인증 실패, 다시 로그인 시도해주세요");
             }
-            MoimReviewDTO moimReviewDTO = moimReviewService.updateofScore(moimId, score);
+            MoimReviewDTO moimReviewDTO = moimReviewService.updateofScore(moimId, userId, score);
             return ResponseEntity.ok().body(responseDTO.Response("success", "데이터 업데이트 성공", Collections.singletonList(moimReviewDTO)));
         }
         catch (AuthenticationException e)
@@ -97,7 +100,7 @@ public class MoimReviewController
             {
                 throw new BadCredentialsException("JWT 인증 실패, 다시 로그인 시도해주세요");
             }
-            MoimReviewDTO moimReviewDTO = moimReviewService.updateofScoreAndComment(moimId,score, comment);
+            MoimReviewDTO moimReviewDTO = moimReviewService.updateofScoreAndComment(moimId, userId, score, comment);
             return ResponseEntity.ok().body(responseDTO.Response("success", "데이터 업데이트 성공", Collections.singletonList(moimReviewDTO)));
         }
         catch (AuthenticationException e)
@@ -118,7 +121,7 @@ public class MoimReviewController
             {
                 throw new BadCredentialsException("JWT 인증 실패, 다시 로그인 시도해주세요");
             }
-            MoimReviewDTO moimReviewDTO = moimReviewService.updateofcomment(moimId, comment);
+            MoimReviewDTO moimReviewDTO = moimReviewService.updateofcomment(moimId, userId, comment);
             return ResponseEntity.ok().body(responseDTO.Response("success", "데이터 업데이트 성공", Collections.singletonList(moimReviewDTO)));
         }
         catch (AuthenticationException e)

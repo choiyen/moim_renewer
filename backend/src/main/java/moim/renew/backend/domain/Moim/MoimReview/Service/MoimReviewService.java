@@ -4,6 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import moim.renew.backend.domain.Moim.MoimReview.DTO.MoimReviewDTO;
 import moim.renew.backend.domain.Moim.MoimReview.Entity.MoimReviewEntity;
 import moim.renew.backend.domain.Moim.MoimReview.Mapper.MoimReviewMapper;
+import moim.renew.backend.domain.User.UserMain.DTO.UserDTO;
+import moim.renew.backend.domain.User.UserMain.Entity.UserEntity;
+import moim.renew.backend.domain.User.UserMain.Mapper.UserMapper;
 import moim.renew.backend.gobal.Exception.DeleteException;
 import moim.renew.backend.gobal.Exception.InsertException;
 import moim.renew.backend.gobal.Exception.SelectException;
@@ -16,17 +19,31 @@ import org.springframework.stereotype.Service;
 public class MoimReviewService
 {
     @Autowired
-    MoimReviewMapper moimReviewMapper;
+    private MoimReviewMapper moimReviewMapper;
 
-    public MoimReviewDTO getReviewByMoimId(String moimId) {
-        MoimReviewEntity moimReviewEntity = moimReviewMapper.getReviewsByMoimId(moimId);
-        if (moimReviewEntity == null) {
-            throw new SelectException();
+    @Autowired
+    private UserMapper userMapper;
+
+
+    public MoimReviewDTO getReviewByMoimId(String moimId, String userId) {
+        UserEntity user = userMapper.FindUserID(userId);
+        if(user != null)
+        {
+            MoimReviewEntity moimReviewEntity = moimReviewMapper.getReviewsBynicknameAndMoimId(moimId, user.getNickname());
+            if (moimReviewEntity == null)
+            {
+                throw new SelectException();
+            }
+            else
+            {
+                return moimReviewEntity.ConvertTo();
+            }
         }
         else
         {
-            return moimReviewEntity.ConvertTo();
+            throw new SelectException();
         }
+
     }
 
     public double getAverAgeScore(String moimId)
@@ -43,52 +60,80 @@ public class MoimReviewService
     }
 
 
-    public MoimReviewDTO updateofScore(String moimId, Float score)
+    public MoimReviewDTO updateofScore(String moimId, String userId, Float score)
     {
-        MoimReviewEntity NewReviewEntity = moimReviewMapper.getReviewsByMoimId(moimId).ConvertToNewScore(score);
-        moimReviewMapper.updateofscore(NewReviewEntity);
-        MoimReviewEntity moimReviewEntity1 = moimReviewMapper.getReviewsByMoimId(moimId);
-        if(moimReviewEntity1.equals(NewReviewEntity))
+        UserEntity user = userMapper.FindUserID(userId);
+        if(user != null)
         {
-            return NewReviewEntity.ConvertTo();
+            MoimReviewEntity NewReviewEntity = moimReviewMapper.getReviewsBynicknameAndMoimId(moimId, user.getNickname()).ConvertToNewScore(score);
+            moimReviewMapper.updateofscore(NewReviewEntity);
+            MoimReviewEntity moimReviewEntity1 = moimReviewMapper.getReviewsBynicknameAndMoimId(moimId, user.getNickname());
+            if(moimReviewEntity1.equals(NewReviewEntity))
+            {
+                return NewReviewEntity.ConvertTo();
+            }
+            else
+            {
+                throw new UpdateException();
+            }
         }
         else
         {
-            throw new UpdateException();
+            throw new SelectException();
         }
+
     }
-    public MoimReviewDTO updateofcomment(String moimId, String comment)
+    public MoimReviewDTO updateofcomment(String moimId, String userId, String comment)
     {
-        MoimReviewEntity NewReviewEntity = moimReviewMapper.getReviewsByMoimId(moimId).ConvertToNewcomment(comment);
-        moimReviewMapper.updateofcomment(NewReviewEntity);
-        MoimReviewEntity moimReviewEntity1 = moimReviewMapper.getReviewsByMoimId(moimId);
-        if(moimReviewEntity1.equals(NewReviewEntity))
+        UserEntity user = userMapper.FindUserID(userId);
+        if(user != null)
         {
-            return NewReviewEntity.ConvertTo();
+            MoimReviewEntity NewReviewEntity = moimReviewMapper.getReviewsBynicknameAndMoimId(moimId, user.getNickname()).ConvertToNewcomment(comment);
+            moimReviewMapper.updateofcomment(NewReviewEntity);
+            MoimReviewEntity moimReviewEntity1 = moimReviewMapper.getReviewsBynicknameAndMoimId(moimId, user.getNickname());
+            if(moimReviewEntity1.equals(NewReviewEntity))
+            {
+                return NewReviewEntity.ConvertTo();
+            }
+            else
+            {
+                throw new UpdateException();
+            }
         }
         else
         {
-            throw new UpdateException();
+            throw new SelectException();
         }
+
     }
-    public MoimReviewDTO updateofScoreAndComment(String moimId, Float score, String comment)
+    public MoimReviewDTO updateofScoreAndComment(String moimId, String userId, Float score, String comment)
     {
-        MoimReviewEntity NewReviewEntity = moimReviewMapper.getReviewsByMoimId(moimId).ConvertToNew(comment, score);
-        moimReviewMapper.updateofcommentandscore(NewReviewEntity);
-        MoimReviewEntity moimReviewEntity1 = moimReviewMapper.getReviewsByMoimId(moimId);
-        if(moimReviewEntity1.equals(NewReviewEntity))
+        UserEntity user = userMapper.FindUserID(userId);
+        if(user != null)
         {
-            return NewReviewEntity.ConvertTo();
+            MoimReviewEntity NewReviewEntity = moimReviewMapper.getReviewsBynicknameAndMoimId(moimId, user.getNickname()).ConvertToNew(comment, score);
+            moimReviewMapper.updateofcommentandscore(NewReviewEntity);
+            MoimReviewEntity updated = moimReviewMapper.getReviewsBynicknameAndMoimId(moimId, user.getNickname());
+
+            if(updated.equals(NewReviewEntity))
+            {
+                return NewReviewEntity.ConvertTo();
+            }
+            else
+            {
+                throw new UpdateException();
+            }
         }
         else
         {
-            throw new UpdateException();
+            throw new SelectException();
         }
+
     }
     public MoimReviewDTO Insert(MoimReviewDTO moimReviewDTO)
     {
         moimReviewMapper.InsertofmoimReview(moimReviewDTO.ConvertTo());
-        MoimReviewEntity moimReviewEntity = moimReviewMapper.getReviewsByMoimId(moimReviewDTO.getMoimId());
+        MoimReviewEntity moimReviewEntity = moimReviewMapper.getReviewsBynicknameAndMoimId(moimReviewDTO.getMoimId(), moimReviewDTO.getReviewer());
         if(moimReviewEntity != null)
         {
             return moimReviewEntity.ConvertTo();
@@ -101,7 +146,7 @@ public class MoimReviewService
     public Boolean Delete(String moimId, String reviewer)
     {
         moimReviewMapper.deleteofmoimReview(moimId, reviewer);
-        MoimReviewEntity moimReviewEntity = moimReviewMapper.getReviewsByMoimId(moimId);
+        MoimReviewEntity moimReviewEntity = moimReviewMapper.getReviewsBynicknameAndMoimId(moimId, reviewer);
         if(moimReviewEntity != null)
         {
             throw new DeleteException();

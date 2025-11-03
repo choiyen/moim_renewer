@@ -10,6 +10,6 @@ public interface FavoriteMapper
 {
     List<FavoriteEntity> selectoffavorite(String userId);
     FavoriteEntity selectofmoimId(String moimId, String userId);
-    void Deleteoffavorite(String moimid, String userId);
+    void Deleteoffavorite(String moimId, String userId);
     void Insertfavoriteofmoim(FavoriteEntity favoriteEntity);
 }

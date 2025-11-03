@@ -11,6 +11,7 @@ import moim.renew.backend.domain.Moim.MoimReview.DTO.MoimReviewDTO;
 @Data
 public class MoimReviewEntity
 {
+    private String moimReviewId;
     private String moimId;
     private String reviewer;
     private Float score;
@@ -19,6 +20,7 @@ public class MoimReviewEntity
     public MoimReviewDTO ConvertTo()
     {
         return MoimReviewDTO.builder()
+                .moimReviewId(this.moimReviewId)
                 .moimId(this.moimId)
                 .comment(this.comment)
                 .reviewer(this.reviewer)

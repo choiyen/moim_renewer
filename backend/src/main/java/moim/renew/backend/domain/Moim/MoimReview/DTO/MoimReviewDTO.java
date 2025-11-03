@@ -12,6 +12,8 @@ import moim.renew.backend.domain.Moim.MoimReview.Entity.MoimReviewEntity;
 @ToString
 public class MoimReviewDTO
 {
+    private String moimReviewId;
+
     private String moimId;
 
     @NotNull(message = "리뷰를 쓴 사람의 닉네임은 포함되어야 합니다.")
@@ -23,6 +25,7 @@ public class MoimReviewDTO
     public MoimReviewEntity ConvertTo()
     {
         return MoimReviewEntity.builder()
+                .moimReviewId(this.moimReviewId)
                 .moimId(this.moimId)
                 .comment(this.comment)
                 .reviewer(this.reviewer)

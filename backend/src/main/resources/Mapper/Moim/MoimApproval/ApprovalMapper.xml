@@ -9,7 +9,7 @@
     <resultMap id="moimApprovalResultMap" type="ApprovalEntity">
         <id     property="approvalId"   column="Approval_id"/>
         <result property="moimId"       column="Moim_id"/>
-        <result property="userId"       column="userId"/>
+        <result property="userId"       column="UserId"/>
         <result property="status"       column="Status"/>
         <result property="requestedAt"  column="Requested_at"/>
         <result property="approvalAt"   column="Approval_at"/>
@@ -17,7 +17,7 @@
 
     <!-- INSERT (Approval_id는 AUTO_INCREMENT라서 제외) -->
     <insert id="insertMoimApproval" parameterType="ApprovalEntity" useGeneratedKeys="true" keyProperty="approvalId">
-        INSERT INTO moim_approval (Moim_id, userId, Status)
+        INSERT INTO moim_approval (Moim_id, UserId, Status)
         VALUES (#{moimId}, #{userId}, #{status})
     </insert>
 
@@ -31,20 +31,20 @@
 
     <!-- SELECT (moimId 기준으로 전체 승인 조회) -->
     <select id="selectMoimApprovalsByMoimId" parameterType="java.lang.String" resultMap="moimApprovalResultMap">
-        SELECT Approval_id, Moim_id, userId, Status, Requested_at, Approval_at
+        SELECT Approval_id, Moim_id, UserId, Status, Requested_at, Approval_at
         FROM moim_approval
         WHERE Moim_id = #{moimId}
     </select>
 
     <!-- SELECT (userId 기준으로 해당 모임의 승인 상태 조회) -->
     <select id="selectMoimApprovalsByUserId" parameterType="java.lang.String" resultMap="moimApprovalResultMap">
-        SELECT Approval_id, Moim_id, User_id, Status, Requested_at, Approval_at
+        SELECT Approval_id, Moim_id, UserId, Status, Requested_at, Approval_at
         FROM moim_approval
-        WHERE userId = #{userId} AND Moim_id = #{moimId}
+        WHERE UserId = #{userId} AND Moim_id = #{moimId}
     </select>
 
     <!-- DELETE (특정 승인 내역 삭제) -->
-    <delete id="deleteMoimApproval" parameterType="java.lang.Integer">
+    <delete id="deleteMoimApproval" parameterType="java.lang.Long">
         DELETE FROM moim_approval
         WHERE Approval_id = #{approvalId}
     </delete>

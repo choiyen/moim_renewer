@@ -76,11 +76,11 @@ CREATE TABLE moim_detail (
 );
 
 CREATE TABLE moim_review (
+    Moims_reviewId VARCHAR(50) PRIMARY KEY,
     Moim_id VARCHAR(50) NOT NULL,
     Reviewer_nickname VARCHAR(50) NOT NULL,
     Score DECIMAL(3,1) NOT NULL,
     Comment CLOB,
-    PRIMARY KEY (Moim_id, Reviewer_nickname),
     FOREIGN KEY (Moim_id) REFERENCES moim(Moim_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (Reviewer_nickname) REFERENCES users(Nickname) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -88,7 +88,7 @@ CREATE TABLE moim_review (
 CREATE TABLE moim_approval (
   Approval_id INT PRIMARY KEY AUTO_INCREMENT,
   Moim_id VARCHAR(50) NOT NULL,
-  userId VARCHAR(50) NOT NULL,
+  UserId VARCHAR(50) NOT NULL,
   Status VARCHAR(50) DEFAULT 'Pended',
   Requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   Approval_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -103,7 +103,7 @@ CREATE TABLE moim_approval (
 CREATE TABLE moim_favorite (
     FavoriteId INT PRIMARY KEY AUTO_INCREMENT,
     Moim_id VARCHAR(50) NOT NULL,
-    userId VARCHAR(50) NOT NULL,
+    UserId VARCHAR(50) NOT NULL,
     CONSTRAINT fk_dibs_moim_moim FOREIGN KEY (Moim_id)
         REFERENCES moim(Moim_id)
         ON DELETE CASCADE
@@ -139,8 +139,8 @@ CREATE TABLE moim_consult_comment (
     Moims_ConsultCommentId VARCHAR(50) PRIMARY KEY,
     Moims_consultId VARCHAR(50),
     Nickname VARCHAR(50) NOT NULL,
-    "Password" VARCHAR(50) NOT NULL,
-    "Comments" VARCHAR(100) NOT NULL,
+    Password VARCHAR(50) NOT NULL,
+    Comments VARCHAR(100) NOT NULL,
     Profileimg VARCHAR(100) NOT NULL,
     Update_Date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_moim_consult_comment_consult FOREIGN KEY (Moims_consultId)

@@ -9,24 +9,29 @@
     <resultMap id="favoriteResultMap" type="FavoriteEntity">
         <id     property="favoriteId" column="FavoriteId"/>
         <result property="moimId"   column="Moim_id"/>
-        <result property="userId"   column="userId"/>
+        <result property="userId"   column="UserId"/>
     </resultMap>
 
     <!--  찜 목록 생성  -->
-    <insert id="Insertfavoriteofmoim" parameterType="java.lang.String">
-        INSERT INTO favorite(Moim_id, userId) VALUES(#{moimId}, #{userId})
+    <insert id="Insertfavoriteofmoim" parameterType="moim.renew.backend.domain.Moim.MoimFavorite.Entity.FavoriteEntity">
+        INSERT INTO moim_favorite(Moim_id, UserId) VALUES(#{moimId}, #{userId})
     </insert>
     <!-- 찜 목록 삭제  -->
-    <delete id="Deleteoffavorite" parameterType="java.lang.String">
-        DELETE FROM favorite WHERE Moim_id = #{moimId} AND userId = #{userId}
+    <delete id="Deleteoffavorite">
+        DELETE FROM moim_favorite WHERE Moim_id = #{moimId} AND UserId = #{userId}
     </delete>
 
-    <!--  찜 목록 찾기  -->
-    <select id="selectoffavorite" parameterType="java.lang.String">
-        SELECT * FROM favorite WHERE userId = #{userId}
+    <!-- 찜 목록 찾기 -->
+    <select id="selectoffavorite"
+            parameterType="moim.renew.backend.domain.Moim.MoimFavorite.Entity.FavoriteEntity"
+            resultMap="favoriteResultMap">
+        SELECT * FROM moim_favorite WHERE UserId = #{userId}
     </select>
-    <!--  해당 목록의 찜 설정 여부  -->
-    <select id="selectofmoimId" parameterType="java.lang.String">
-        SELECT * FROM favorite WHERE Moim_id = #{moimId} AND userId = #{userId}
+
+    <!-- 해당 목록의 찜 설정 여부 -->
+    <select id="selectofmoimId"
+            parameterType="moim.renew.backend.domain.Moim.MoimFavorite.Entity.FavoriteEntity"
+            resultMap="favoriteResultMap">
+        SELECT * FROM moim_favorite WHERE Moim_id = #{moimId} AND UserId = #{userId}
     </select>
 </mapper>

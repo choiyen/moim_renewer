@@ -79,12 +79,12 @@ CREATE TABLE moim_detail (
 );
 
 CREATE TABLE moim_review (
+    Moims_reviewId VARCHAR(50) PRIMARY KEY,
     Moim_id VARCHAR(50) NOT NULL,
     Reviewer_nickname VARCHAR(50) NOT NULL,
     Score DECIMAL(3,1) NOT NULL,
     Comment TEXT,
 
-    PRIMARY KEY (Moim_id, Reviewer_nickname),
     FOREIGN KEY (Moim_id) REFERENCES moim(Moim_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (Reviewer_nickname) REFERENCES users(Nickname) ON DELETE CASCADE ON UPDATE CASCADE
 );

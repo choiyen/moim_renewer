@@ -48,10 +48,7 @@ public class MoimCategoryMapperIntegrationTest
                 .addressDetail("fdsfsfsf")
                 .interests("1")
                 .build();
-
         userMapper.InsertUser(user);
-        moimCategoryMapper.InsertCategory(new MoimCateGoryEntity(1, "dfsfdfsd"));
-        moimCategoryDetaillMapper.insertCategoryDetail(new MoimCategoryDetailEntity("1", 1, "dfdsdsfsdf"));
     }
 
     @Test

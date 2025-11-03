@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @Data
 public class ApprovalEntity
 {
+    private Long approvalId;
     private String moimId;
-    private String userNickname;
+    private String userId;
     private String status;
     private LocalDateTime requestedAt;
     private LocalDateTime approvalAt;
@@ -22,8 +23,9 @@ public class ApprovalEntity
     public ApprovalDTO ConvertTo()
     {
         return ApprovalDTO.builder()
+                .approvalId(this.approvalId)
                 .moimId(this.moimId)
-                .userNickname(this.userNickname)
+                .userId(this.userId)
                 .status(ApprovalStatus.valueOf(this.status))
                 .approvalAt(this.approvalAt)
                 .requestedAt(this.requestedAt)

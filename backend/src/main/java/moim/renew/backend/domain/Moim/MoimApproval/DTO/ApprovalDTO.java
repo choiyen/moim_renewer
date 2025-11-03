@@ -17,13 +17,15 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 public class ApprovalDTO {
 
+    private Long approvalId;
+
     @NotBlank(message = "moimId는 필수 입력값입니다.")
     @Size(max = 20, message = "moimId는 최대 20자 이하여야 합니다.")
     private String moimId;
 
     @NotBlank(message = "userId는 필수 입력값입니다.")
     @Size(max = 20, message = "userId는 최대 20자 이하여야 합니다.")
-    private String userNickname;
+    private String userId;
 
     private ApprovalStatus status;
 
@@ -36,8 +38,9 @@ public class ApprovalDTO {
     public ApprovalEntity ConvertTo()
     {
         return ApprovalEntity.builder()
+                .approvalId(this.approvalId)
                 .moimId(this.moimId)
-                .userNickname(this.userNickname)
+                .userId(this.userId)
                 .status(String.valueOf(this.status))
                 .approvalAt(this.approvalAt)
                 .requestedAt(this.requestedAt)
